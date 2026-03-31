@@ -10,8 +10,10 @@
     body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background: #070b11; }
     @keyframes flashGreen { 0% { color: #4ade80; } 100% {} }
     @keyframes flashRed   { 0% { color: #f87171; } 100% {} }
+    @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:0.4} }
     .flash-green { animation: flashGreen 0.6s ease; }
     .flash-red   { animation: flashRed   0.6s ease; }
+    .live-dot    { animation: pulse2 2s infinite; }
     .active-tf {
       background: rgba(59,130,246,0.15);
       border-color: #3b82f6 !important;
@@ -38,345 +40,562 @@
       padding: 20px 24px;
     }
     .tf-btn {
-      font-size: 11px;
-      padding: 5px 12px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      color: #6b7280;
-      cursor: pointer;
-      transition: all 0.15s;
-      background: transparent;
+      font-size: 11px; padding: 5px 12px; border-radius: 8px;
+      border: 1px solid #374151; color: #6b7280; cursor: pointer;
+      transition: all 0.15s; background: transparent;
     }
     .tf-btn:hover { border-color: #4b5563; color: #d1d5db; }
-    .live-dot {
-      width: 7px; height: 7px;
-      background: #22c55e;
-      border-radius: 50%;
-      display: inline-block;
-      animation: pulse 2s infinite;
-      margin-right: 5px;
+    .tab-btn {
+      padding: 7px 18px; border-radius: 9px; font-size: 13px;
+      font-weight: 500; cursor: pointer; transition: all 0.15s;
+      color: #6b7280; border: 1px solid transparent; background: transparent;
     }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.3); }
+    .tab-btn.active { background: rgba(59,130,246,0.12); border-color: #3b82f6; color: #93c5fd; }
+    .tab-btn:hover:not(.active) { color: #9ca3af; }
+    .signal-badge {
+      padding: 3px 11px; border-radius: 7px; font-size: 12px;
+      font-weight: 700; letter-spacing: 0.5px; display: inline-block;
     }
-    .fng-bar { height: 6px; border-radius: 4px; background: linear-gradient(to right, #dc2626, #f97316, #eab308, #84cc16, #22c55e); }
-    .fng-needle { width: 12px; height: 12px; background: white; border-radius: 50%; border: 2px solid #0d1320; position: absolute; top: -3px; transform: translateX(-50%); transition: left 0.8s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 0 6px rgba(255,255,255,0.5); }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
-    .divider { height: 1px; background: linear-gradient(to right, transparent, #1f2937, transparent); margin: 8px 0; }
+    .signal-long  { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+    .signal-short { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+    .signal-wait  { background: rgba(156,163,175,0.12); color: #9ca3af; border: 1px solid rgba(156,163,175,0.25); }
+    .win-badge  { background: rgba(74,222,128,0.1);  color: #4ade80; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 600; }
+    .loss-badge { background: rgba(248,113,113,0.1); color: #f87171; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 600; }
+    .open-badge { background: rgba(251,191,36,0.1);  color: #fbbf24; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 600; }
+    input, select, textarea {
+      background: #0f1623; border: 1px solid #1f2937; border-radius: 8px;
+      color: #e5e7eb; padding: 8px 12px; font-size: 13px;
+      outline: none; transition: border-color 0.15s; width: 100%;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
+    select option { background: #0f1623; }
+    .btn-primary {
+      background: #2563eb; color: white; border: none; border-radius: 8px;
+      padding: 8px 18px; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-sm-danger {
+      background: rgba(239,68,68,0.12); color: #f87171;
+      border: 1px solid rgba(239,68,68,0.2); border-radius: 6px;
+      padding: 3px 9px; font-size: 11px; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-sm-danger:hover { background: rgba(239,68,68,0.22); }
+    .btn-sm-success {
+      background: rgba(74,222,128,0.1); color: #4ade80;
+      border: 1px solid rgba(74,222,128,0.2); border-radius: 6px;
+      padding: 3px 9px; font-size: 11px; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-sm-success:hover { background: rgba(74,222,128,0.2); }
+    .modal-overlay {
+      position: fixed; inset: 0; display: none; align-items: center;
+      justify-content: center; z-index: 50;
+      background: rgba(0,0,0,0.75);
+    }
+    .modal-box {
+      background: #0f1623; border: 1px solid #1f2937;
+      border-radius: 20px; padding: 28px; width: 100%; max-width: 480px;
+    }
+    table { border-collapse: collapse; width: 100%; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
   </style>
 </head>
-<body class="text-white min-h-screen">
+<body class="text-gray-200 min-h-screen">
 
-  <!-- Header -->
-  <header style="background:#080d16;border-bottom:1px solid #131c2e;" class="sticky top-0 z-50">
-    <div class="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div style="background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:9px;width:32px;height:32px;" class="flex items-center justify-center text-black font-black text-sm">G</div>
+<!-- ======== HEADER ======== -->
+<header class="sticky top-0 z-40 flex items-center justify-between px-6 py-3"
+  style="background: rgba(7,11,17,0.93); backdrop-filter: blur(14px); border-bottom: 1px solid #1a2332;">
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
+      style="background: linear-gradient(135deg,#2563eb,#7c3aed)">G</div>
+    <div>
+      <div class="font-bold text-white text-sm tracking-wide">Gunter Trading Dashboard</div>
+      <div class="text-xs text-gray-500">ETH · BTC · Derivatives</div>
+    </div>
+  </div>
+  <div class="flex items-center gap-5">
+    <div class="text-xs text-gray-500" id="last-update">更新中...</div>
+    <div class="flex items-center gap-1.5">
+      <div class="w-1.5 h-1.5 rounded-full bg-green-400 live-dot"></div>
+      <span class="text-xs font-medium text-green-400">LIVE</span>
+    </div>
+    <div class="text-right">
+      <div class="text-sm font-semibold text-white tabular-nums" id="clock">--:--:--</div>
+      <div class="text-xs text-gray-500">Taipei Time</div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-5 space-y-5">
+
+  <!-- ======== PRICE ROW ======== -->
+  <div class="grid grid-cols-3 gap-4">
+    <!-- ETH -->
+    <div class="price-card">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white"
+            style="background: linear-gradient(135deg,#627eea,#8b5cf6)">E</div>
+          <div>
+            <div class="font-bold text-white text-sm">ETH / USDT</div>
+            <div class="text-xs text-gray-600">Binance Perp · 即時</div>
+          </div>
+        </div>
+        <span id="eth-chg" class="text-xs font-medium px-2 py-1 rounded-lg bg-gray-800 text-gray-400">—</span>
+      </div>
+      <div id="eth-price" class="text-3xl font-bold text-white mb-3">—</div>
+      <div class="flex gap-4 text-xs">
+        <span class="text-gray-600">24H高 <span id="eth-high" class="text-gray-300 ml-0.5">—</span></span>
+        <span class="text-gray-600">24H低 <span id="eth-low" class="text-gray-300 ml-0.5">—</span></span>
+        <span class="text-gray-600">量 <span id="eth-vol" class="text-gray-300 ml-0.5">—</span></span>
+      </div>
+    </div>
+    <!-- BTC -->
+    <div class="price-card">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white"
+            style="background: linear-gradient(135deg,#f7931a,#f59e0b)">B</div>
+          <div>
+            <div class="font-bold text-white text-sm">BTC / USDT</div>
+            <div class="text-xs text-gray-600">Binance Perp · 即時</div>
+          </div>
+        </div>
+        <span id="btc-chg" class="text-xs font-medium px-2 py-1 rounded-lg bg-gray-800 text-gray-400">—</span>
+      </div>
+      <div id="btc-price" class="text-3xl font-bold text-white mb-3">—</div>
+      <div class="flex gap-4 text-xs">
+        <span class="text-gray-600">24H高 <span id="btc-high" class="text-gray-300 ml-0.5">—</span></span>
+        <span class="text-gray-600">24H低 <span id="btc-low" class="text-gray-300 ml-0.5">—</span></span>
+        <span class="text-gray-600">量 <span id="btc-vol" class="text-gray-300 ml-0.5">—</span></span>
+      </div>
+    </div>
+    <!-- Fear & Greed -->
+    <div class="price-card">
+      <div class="mb-3">
+        <div class="font-semibold text-white text-sm">恐懼貪婪指數</div>
+        <div class="text-xs text-gray-600">Alternative.me · 每日更新</div>
+      </div>
+      <div id="fng-value" class="text-3xl font-bold text-white mb-1">—</div>
+      <div id="fng-label" class="text-sm text-gray-400 mt-1.5">載入中...</div>
+      <div class="relative mt-3 h-2 rounded-full overflow-hidden"
+        style="background: linear-gradient(to right,#ef4444,#f97316,#eab308,#22c55e)">
+        <div id="fng-needle" class="absolute top-0 w-1 h-full bg-white rounded-full transition-all duration-700" style="left:50%"></div>
+      </div>
+      <div class="flex justify-between mt-1 text-xs">
+        <span class="text-red-400">極恐懼</span>
+        <span class="text-gray-600">中性</span>
+        <span class="text-green-400">極貪婪</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== METRICS ROW ======== -->
+  <div class="grid grid-cols-4 gap-4">
+    <div class="metric-card">
+      <div class="text-xs text-gray-500 mb-2">⚡ ETH 資金費率</div>
+      <div id="eth-funding" class="text-xl font-bold text-white">—</div>
+      <div class="text-xs text-gray-600 mt-1">每8小時結算</div>
+      <div id="eth-funding-ann" class="text-xs text-gray-600 mt-0.5">年化 —</div>
+    </div>
+    <div class="metric-card">
+      <div class="text-xs text-gray-500 mb-2">📊 ETH 未平倉量</div>
+      <div id="eth-oi" class="text-xl font-bold text-white">—</div>
+      <div id="eth-oi-change" class="text-xs text-gray-600 mt-1">1h 袺%�� —</div>
+    </div>
+    <div class="metric-card">
+      <div class="text-xs text-gray-500 mb-2">⚖️ ETH 大戶多空比</div>
+      <div id="eth-ls-ratio" class="text-xl font-bold text-white">—</div>
+      <div class="h-1.5 rounded-full bg-gray-800 mt-2 overflow-hidden">
+        <div id="eth-ls-bar" class="h-full rounded-full transition-all duration-500" style="width:50%; background:#22c55e"></div>
+      </div>
+      <div id="eth-ls-pct" class="text-xs text-gray-600 mt-1">多 — / 空 —</div>
+    </div>
+    <div class="metric-card">
+      <div class="text-xs text-gray-500 mb-2">⚡ BTC 資金費率</div>
+      <div id="btc-funding" class="text-xl font-bold text-white">—</div>
+      <div class="text-xs text-gray-600 mt-1">每8小時結算</div>
+      <div id="btc-funding-ann" class="text-xs text-gray-600 mt-0.5">年化 —</div>
+    </div>
+  </div>
+
+  <!-- ======== ETH CHART ======== -->
+  <div class="chart-card">
+    <div class="flex items-center justify-between mb-4">
+      <span class="font-semibold text-white">ETH/USDT 合約 K線</span>
+      <span class="text-xs text-gray-600">Binance Futures</span>
+      <div class="flex gap-1">
+        <button class="tf-btn active-tf" id="eth-tf-15m" onclick="loadKlines('eth','15m')">15m</button>
+        <button class="tf-btn" id="eth-tf-1h"  onclick="loadKlines('eth','1h')">1h</button>
+        <button class="tf-btn" id="eth-tf-4h"  onclick="loadKlines('eth','4h')">4h</button>
+        <button class="tf-btn" id="eth-tf-1d"  onclick="loadKlines('eth','1d')">1D</button>
+      </div>
+    </div>
+    <div id="eth-chart" style="height:380px;"></div>
+  </div>
+
+  <!-- ======== BTC CHART ======== -->
+  <div class="chart-card">
+    <div class="flex items-center justify-between mb-4">
+      <span class="font-semibold text-white">BTC/USDT 合約 K線</span>
+      <span class="text-xs text-gray-600">Binance Futures</span>
+      <div class="flex gap-1">
+        <button class="tf-btn" id="btc-tf-15m" onclick="loadKlines('btc','15m')">15m</button>
+        <button class="tf-btn" id="btc-tf-1h"  onclick="loadKlines('btc','1h')">1h</button>
+        <button class="tf-btn active-tf" id="btc-tf-4h"  onclick="loadKlines('btc','4h')">4h</button>
+        <button class="tf-btn" id="btc-tf-1d"  onclick="loadKlines('btc','1d')">1D</button>
+      </div>
+    </div>
+    <div id="btc-chart" style="height:340px;"></div>
+  </div>
+
+  <!-- ======== TRADING LOG ======== -->
+  <div class="chart-card">
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="font-semibold text-white text-sm">📋 交易建議追蹤</span>
+        <div class="flex gap-1">
+          <button class="tab-btn active" id="tab-current" onclick="showTab('current')">當前建議</button>
+          <button class="tab-btn" id="tab-history" onclick="showTab('history')">歷史紀錄</button>
+          <button class="tab-btn" id="tab-review"  onclick="showTab('review')">復盤分析</button>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openAddModal()">+ 新增建議</button>
+    </div>
+
+    <!-- Tab: 當前建議 -->
+    <div id="tab-current-content">
+      <div id="current-empty" class="text-center py-12 text-gray-600">
+        <div class="text-4xl mb-3">📭</div>
+        <div class="text-sm">尚無當前建議，點擊「新增建議」加入分析結果</div>
+      </div>
+      <div id="current-card" class="hidden"></div>
+    </div>
+
+    <!-- Tab: 歷史紀錄 -->
+    <div id="tab-history-content" class="hidden">
+      <div id="history-empty" class="text-center py-12 text-gray-600 hidden">
+        <div class="text-4xl mb-3">📜</div>
+        <div class="text-sm">尚無歷史紀錄</div>
+      </div>
+      <div class="overflow-x-auto">
+        <table id="history-table">
+          <thead>
+            <tr style="border-bottom: 1px solid #1f2937;">
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">時間</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">方向</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">幣種</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">進場</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">SL</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">TP</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">出場</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">盈虧%</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3 pr-4">狀態</th>
+              <th class="text-left text-xs text-gray-500 font-medium pb-3">操作</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab: 復盤分析 -->
+    <div id="tab-review-content" class="hidden">
+      <div class="grid grid-cols-4 gap-4 mb-6">
+        <div class="metric-card text-center">
+          <div class="text-2xl font-bold text-white" id="rv-total">0</div>
+          <div class="text-xs text-gray-500 mt-1">總交易次數</div>
+        </div>
+        <div class="metric-card text-center">
+          <div class="text-2xl font-bold text-green-400" id="rv-winrate">—</div>
+          <div class="text-xs text-gray-500 mt-1">勝率</div>
+        </div>
+        <div class="metric-card text-center">
+          <div class="text-2xl font-bold text-white" id="rv-avg">—</div>
+          <div class="text-xs text-gray-500 mt-1">平均盈虧%</div>
+        </div>
+        <div class="metric-card text-center">
+          <div class="text-2xl font-bold text-white" id="rv-sum">—</div>
+          <div class="text-xs text-gray-500 mt-1">累計盈虧%</div>
+        </div>
+      </div>
+      <div id="rv-list" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="text-center text-xs text-gray-700 pb-4">
+    數據來源：Binance Futures API · Alternative.me · 每30秒自動更新 · K線每5分鐘更新
+  </div>
+</main>
+
+<!-- ======== ADD MODAL ======== -->
+<div id="add-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="font-bold text-white">新增交易建議</h3>
+      <button onclick="closeModal('add-modal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-3">
         <div>
-          <div class="font-bold text-white text-sm">Gunter Trading Dashboard</div>
-          <div class="text-xs text-gray-600">ETH Â· BTC Â· Derivatives</div>
+          <label class="text-xs text-gray-500 block mb-1">方向</label>
+          <select id="f-dir">
+            <option value="LONG">LONG 做多</option>
+            <option value="SHORT">SHORT 做空</option>
+            <option value="WAIT">觀望</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">幣種</label>
+          <select id="f-sym">
+            <option value="ETH">ETH/USDT</option>
+            <option value="BTC">BTC/USDT</option>
+          </select>
         </div>
       </div>
-      <div class="flex items-center gap-4">
-        <div class="flex items-center gap-1.5 text-xs">
-          <span class="live-dot"></span>
-          <span class="text-green-400 font-medium">LIVE</span>
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">進場價</label>
+          <input type="number" id="f-entry" placeholder="2050">
         </div>
-        <div class="text-right">
-          <div id="clock" class="text-gray-300 text-xs font-mono"></div>
-          <div class="text-gray-600 text-xs">Taipei Time</div>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">止損 SL</label>
+          <input type="number" id="f-sl" placeholder="1980">
         </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-screen-xl mx-auto px-6 py-5 space-y-5">
-
-    <!-- ââ Price Banner ââ -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-      <!-- ETH -->
-      <div class="price-card">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2.5">
-            <div style="background:rgba(99,102,241,0.15);border-radius:50%;width:36px;height:36px;" class="flex items-center justify-center text-indigo-400 font-bold text-base">Î</div>
-            <div>
-              <div class="font-semibold text-white text-sm">ETH / USDT</div>
-              <div class="text-xs text-gray-600">Binance Perp Â· å³æ</div>
-            </div>
-          </div>
-          <div id="eth-badge" class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:rgba(107,114,128,0.15);color:#9ca3af;">â</div>
-        </div>
-        <div id="eth-price" class="text-4xl font-black text-white tracking-tight mb-2">â</div>
-        <div class="flex gap-4 text-xs">
-          <span class="text-gray-600">24Hé« <span id="eth-high" class="text-gray-300 ml-0.5">â</span></span>
-          <span class="text-gray-600">24Hä½ <span id="eth-low" class="text-gray-300 ml-0.5">â</span></span>
-          <span class="text-gray-600">é <span id="eth-vol" class="text-gray-300 ml-0.5">â</span></span>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">止盈 TP</label>
+          <input type="number" id="f-tp" placeholder="2150">
         </div>
       </div>
-
-      <!-- BTC -->
-      <div class="price-card">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2.5">
-            <div style="background:rgba(245,158,11,0.15);border-radius:50%;width:36px;height:36px;" class="flex items-center justify-center text-yellow-400 font-bold text-base">â¿</div>
-            <div>
-              <div class="font-semibold text-white text-sm">BTC / USDT</div>
-              <div class="text-xs text-gray-600">Binance Perp Â· å³æ</div>
-            </div>
-          </div>
-          <div id="btc-badge" class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:rgba(107,114,128,0.15);color:#9ca3af;">â</div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">時間框架</label>
+          <select id="f-tf">
+            <option value="15m">15m</option>
+            <option value="1h">1h</option>
+            <option value="4h" selected>4h</option>
+            <option value="1D">1D</option>
+          </select>
         </div>
-        <div id="btc-price" class="text-4xl font-black text-white tracking-tight mb-2">â</div>
-        <div class="flex gap-4 text-xs">
-          <span class="text-gray-600">24Hé« <span id="btc-high" class="text-gray-300 ml-0.5">â</span></span>
-          <span class="text-gray-600">24Hä½ <span id="btc-low" class="text-gray-300 ml-0.5">â</span></span>
-          <span class="text-gray-600">é <span id="btc-vol" class="text-gray-300 ml-0.5">â</span></span>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">時間</label>
+          <input type="text" id="f-time" placeholder="2026-03-31 15:00">
         </div>
       </div>
-
-      <!-- Fear & Greed -->
-      <div class="price-card flex flex-col justify-between">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-xl">ð§ </span>
-          <div>
-            <div class="font-semibold text-white text-sm">ææ¼è²ªå©ªææ¸</div>
-            <div class="text-xs text-gray-600">Alternative.me Â· æ¯æ¥æ´æ°</div>
-          </div>
-        </div>
-        <div class="flex items-end gap-5">
-          <div>
-            <div id="fng-value" class="text-5xl font-black leading-none">â</div>
-            <div id="fng-label" class="text-sm text-gray-400 mt-1.5">è¼å¥ä¸­â¦</div>
-          </div>
-          <div class="flex-1 pb-1">
-            <div class="fng-bar mb-2.5 relative">
-              <div id="fng-needle" class="fng-needle" style="left:50%"></div>
-            </div>
-            <div class="flex justify-between text-xs">
-              <span class="text-red-400">æ¥µææ¼</span>
-              <span class="text-gray-600">ä¸­æ§</span>
-              <span class="text-green-400">æ¥µè²ªå©ª</span>
-            </div>
-          </div>
-        </div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">分析依據</label>
+        <textarea id="f-reason" rows="2" style="resize:none" placeholder="e.g. ETH 測試支撐，資金費率低，信號偏多..."></textarea>
       </div>
     </div>
+    <div class="flex gap-3 mt-5 justify-end">
+      <button onclick="closeModal('add-modal')" class="text-gray-400 hover:text-white text-sm px-4 py-2">取消</button>
+      <button onclick="addSignal()" class="btn-primary px-6">新增</button>
+    </div>
+  </div>
+</div>
 
-    <!-- ââ Metrics Row ââ -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="metric-card">
-        <div class="text-xs text-gray-500 mb-2">â¡ ETH è³éè²»ç</div>
-        <div id="eth-funding" class="text-2xl font-bold text-yellow-400">â</div>
-        <div class="text-xs text-gray-600 mt-1">æ¯8å°æçµç®</div>
-        <div id="eth-funding-ann" class="text-xs text-gray-600 mt-0.5">å¹´å â</div>
+<!-- ======== CLOSE TRADE MODAL ======== -->
+<div id="close-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="font-bold text-white">結平交易</h3>
+      <button onclick="closeModal('close-modal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
+    </div>
+    <input type="hidden" id="close-id">
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">出場價格</label>
+        <input type="number" id="close-exit" placeholder="出場價">
       </div>
-      <div class="metric-card" id="eth-oi-card">
-        <div class="text-xs text-gray-500 mb-2">ð ETH æªå¹³åé</div>
-        <div id="eth-oi" class="text-2xl font-bold text-purple-400">â</div>
-        <div id="eth-oi-change" class="text-xs text-gray-600 mt-1">1h è®å â</div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">出場時間</label>
+        <input type="text" id="close-time" placeholder="2026-03-31 18:00">
       </div>
-      <div class="metric-card" id="eth-ls-card">
-        <div class="text-xs text-gray-500 mb-2">âï¸ ETH å¤§æ¶å¤ç©ºæ¯</div>
-        <div id="eth-ls-ratio" class="text-2xl font-bold text-blue-400">â</div>
-        <div class="mt-2 w-full h-1.5 rounded-full bg-gray-800 overflow-hidden">
-          <div id="eth-ls-bar" class="h-full bg-green-500 rounded-full transition-all duration-700" style="width:50%"></div>
-        </div>
-        <div id="eth-ls-pct" class="text-xs text-gray-600 mt-1">å¤ â / ç©º â</div>
-      </div>
-      <div class="metric-card">
-        <div class="text-xs text-gray-500 mb-2">â¡ BTC è³éè²»ç</div>
-        <div id="btc-funding" class="text-2xl font-bold text-yellow-400">â</div>
-        <div class="text-xs text-gray-600 mt-1">æ¯8å°æçµç®</div>
-        <div id="btc-funding-ann" class="text-xs text-gray-600 mt-0.5">å¹´å â</div>
+      <div>
+        <label class="text-xs text-gray-500 block mb-1">復盤備註</label>
+        <textarea id="close-note" rows="2" style="resize:none" placeholder="e.g. 觸及 TP1，方向判斷正確..."></textarea>
       </div>
     </div>
-
-    <!-- ââ ETH Chart ââ -->
-    <div class="chart-card">
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-3">
-          <span class="text-indigo-400 font-bold">Î</span>
-          <span class="font-semibold text-white">ETH/USDT åç´ Kç·</span>
-          <span class="text-xs text-gray-600 hidden md:block">Binance Futures</span>
-        </div>
-        <div class="flex gap-1.5">
-          <button class="tf-btn eth-tf" id="eth-tf-15m" onclick="switchTf('eth','15m')">15m</button>
-          <button class="tf-btn eth-tf" id="eth-tf-1h"  onclick="switchTf('eth','1h')">1h</button>
-          <button class="tf-btn eth-tf active-tf" id="eth-tf-4h"  onclick="switchTf('eth','4h')">4h</button>
-          <button class="tf-btn eth-tf" id="eth-tf-1d"  onclick="switchTf('eth','1d')">1D</button>
-        </div>
-      </div>
-      <div id="eth-chart" style="height:380px;width:100%;"></div>
+    <div class="flex gap-3 mt-5 justify-end">
+      <button onclick="closeModal('close-modal')" class="text-gray-400 hover:text-white text-sm px-4 py-2">取消</button>
+      <button onclick="submitClose()" class="btn-primary px-6">確認結平</button>
     </div>
-
-    <!-- ââ BTC Chart ââ -->
-    <div class="chart-card">
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-3">
-          <span class="text-yellow-400 font-bold">â¿</span>
-          <span class="font-semibold text-white">BTC/USDT åç´ Kç·</span>
-          <span class="text-xs text-gray-600 hidden md:block">Binance Futures</span>
-        </div>
-        <div class="flex gap-1.5">
-          <button class="tf-btn btc-tf" id="btc-tf-15m" onclick="switchTf('btc','15m')">15m</button>
-          <button class="tf-btn btc-tf" id="btc-tf-1h"  onclick="switchTf('btc','1h')">1h</button>
-          <button class="tf-btn btc-tf active-tf" id="btc-tf-4h"  onclick="switchTf('btc','4h')">4h</button>
-          <button class="tf-btn btc-tf" id="btc-tf-1d"  onclick="switchTf('btc','1d')">1D</button>
-        </div>
-      </div>
-      <div id="btc-chart" style="height:340px;width:100%;"></div>
-    </div>
-
-    <!-- ââ Footer ââ -->
-    <div class="text-center text-xs text-gray-700 pb-4 space-y-1">
-      <div>æ¸æä¾æºï¼Binance Futures API Â· Alternative.me Â· ææ¨æ¯30ç§èªåæ´æ° Â· Kç·æ¯5åéæ´æ°</div>
-      <div id="last-update" class="text-gray-800">â</div>
-    </div>
-
-  </main>
+  </div>
+</div>
 
 <script>
 // ================================================================
 // CLOCK
 // ================================================================
-function updateClock() {
-  const s = new Date().toLocaleString('zh-TW', {
-    timeZone: 'Asia/Taipei',
-    year:'numeric', month:'2-digit', day:'2-digit',
-    hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
-  });
-  document.getElementById('clock').textContent = s;
+function tick() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('zh-TW', {timeZone:'Asia/Taipei'});
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(tick, 1000); tick();
 
 // ================================================================
-// WEBSOCKET â LIVE PRICES
+// CHARTS
 // ================================================================
-let prev = { eth: 0, btc: 0 };
+const chartBaseOpts = (h) => ({
+  layout: { background:{color:'transparent'}, textColor:'#9ca3af' },
+  grid: { vertLines:{color:'#1a2332'}, horzLines:{color:'#1a2332'} },
+  crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+  timeScale: { borderColor:'#374151', timeVisible:true, secondsVisible:false },
+  rightPriceScale: { borderColor:'#374151' },
+  height: h
+});
 
-function fmt(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
-function fmtVol(v) {
-  if (v >= 1e9) return (v/1e9).toFixed(2)+'B';
-  if (v >= 1e6) return (v/1e6).toFixed(2)+'M';
-  if (v >= 1e3) return (v/1e3).toFixed(1)+'K';
-  return v.toFixed(0);
-}
-
-function updatePriceCard(sym, d) {
-  const price  = parseFloat(d.c);
-  const change = parseFloat(d.P);
-  const high   = parseFloat(d.h);
-  const low    = parseFloat(d.l);
-  const vol    = parseFloat(d.v);
-  const isPos  = change >= 0;
-  const dp = sym === 'btc' ? 1 : 2;
-
-  const priceEl = document.getElementById(sym+'-price');
-  priceEl.textContent = '$' + fmt(price, dp);
-
-  if (prev[sym] > 0 && price !== prev[sym]) {
-    priceEl.classList.remove('flash-green','flash-red');
-    void priceEl.offsetWidth;
-    priceEl.classList.add(price > prev[sym] ? 'flash-green' : 'flash-red');
-  }
-  prev[sym] = price;
-
-  const badge = document.getElementById(sym+'-badge');
-  badge.textContent = (isPos?'+':'') + change.toFixed(2) + '%';
-  badge.style.background = isPos ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
-  badge.style.color = isPos ? '#4ade80' : '#f87171';
-
-  document.getElementById(sym+'-high').textContent = '$'+fmt(high, dp);
-  document.getElementById(sym+'-low' ).textContent = '$'+fmt(low, dp);
-  document.getElementById(sym+'-vol' ).textContent = fmtVol(vol);
-}
-
-function initWS() {
-  const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=ethusdt@ticker/btcusdt@ticker');
-  ws.onmessage = e => {
-    const msg = JSON.parse(e.data);
-    if (msg.stream === 'ethusdt@ticker') updatePriceCard('eth', msg.data);
-    else if (msg.stream === 'btcusdt@ticker') updatePriceCard('btc', msg.data);
-  };
-  ws.onclose = () => setTimeout(initWS, 3000);
-  ws.onerror = () => ws.close();
-}
-initWS();
-
-// ================================================================
-// CHARTS â TradingView Lightweight Charts
-// ================================================================
-let charts = {};
-let series = {};
-let currentTf = { eth: '4h', btc: '4h' };
-
-function makeChart(containerId, height) {
-  const el = document.getElementById(containerId);
-  const c = LightweightCharts.createChart(el, {
-    width: el.clientWidth,
-    height,
-    layout: { background: { color: '#0d1320' }, textColor: '#6b7280' },
-    grid: { vertLines: { color: '#111827' }, horzLines: { color: '#111827' } },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-    rightPriceScale: { borderColor: '#1f2937' },
-    timeScale: { borderColor: '#1f2937', timeVisible: true, secondsVisible: false },
-  });
-  window.addEventListener('resize', () => c.resize(el.clientWidth, height));
-  return c;
-}
+let ethChart, ethSeries, btcChart, btcSeries;
+let ethTf = '15m', btcTf = '4h';
 
 function initCharts() {
-  charts.eth = makeChart('eth-chart', 380);
-  series.eth = charts.eth.addCandlestickSeries({
+  ethChart = LightweightCharts.createChart(document.getElementById('eth-chart'), chartBaseOpts(380));
+  ethSeries = ethChart.addCandlestickSeries({
     upColor:'#22c55e', downColor:'#ef4444',
     borderUpColor:'#22c55e', borderDownColor:'#ef4444',
-    wickUpColor:'#4ade80', wickDownColor:'#f87171',
+    wickUpColor:'#22c55e', wickDownColor:'#ef4444'
   });
-
-  charts.btc = makeChart('btc-chart', 340);
-  series.btc = charts.btc.addCandlestickSeries({
-    upColor:'#f59e0b', downColor:'#ef4444',
-    borderUpColor:'#f59e0b', borderDownColor:'#ef4444',
-    wickUpColor:'#fbbf24', wickDownColor:'#f87171',
+  btcChart = LightweightCharts.createChart(document.getElementById('btc-chart'), chartBaseOpts(340));
+  btcSeries = btcChart.addCandlestickSeries({
+    upColor:'#22c55e', downColor:'#ef4444',
+    borderUpColor:'#22c55e', borderDownColor:'#ef4444',
+    wickUpColor:'#22c55e', wickDownColor:'#ef4444'
   });
-
-  loadKlines('eth');
-  loadKlines('btc');
+  loadKlines('eth', ethTf);
+  loadKlines('btc', btcTf);
 }
 
-async function loadKlines(sym) {
+async function loadKlines(sym, tf) {
   const symbol = sym === 'eth' ? 'ETHUSDT' : 'BTCUSDT';
-  const tf = currentTf[sym];
   try {
     const r = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${tf}&limit=300`);
-    const data = await r.json();
-    const candles = data.map(k => ({
-      time:  k[0]/1000,
-      open:  parseFloat(k[1]),
-      high:  parseFloat(k[2]),
-      low:   parseFloat(k[3]),
-      close: parseFloat(k[4]),
+    const d = await r.json();
+    const data = d.map(k => ({
+      time: Math.floor(k[0]/1000),
+      open: parseFloat(k[1]), high: parseFloat(k[2]),
+      low:  parseFloat(k[3]), close:parseFloat(k[4])
     }));
-    series[sym].setData(candles);
-    charts[sym].timeScale().fitContent();
-  } catch(e) { console.error('klines err', e); }
-}
-
-function switchTf(sym, tf) {
-  currentTf[sym] = tf;
-  document.querySelectorAll('.'+sym+'-tf').forEach(b => b.classList.remove('active-tf'));
-  document.getElementById(sym+'-tf-'+tf).classList.add('active-tf');
-  loadKlines(sym);
+    if (sym === 'eth') {
+      ethSeries.setData(data); ethChart.timeScale().fitContent(); ethTf = tf;
+      document.querySelectorAll('[id^="eth-tf-"]').forEach(b => b.classList.remove('active-tf'));
+      const btn = document.getElementById('eth-tf-' + tf.replace('d','d'));
+      if (btn) btn.classList.add('active-tf');
+    } else {
+      btcSeries.setData(data); btcChart.timeScale().fitContent(); btcTf = tf;
+      document.querySelectorAll('[id^="btc-tf-"]').forEach(b => b.classList.remove('active-tf'));
+      const btn = document.getElementById('btc-tf-' + tf.replace('d','d'));
+      if (btn) btn.classList.add('active-tf');
+    }
+  } catch(e) { console.error('klines', e); }
 }
 
 // ================================================================
-// FEAR & GREED
+// WEBSOCKET
 // ================================================================
+const prevP = {};
+function fmtP(p, sym) {
+  return '$' + parseFloat(p).toLocaleString('en-US', {
+    minimumFractionDigits: sym==='eth'?2:1,
+    maximumFractionDigits: sym==='eth'?2:1
+  });
+}
+function fmtVol(v) {
+  const n = parseFloat(v);
+  return n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : n.toFixed(0);
+}
+
+function connectWS() {
+  const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=ethusdt@ticker/btcusdt@ticker');
+  ws.onmessage = (e) => {
+    const { data: d } = JSON.parse(e.data);
+    const sym = d.s === 'ETHUSDT' ? 'eth' : 'btc';
+    const price = fmtP(d.c, sym);
+    const el = document.getElementById(sym+'-price');
+    if (el && prevP[sym] && prevP[sym] !== price) {
+      el.classList.remove('flash-green','flash-red');
+      void el.offsetWidth;
+      el.classList.add(parseFloat(d.c) > parseFloat(prevP[sym].replace(/[$,]/g,'')) ? 'flash-green' : 'flash-red');
+    }
+    if (el) el.textContent = price;
+    prevP[sym] = price;
+    const chg = parseFloat(d.P);
+    const chgEl = document.getElementById(sym+'-chg');
+    if (chgEl) {
+      chgEl.textContent = (chg>=0?'+':'') + chg.toFixed(2) + '%';
+      chgEl.className = 'text-xs font-medium px-2 py-1 rounded-lg ' +
+        (chg>=0 ? 'text-green-400 bg-green-400/10' : 'text-red-400 bg-red-400/10');
+    }
+    const h = document.getElementById(sym+'-high');
+    const l = document.getElementById(sym+'-low');
+    const v = document.getElementById(sym+'-vol');
+    if (h) h.textContent = fmtP(d.h, sym);
+    if (l) l.textContent = fmtP(d.l, sym);
+    if (v) v.textContent = fmtVol(d.q);
+  };
+  ws.onclose = () => setTimeout(connectWS, 3000);
+}
+
+// ================================================================
+// METRICS
+// ================================================================
+async function fetchFunding() {
+  for (const sym of ['ETH','BTC']) {
+    try {
+      const r = await fetch(`https://fapi.binance.com/fapi/v1/premiumIndex?symbol=${sym}USDT`);
+      const d = await r.json();
+      const rate = parseFloat(d.lastFundingRate) * 100;
+      const ann  = rate * 3 * 365;
+      const k = sym.toLowerCase();
+      const el = document.getElementById(k+'-funding');
+      if (el) {
+        el.textContent = (rate>=0?'+':'') + rate.toFixed(4) + '%';
+        el.className = 'text-xl font-bold ' + (rate>=0 ? 'text-green-400' : 'text-red-400');
+      }
+      const ae = document.getElementById(k+'-funding-ann');
+      if (ae) ae.textContent = '年化 ' + (ann>=0?'+':'') + ann.toFixed(1) + '%';
+    } catch(e) {}
+  }
+}
+
+async function fetchOI() {
+  try {
+    const [r1, r2] = await Promise.all([
+      fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=ETHUSDT'),
+      fetch('https://fapi.binance.com/futures/data/openInterestHist?symbol=ETHUSDT&contractType=PERPETUAL&period=1h&limit=2')
+    ]);
+    const d1 = await r1.json(), d2 = await r2.json();
+    const oi = parseFloat(d1.openInterest);
+    const oiEl = document.getElementById('eth-oi');
+    if (oiEl) oiEl.textContent = (oi>=1e6?(oi/1e6).toFixed(2)+'M':(oi/1e3).toFixed(1)+'K') + ' ETH';
+    if (d2.length >= 2) {
+      const chg = ((parseFloat(d2[1].sumOpenInterest)-parseFloat(d2[0].sumOpenInterest))/parseFloat(d2[0].sumOpenInterest))*100;
+      const ce = document.getElementById('eth-oi-change');
+      if (ce) {
+        ce.textContent = '1h 變化 ' + (chg>=0?'+':'') + chg.toFixed(2) + '%';
+        ce.className = 'text-xs mt-1 ' + (chg>=0?'text-green-400':'text-red-400');
+      }
+    }
+  } catch(e) {}
+}
+
+async function fetchLS() {
+  try {
+    const r = await fetch('https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol=ETHUSDT&period=5m&limit=1');
+    const d = await r.json();
+    if (!d.length) return;
+    const ratio = parseFloat(d[0].longShortRatio);
+    const longPct  = parseFloat(d[0].longAccount)  * 100;
+    const shortPct = parseFloat(d[0].shortAccount) * 100;
+    const re = document.getElementById('eth-ls-ratio');
+    if (re) { re.textContent = ratio.toFixed(2); re.style.color = ratio>1?'#4ade80':'#f87171'; }
+    const bar = document.getElementById('eth-ls-bar');
+    if (bar) { bar.style.width = longPct+'%'; bar.style.background = ratio>1?'#22c55e':'#ef4444'; }
+    const pe = document.getElementById('eth-ls-pct');
+    if (pe) pe.innerHTML = `<span style="color:#4ade80">多 ${longPct.toFixed(1)}%</span> / <span style="color:#f87171">空 ${shortPct.toFixed(1)}%</span>`;
+  } catch(e) {}
+}
+
 async function fetchFng() {
   try {
     const r = await fetch('https://api.alternative.me/fng/?limit=1');
@@ -384,100 +603,252 @@ async function fetchFng() {
     const val = parseInt(d.data[0].value);
     const cls = d.data[0].value_classification;
     const map = {
-      'Extreme Fear':'ð± æ¥µåº¦ææ¼','Fear':'ð° ææ¼',
-      'Neutral':'ð ä¸­æ§','Greed':'ð è²ªå©ª','Extreme Greed':'ð¤ æ¥µåº¦è²ªå©ª'
+      'Extreme Fear':'😱 極度恐懼','Fear':'😰 恐懼',
+      'Neutral':'😐 中性','Greed':'😏 貪婪','Extreme Greed':'🤑 極度貪婪'
     };
-    const fngEl = document.getElementById('fng-value');
-    fngEl.textContent = val;
-    const colors = val<25?'#f87171':val<45?'#fb923c':val<55?'#facc15':val<75?'#86efac':'#4ade80';
-    fngEl.style.color = colors;
-    document.getElementById('fng-label').textContent = map[cls]||cls;
-    document.getElementById('fng-needle').style.left = val+'%';
-  } catch(e){}
+    const ve = document.getElementById('fng-value');
+    const le = document.getElementById('fng-label');
+    const ne = document.getElementById('fng-needle');
+    if (ve) { ve.textContent = val; ve.style.color = val<25?'#ef4444':val<50?'#f97316':val<75?'#eab308':'#22c55e'; }
+    if (le) le.textContent = map[cls] || cls;
+    if (ne) ne.style.left = val + '%';
+  } catch(e) {}
 }
 
-// ================================================================
-// FUNDING RATE
-// ================================================================
-async function fetchFunding() {
-  try {
-    const [r1,r2] = await Promise.all([
-      fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT'),
-      fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT'),
-    ]);
-    const [e,b] = await Promise.all([r1.json(), r2.json()]);
-
-    function renderFunding(sym, rate) {
-      const pct = rate * 100;
-      const ann = pct * 3 * 365;
-      const el = document.getElementById(sym+'-funding');
-      el.textContent = (pct>=0?'+':'')+pct.toFixed(4)+'%';
-      el.style.color = pct>=0?'#facc15':'#4ade80';
-      document.getElementById(sym+'-funding-ann').textContent = 'å¹´å '+(ann>=0?'+':'')+ann.toFixed(1)+'%';
-    }
-    renderFunding('eth', parseFloat(e.lastFundingRate));
-    renderFunding('btc', parseFloat(b.lastFundingRate));
-  } catch(e){}
-}
-
-// ================================================================
-// OPEN INTEREST
-// ================================================================
-async function fetchOI() {
-  try {
-    const [r1,r2] = await Promise.all([
-      fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=ETHUSDT'),
-      fetch('https://fapi.binance.com/futures/data/openInterestHist?symbol=ETHUSDT&contractType=PERPETUAL&period=1h&limit=2'),
-    ]);
-    const [curr, hist] = await Promise.all([r1.json(), r2.json()]);
-    const oi = parseFloat(curr.openInterest);
-    document.getElementById('eth-oi').textContent = fmtVol(oi)+' ETH';
-    if (hist.length >= 2) {
-      const latest = parseFloat(hist[hist.length-1].sumOpenInterest);
-      const old    = parseFloat(hist[0].sumOpenInterest);
-      const chg    = ((latest-old)/old*100).toFixed(2);
-      const chgEl  = document.getElementById('eth-oi-change');
-      chgEl.textContent = '1h è®å '+(chg>=0?'+':'')+chg+'%';
-      chgEl.style.color = chg>=0?'#4ade80':'#f87171';
-    }
-  } catch(e){}
-}
-
-// ================================================================
-// LONG/SHORT RATIO
-// ================================================================
-async function fetchLS() {
-  try {
-    const r = await fetch('https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol=ETHUSDT&period=5m&limit=1');
-    const d = await r.json();
-    if (!d.length) return;
-    const ratio  = parseFloat(d[0].longShortRatio);
-    const longPct  = parseFloat(d[0].longAccount)*100;
-    const shortPct = parseFloat(d[0].shortAccount)*100;
-    const ratioEl = document.getElementById('eth-ls-ratio');
-    ratioEl.textContent = ratio.toFixed(2);
-    ratioEl.style.color = ratio>1?'#4ade80':'#f87171';
-    document.getElementById('eth-ls-bar').style.width = longPct+'%';
-    document.getElementById('eth-ls-bar').style.background = ratio>1?'#22c55e':'#ef4444';
-    document.getElementById('eth-ls-pct').innerHTML =
-      `<span style="color:#4ade80">å¤ ${longPct.toFixed(1)}%</span> / <span style="color:#f87171">ç©º ${shortPct.toFixed(1)}%</span>`;
-  } catch(e){}
-}
-
-// ================================================================
-// INIT & REFRESH
-// ================================================================
 async function refreshAll() {
   await Promise.allSettled([fetchFunding(), fetchOI(), fetchLS(), fetchFng()]);
-  const t = new Date().toLocaleTimeString('zh-TW',{timeZone:'Asia/Taipei'});
-  document.getElementById('last-update').textContent = 'æå¾æ´æ° '+t;
+  const t = new Date().toLocaleTimeString('zh-TW', {timeZone:'Asia/Taipei'});
+  document.getElementById('last-update').textContent = '更新 ' + t;
 }
 
-initCharts();
-refreshAll();
+// ================================================================
+// TRADING LOG  (localStorage)
+// ================================================================
+const LS_KEY = 'gunter_trades_v1';
+let trades = [];
+let currentTab = 'current';
 
+function loadTrades() {
+  try { trades = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch(e) { trades = []; }
+}
+function saveTrades() {
+  localStorage.setItem(LS_KEY, JSON.stringify(trades));
+}
+function nowStr() {
+  return new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})
+    .replace(/\//g,'-').replace(',','');
+}
+
+function showTab(tab) {
+  currentTab = tab;
+  ['current','history','review'].forEach(t => {
+    document.getElementById('tab-'+t+'-content').classList.toggle('hidden', t !== tab);
+    document.getElementById('tab-'+t).classList.toggle('active', t === tab);
+  });
+  if (tab === 'current') renderCurrent();
+  if (tab === 'history') renderHistory();
+  if (tab === 'review')  renderReview();
+}
+
+// ---- Current ----
+function renderCurrent() {
+  const active = trades.find(t => t.status === 'OPEN');
+  const emEl = document.getElementById('current-empty');
+  const cdEl = document.getElementById('current-card');
+  if (!active) { emEl.classList.remove('hidden'); cdEl.classList.add('hidden'); return; }
+  emEl.classList.add('hidden'); cdEl.classList.remove('hidden');
+  const bCls = active.direction==='LONG'?'signal-long':active.direction==='SHORT'?'signal-short':'signal-wait';
+  const eColor = active.direction==='LONG'?'#4ade80':'#f87171';
+  const rr = (active.sl && active.tp && active.entry) ?
+    Math.abs((active.tp - active.entry) / (active.entry - active.sl)).toFixed(2) : null;
+  cdEl.innerHTML = `
+    <div class="rounded-xl p-5" style="background:linear-gradient(135deg,#0f1623,#111827);border:1px solid #374151;">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3 flex-wrap">
+          <span class="signal-badge ${bCls}">${active.direction}</span>
+          <span class="text-white font-semibold">${active.symbol}/USDT</span>
+          <span class="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded">${active.tf}</span>
+          ${rr ? `<span class="text-xs text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded">RR ${rr}:1</span>` : ''}
+        </div>
+        <div class="text-right flex-shrink-0 ml-4">
+          <div class="text-xs text-gray-500 mb-2">${active.timestamp}</div>
+          <div class="flex gap-2">
+            <button class="btn-sm-success" onclick="openCloseModal(${active.id})">結平</button>
+            <button class="btn-sm-danger" onclick="deleteTrade(${active.id})">刪除</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div class="text-center p-3 rounded-xl" style="background:#0a0f1a;">
+          <div class="text-xs text-gray-500 mb-1.5">進場價</div>
+          <div class="text-xl font-bold" style="color:${eColor}">${active.entry||'—'}</div>
+        </div>
+        <div class="text-center p-3 rounded-xl" style="background:#0a0f1a;">
+          <div class="text-xs text-gray-500 mb-1.5">止損 SL</div>
+          <div class="text-xl font-bold text-red-400">${active.sl||'—'}</div>
+        </div>
+        <div class="text-center p-3 rounded-xl" style="background:#0a0f1a;">
+          <div class="text-xs text-gray-500 mb-1.5">止盈 TP</div>
+          <div class="text-xl font-bold text-green-400">${active.tp||'—'}</div>
+        </div>
+      </div>
+      ${active.reason ? `<div class="text-xs text-gray-400 p-3 rounded-lg" style="background:#0a0f1a;border:1px solid #1f2937;">💡 ${active.reason}</div>` : ''}
+    </div>`;
+}
+
+// ---- History ----
+function renderHistory() {
+  const closed = trades.filter(t => t.status !== 'OPEN').slice().reverse();
+  const emEl = document.getElementById('history-empty');
+  const tbl  = document.getElementById('history-table');
+  const tbody= document.getElementById('history-tbody');
+  if (closed.length === 0) { emEl.classList.remove('hidden'); tbl.style.display='none'; return; }
+  emEl.classList.add('hidden'); tbl.style.display='';
+  tbody.innerHTML = closed.map(t => {
+    const bCls = t.direction==='LONG'?'signal-long':t.direction==='SHORT'?'signal-short':'signal-wait';
+    const pColor = t.pnl == null ? '#9ca3af' : t.pnl>=0 ? '#4ade80' : '#f87171';
+    const sBadge = t.status==='WIN'  ? '<span class="win-badge">WIN</span>'
+                 : t.status==='LOSS' ? '<span class="loss-badge">LOSS</span>'
+                 : '<span class="open-badge">OPEN</span>';
+    const pStr = t.pnl != null ? (t.pnl>=0?'+':'')+t.pnl.toFixed(2)+'%' : '—';
+    return `<tr style="border-bottom:1px solid #1a2332;">
+      <td class="py-3 pr-4 text-xs text-gray-500 whitespace-nowrap">${t.timestamp}</td>
+      <td class="py-3 pr-4"><span class="signal-badge ${bCls}">${t.direction}</span></td>
+      <td class="py-3 pr-4 text-xs text-gray-400">${t.symbol}</td>
+      <td class="py-3 pr-4 text-sm text-gray-300">${t.entry||'—'}</td>
+      <td class="py-3 pr-4 text-sm text-red-400">${t.sl||'—'}</td>
+      <td class="py-3 pr-4 text-sm text-green-400">${t.tp||'—'}</td>
+      <td class="py-3 pr-4 text-sm text-gray-300">${t.exit||'—'}</td>
+      <td class="py-3 pr-4 text-sm font-semibold" style="color:${pColor}">${pStr}</td>
+      <td class="py-3 pr-4">${sBadge}</td>
+      <td class="py-3">
+        <button class="btn-sm-danger" onclick="deleteTrade(${t.id})">刪除</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ---- Review ----
+function renderReview() {
+  const done = trades.filter(t => t.status !== 'OPEN' && t.pnl != null);
+  document.getElementById('rv-total').textContent = done.length;
+  if (done.length === 0) {
+    document.getElementById('rv-winrate').textContent = '—';
+    document.getElementById('rv-avg').textContent = '—';
+    document.getElementById('rv-sum').textContent = '—';
+    document.getElementById('rv-list').innerHTML = '<div class="text-center py-10 text-gray-600 text-sm">尚無已結平的交易紀錄</div>';
+    return;
+  }
+  const wins = done.filter(t => t.pnl > 0).length;
+  const wr   = (wins/done.length*100).toFixed(1);
+  const avg  = (done.reduce((a,t)=>a+t.pnl,0)/done.length).toFixed(2);
+  const sum  = done.reduce((a,t)=>a+t.pnl,0).toFixed(2);
+  document.getElementById('rv-winrate').textContent = wr + '%';
+  document.getElementById('rv-winrate').style.color = parseFloat(wr)>=50?'#4ade80':'#f87171';
+  document.getElementById('rv-avg').textContent = (parseFloat(avg)>=0?'+':'')+avg+'%';
+  document.getElementById('rv-avg').style.color = parseFloat(avg)>=0?'#4ade80':'#f87171';
+  document.getElementById('rv-sum').textContent = (parseFloat(sum)>=0?'+':'')+sum+'%';
+  document.getElementById('rv-sum').style.color = parseFloat(sum)>=0?'#4ade80':'#f87171';
+  document.getElementById('rv-list').innerHTML = done.slice().reverse().map(t => {
+    const pColor = t.pnl>=0?'#4ade80':'#f87171';
+    const borderColor = t.pnl>=0?'rgba(74,222,128,0.15)':'rgba(248,113,113,0.15)';
+    const bCls = t.direction==='LONG'?'signal-long':'signal-short';
+    return `<div class="rounded-xl p-4" style="background:#0f1623;border:1px solid ${borderColor};">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <span class="signal-badge ${bCls}">${t.direction}</span>
+          <span class="text-white text-sm font-medium">${t.symbol}/USDT</span>
+          <span class="text-xs text-gray-500">${t.tf}</span>
+        </div>
+        <span class="font-bold text-lg" style="color:${pColor}">${t.pnl>=0?'+':''}${t.pnl.toFixed(2)}%</span>
+      </div>
+      <div class="text-xs text-gray-600 mb-2">${t.timestamp} → ${t.closedAt||'—'}</div>
+      <div class="flex gap-5 text-xs mb-2">
+        <span class="text-gray-500">進場 <span class="text-gray-300">${t.entry||'—'}</span></span>
+        <span class="text-gray-500">SL <span class="text-red-400">${t.sl||'—'}</span></span>
+        <span class="text-gray-500">TP <span class="text-green-400">${t.tp||'—'}</span></span>
+        <span class="text-gray-500">出場 <span class="text-gray-300">${t.exit||'—'}</span></span>
+      </div>
+      ${t.note ? `<div class="text-xs text-gray-500 mt-2 p-2 rounded" style="background:#0a0f1a;">📝 ${t.note}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ---- Modal helpers ----
+function openAddModal() {
+  document.getElementById('f-time').value = nowStr();
+  document.getElementById('add-modal').style.display = 'flex';
+}
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+function addSignal() {
+  const direction = document.getElementById('f-dir').value;
+  const symbol    = document.getElementById('f-sym').value;
+  const entry     = parseFloat(document.getElementById('f-entry').value) || null;
+  const sl        = parseFloat(document.getElementById('f-sl').value) || null;
+  const tp        = parseFloat(document.getElementById('f-tp').value) || null;
+  const tf        = document.getElementById('f-tf').value;
+  const timestamp = document.getElementById('f-time').value || nowStr();
+  const reason    = document.getElementById('f-reason').value.trim();
+  // Close any existing open trade
+  trades = trades.map(t => t.status==='OPEN' ? {...t, status:'CLOSED'} : t);
+  trades.push({ id:Date.now(), direction, symbol, entry, sl, tp, tf, timestamp, reason,
+    status:'OPEN', exit:null, pnl:null, closedAt:null, note:'' });
+  saveTrades();
+  closeModal('add-modal');
+  ['f-entry','f-sl','f-tp','f-reason'].forEach(id => document.getElementById(id).value='');
+  renderCurrent();
+}
+
+function openCloseModal(id) {
+  document.getElementById('close-id').value = id;
+  document.getElementById('close-exit').value = '';
+  document.getElementById('close-time').value = nowStr();
+  document.getElementById('close-note').value = '';
+  document.getElementById('close-modal').style.display = 'flex';
+}
+
+function submitClose() {
+  const id    = parseInt(document.getElementById('close-id').value);
+  const exit  = parseFloat(document.getElementById('close-exit').value);
+  const cTime = document.getElementById('close-time').value || nowStr();
+  const note  = document.getElementById('close-note').value.trim();
+  const trade = trades.find(t => t.id===id);
+  if (!trade || isNaN(exit) || !trade.entry) return;
+  const pnl = trade.direction==='LONG'
+    ? ((exit - trade.entry) / trade.entry * 100)
+    : trade.direction==='SHORT'
+    ? ((trade.entry - exit) / trade.entry * 100)
+    : 0;
+  trade.exit=exit; trade.pnl=pnl;
+  trade.status=pnl>=0?'WIN':'LOSS';
+  trade.closedAt=cTime; trade.note=note;
+  saveTrades();
+  closeModal('close-modal');
+  renderCurrent();
+  if (currentTab==='history') renderHistory();
+  if (currentTab==='review')  renderReview();
+}
+
+function deleteTrade(id) {
+  if (!confirm('確定刪除此筆紀錄？')) return;
+  trades = trades.filter(t => t.id !== id);
+  saveTrades();
+  renderCurrent();
+  if (currentTab==='history') renderHistory();
+  if (currentTab==='review')  renderReview();
+}
+
+// ================================================================
+// INIT
+// ================================================================
+loadTrades();
+initCharts();
+connectWS();
+refreshAll();
 setInterval(refreshAll, 30000);
-setInterval(() => { loadKlines('eth'); loadKlines('btc'); }, 300000);
+setInterval(() => { loadKlines('eth', ethTf); loadKlines('btc', btcTf); }, 300000);
+renderCurrent();
 </script>
 </body>
 </html>
