@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gunter Trading Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; background: #070b11; }
+    @keyframes flashGreen { 0% { color: #4ade80; } 100% {} }
+    @keyframes flashRed   { 0% { color: #f87171; } 100% {} }
+    .flash-green { animation: flashGreen 0.6s ease; }
+    .flash-red   { animation: flashRed   0.6s ease; }
+    .active-tf {
+      background: rgba(59,130,246,0.15);
+      border-color: #3b82f6 !important;
+      color: #93c5fd !important;
+    }
+    .metric-card {
+      background: linear-gradient(135deg, #0f1623 0%, #111827 100%);
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: border-color 0.2s;
+    }
+    .metric-card:hover { border-color: #374151; }
+    .price-card {
+      background: linear-gradient(135deg, #0c1520 0%, #111827 100%);
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 22px 24px;
+    }
+    .chart-card {
+      background: #0d1320;
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 20px 24px;
+    }
+    .tf-btn {
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: transparent;
+    }
+    .tf-btn:hover { border-color: #4b5563; color: #d1d5db; }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+      margin-right: 5px;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+    .fng-bar { height: 6px; border-radius: 4px; background: linear-gradient(to right, #dc2626, #f97316, #eab308, #84cc16, #22c55e); }
+    .fng-needle { width: 12px; height: 12px; background: white; border-radius: 50%; border: 2px solid #0d1320; position: absolute; top: -3px; transform: translateX(-50%); transition: left 0.8s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 0 6px rgba(255,255,255,0.5); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+    .divider { height: 1px; background: linear-gradient(to right, transparent, #1f2937, transparent); margin: 8px 0; }
+  </style>
+</head>
+<body class="text-white min-h-screen">
+
+  <!-- Header -->
+  <header style="background:#080d16;border-bottom:1px solid #131c2e;" class="sticky top-0 z-50">
+    <div class="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div style="background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:9px;width:32px;height:32px;" class="flex items-center justify-center text-black font-black text-sm">G</div>
+        <div>
+          <div class="font-bold text-white text-sm">Gunter Trading Dashboard</div>
+          <div class="text-xs text-gray-600">ETH Â· BTC Â· Derivatives</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1.5 text-xs">
+          <span class="live-dot"></span>
+          <span class="text-green-400 font-medium">LIVE</span>
+        </div>
+        <div class="text-right">
+          <div id="clock" class="text-gray-300 text-xs font-mono"></div>
+          <div class="text-gray-600 text-xs">Taipei Time</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-screen-xl mx-auto px-6 py-5 space-y-5">
+
+    <!-- ââ Price Banner ââ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- ETH -->
+      <div class="price-card">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <div style="background:rgba(99,102,241,0.15);border-radius:50%;width:36px;height:36px;" class="flex items-center justify-center text-indigo-400 font-bold text-base">Î</div>
+            <div>
+              <div class="font-semibold text-white text-sm">ETH / USDT</div>
+              <div class="text-xs text-gray-600">Binance Perp Â· å³æ</div>
+            </div>
+          </div>
+          <div id="eth-badge" class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:rgba(107,114,128,0.15);color:#9ca3af;">â</div>
+        </div>
+        <div id="eth-price" class="text-4xl font-black text-white tracking-tight mb-2">â</div>
+        <div class="flex gap-4 text-xs">
+          <span class="text-gray-600">24Hé« <span id="eth-high" class="text-gray-300 ml-0.5">â</span></span>
+          <span class="text-gray-600">24Hä½ <span id="eth-low" class="text-gray-300 ml-0.5">â</span></span>
+          <span class="text-gray-600">é <span id="eth-vol" class="text-gray-300 ml-0.5">â</span></span>
+        </div>
+      </div>
+
+      <!-- BTC -->
+      <div class="price-card">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <div style="background:rgba(245,158,11,0.15);border-radius:50%;width:36px;height:36px;" class="flex items-center justify-center text-yellow-400 font-bold text-base">â¿</div>
+            <div>
+              <div class="font-semibold text-white text-sm">BTC / USDT</div>
+              <div class="text-xs text-gray-600">Binance Perp Â· å³æ</div>
+            </div>
+          </div>
+          <div id="btc-badge" class="text-xs px-2.5 py-1 rounded-full font-semibold" style="background:rgba(107,114,128,0.15);color:#9ca3af;">â</div>
+        </div>
+        <div id="btc-price" class="text-4xl font-black text-white tracking-tight mb-2">â</div>
+        <div class="flex gap-4 text-xs">
+          <span class="text-gray-600">24Hé« <span id="btc-high" class="text-gray-300 ml-0.5">â</span></span>
+          <span class="text-gray-600">24Hä½ <span id="btc-low" class="text-gray-300 ml-0.5">â</span></span>
+          <span class="text-gray-600">é <span id="btc-vol" class="text-gray-300 ml-0.5">â</span></span>
+        </div>
+      </div>
+
+      <!-- Fear & Greed -->
+      <div class="price-card flex flex-col justify-between">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">ð§ </span>
+          <div>
+            <div class="font-semibold text-white text-sm">ææ¼è²ªå©ªææ¸</div>
+            <div class="text-xs text-gray-600">Alternative.me Â· æ¯æ¥æ´æ°</div>
+          </div>
+        </div>
+        <div class="flex items-end gap-5">
+          <div>
+            <div id="fng-value" class="text-5xl font-black leading-none">â</div>
+            <div id="fng-label" class="text-sm text-gray-400 mt-1.5">è¼å¥ä¸­â¦</div>
+          </div>
+          <div class="flex-1 pb-1">
+            <div class="fng-bar mb-2.5 relative">
+              <div id="fng-needle" class="fng-needle" style="left:50%"></div>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-red-400">æ¥µææ¼</span>
+              <span class="text-gray-600">ä¸­æ§</span>
+              <span class="text-green-400">æ¥µè²ªå©ª</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ââ Metrics Row ââ -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="metric-card">
+        <div class="text-xs text-gray-500 mb-2">â¡ ETH è³éè²»ç</div>
+        <div id="eth-funding" class="text-2xl font-bold text-yellow-400">â</div>
+        <div class="text-xs text-gray-600 mt-1">æ¯8å°æçµç®</div>
+        <div id="eth-funding-ann" class="text-xs text-gray-600 mt-0.5">å¹´å â</div>
+      </div>
+      <div class="metric-card" id="eth-oi-card">
+        <div class="text-xs text-gray-500 mb-2">ð ETH æªå¹³åé</div>
+        <div id="eth-oi" class="text-2xl font-bold text-purple-400">â</div>
+        <div id="eth-oi-change" class="text-xs text-gray-600 mt-1">1h è®å â</div>
+      </div>
+      <div class="metric-card" id="eth-ls-card">
+        <div class="text-xs text-gray-500 mb-2">âï¸ ETH å¤§æ¶å¤ç©ºæ¯</div>
+        <div id="eth-ls-ratio" class="text-2xl font-bold text-blue-400">â</div>
+        <div class="mt-2 w-full h-1.5 rounded-full bg-gray-800 overflow-hidden">
+          <div id="eth-ls-bar" class="h-full bg-green-500 rounded-full transition-all duration-700" style="width:50%"></div>
+        </div>
+        <div id="eth-ls-pct" class="text-xs text-gray-600 mt-1">å¤ â / ç©º â</div>
+      </div>
+      <div class="metric-card">
+        <div class="text-xs text-gray-500 mb-2">â¡ BTC è³éè²»ç</div>
+        <div id="btc-funding" class="text-2xl font-bold text-yellow-400">â</div>
+        <div class="text-xs text-gray-600 mt-1">æ¯8å°æçµç®</div>
+        <div id="btc-funding-ann" class="text-xs text-gray-600 mt-0.5">å¹´å â</div>
+      </div>
+    </div>
+
+    <!-- ââ ETH Chart ââ -->
+    <div class="chart-card">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-indigo-400 font-bold">Î</span>
+          <span class="font-semibold text-white">ETH/USDT åç´ Kç·</span>
+          <span class="text-xs text-gray-600 hidden md:block">Binance Futures</span>
+        </div>
+        <div class="flex gap-1.5">
+          <button class="tf-btn eth-tf" id="eth-tf-15m" onclick="switchTf('eth','15m')">15m</button>
+          <button class="tf-btn eth-tf" id="eth-tf-1h"  onclick="switchTf('eth','1h')">1h</button>
+          <button class="tf-btn eth-tf active-tf" id="eth-tf-4h"  onclick="switchTf('eth','4h')">4h</button>
+          <button class="tf-btn eth-tf" id="eth-tf-1d"  onclick="switchTf('eth','1d')">1D</button>
+        </div>
+      </div>
+      <div id="eth-chart" style="height:380px;width:100%;"></div>
+    </div>
+
+    <!-- ââ BTC Chart ââ -->
+    <div class="chart-card">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-yellow-400 font-bold">â¿</span>
+          <span class="font-semibold text-white">BTC/USDT åç´ Kç·</span>
+          <span class="text-xs text-gray-600 hidden md:block">Binance Futures</span>
+        </div>
+        <div class="flex gap-1.5">
+          <button class="tf-btn btc-tf" id="btc-tf-15m" onclick="switchTf('btc','15m')">15m</button>
+          <button class="tf-btn btc-tf" id="btc-tf-1h"  onclick="switchTf('btc','1h')">1h</button>
+          <button class="tf-btn btc-tf active-tf" id="btc-tf-4h"  onclick="switchTf('btc','4h')">4h</button>
+          <button class="tf-btn btc-tf" id="btc-tf-1d"  onclick="switchTf('btc','1d')">1D</button>
+        </div>
+      </div>
+      <div id="btc-chart" style="height:340px;width:100%;"></div>
+    </div>
+
+    <!-- ââ Footer ââ -->
+    <div class="text-center text-xs text-gray-700 pb-4 space-y-1">
+      <div>æ¸æä¾æºï¼Binance Futures API Â· Alternative.me Â· ææ¨æ¯30ç§èªåæ´æ° Â· Kç·æ¯5åéæ´æ°</div>
+      <div id="last-update" class="text-gray-800">â</div>
+    </div>
+
+  </main>
+
+<script>
+// ================================================================
+// CLOCK
+// ================================================================
+function updateClock() {
+  const s = new Date().toLocaleString('zh-TW', {
+    timeZone: 'Asia/Taipei',
+    year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+  });
+  document.getElementById('clock').textContent = s;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ================================================================
+// WEBSOCKET â LIVE PRICES
+// ================================================================
+let prev = { eth: 0, btc: 0 };
+
+function fmt(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+function fmtVol(v) {
+  if (v >= 1e9) return (v/1e9).toFixed(2)+'B';
+  if (v >= 1e6) return (v/1e6).toFixed(2)+'M';
+  if (v >= 1e3) return (v/1e3).toFixed(1)+'K';
+  return v.toFixed(0);
+}
+
+function updatePriceCard(sym, d) {
+  const price  = parseFloat(d.c);
+  const change = parseFloat(d.P);
+  const high   = parseFloat(d.h);
+  const low    = parseFloat(d.l);
+  const vol    = parseFloat(d.v);
+  const isPos  = change >= 0;
+  const dp = sym === 'btc' ? 1 : 2;
+
+  const priceEl = document.getElementById(sym+'-price');
+  priceEl.textContent = '$' + fmt(price, dp);
+
+  if (prev[sym] > 0 && price !== prev[sym]) {
+    priceEl.classList.remove('flash-green','flash-red');
+    void priceEl.offsetWidth;
+    priceEl.classList.add(price > prev[sym] ? 'flash-green' : 'flash-red');
+  }
+  prev[sym] = price;
+
+  const badge = document.getElementById(sym+'-badge');
+  badge.textContent = (isPos?'+':'') + change.toFixed(2) + '%';
+  badge.style.background = isPos ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
+  badge.style.color = isPos ? '#4ade80' : '#f87171';
+
+  document.getElementById(sym+'-high').textContent = '$'+fmt(high, dp);
+  document.getElementById(sym+'-low' ).textContent = '$'+fmt(low, dp);
+  document.getElementById(sym+'-vol' ).textContent = fmtVol(vol);
+}
+
+function initWS() {
+  const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=ethusdt@ticker/btcusdt@ticker');
+  ws.onmessage = e => {
+    const msg = JSON.parse(e.data);
+    if (msg.stream === 'ethusdt@ticker') updatePriceCard('eth', msg.data);
+    else if (msg.stream === 'btcusdt@ticker') updatePriceCard('btc', msg.data);
+  };
+  ws.onclose = () => setTimeout(initWS, 3000);
+  ws.onerror = () => ws.close();
+}
+initWS();
+
+// ================================================================
+// CHARTS â TradingView Lightweight Charts
+// ================================================================
+let charts = {};
+let series = {};
+let currentTf = { eth: '4h', btc: '4h' };
+
+function makeChart(containerId, height) {
+  const el = document.getElementById(containerId);
+  const c = LightweightCharts.createChart(el, {
+    width: el.clientWidth,
+    height,
+    layout: { background: { color: '#0d1320' }, textColor: '#6b7280' },
+    grid: { vertLines: { color: '#111827' }, horzLines: { color: '#111827' } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: '#1f2937' },
+    timeScale: { borderColor: '#1f2937', timeVisible: true, secondsVisible: false },
+  });
+  window.addEventListener('resize', () => c.resize(el.clientWidth, height));
+  return c;
+}
+
+function initCharts() {
+  charts.eth = makeChart('eth-chart', 380);
+  series.eth = charts.eth.addCandlestickSeries({
+    upColor:'#22c55e', downColor:'#ef4444',
+    borderUpColor:'#22c55e', borderDownColor:'#ef4444',
+    wickUpColor:'#4ade80', wickDownColor:'#f87171',
+  });
+
+  charts.btc = makeChart('btc-chart', 340);
+  series.btc = charts.btc.addCandlestickSeries({
+    upColor:'#f59e0b', downColor:'#ef4444',
+    borderUpColor:'#f59e0b', borderDownColor:'#ef4444',
+    wickUpColor:'#fbbf24', wickDownColor:'#f87171',
+  });
+
+  loadKlines('eth');
+  loadKlines('btc');
+}
+
+async function loadKlines(sym) {
+  const symbol = sym === 'eth' ? 'ETHUSDT' : 'BTCUSDT';
+  const tf = currentTf[sym];
+  try {
+    const r = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${tf}&limit=300`);
+    const data = await r.json();
+    const candles = data.map(k => ({
+      time:  k[0]/1000,
+      open:  parseFloat(k[1]),
+      high:  parseFloat(k[2]),
+      low:   parseFloat(k[3]),
+      close: parseFloat(k[4]),
+    }));
+    series[sym].setData(candles);
+    charts[sym].timeScale().fitContent();
+  } catch(e) { console.error('klines err', e); }
+}
+
+function switchTf(sym, tf) {
+  currentTf[sym] = tf;
+  document.querySelectorAll('.'+sym+'-tf').forEach(b => b.classList.remove('active-tf'));
+  document.getElementById(sym+'-tf-'+tf).classList.add('active-tf');
+  loadKlines(sym);
+}
+
+// ================================================================
+// FEAR & GREED
+// ================================================================
+async function fetchFng() {
+  try {
+    const r = await fetch('https://api.alternative.me/fng/?limit=1');
+    const d = await r.json();
+    const val = parseInt(d.data[0].value);
+    const cls = d.data[0].value_classification;
+    const map = {
+      'Extreme Fear':'ð± æ¥µåº¦ææ¼','Fear':'ð° ææ¼',
+      'Neutral':'ð ä¸­æ§','Greed':'ð è²ªå©ª','Extreme Greed':'ð¤ æ¥µåº¦è²ªå©ª'
+    };
+    const fngEl = document.getElementById('fng-value');
+    fngEl.textContent = val;
+    const colors = val<25?'#f87171':val<45?'#fb923c':val<55?'#facc15':val<75?'#86efac':'#4ade80';
+    fngEl.style.color = colors;
+    document.getElementById('fng-label').textContent = map[cls]||cls;
+    document.getElementById('fng-needle').style.left = val+'%';
+  } catch(e){}
+}
+
+// ================================================================
+// FUNDING RATE
+// ================================================================
+async function fetchFunding() {
+  try {
+    const [r1,r2] = await Promise.all([
+      fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=ETHUSDT'),
+      fetch('https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT'),
+    ]);
+    const [e,b] = await Promise.all([r1.json(), r2.json()]);
+
+    function renderFunding(sym, rate) {
+      const pct = rate * 100;
+      const ann = pct * 3 * 365;
+      const el = document.getElementById(sym+'-funding');
+      el.textContent = (pct>=0?'+':'')+pct.toFixed(4)+'%';
+      el.style.color = pct>=0?'#facc15':'#4ade80';
+      document.getElementById(sym+'-funding-ann').textContent = 'å¹´å '+(ann>=0?'+':'')+ann.toFixed(1)+'%';
+    }
+    renderFunding('eth', parseFloat(e.lastFundingRate));
+    renderFunding('btc', parseFloat(b.lastFundingRate));
+  } catch(e){}
+}
+
+// ================================================================
+// OPEN INTEREST
+// ================================================================
+async function fetchOI() {
+  try {
+    const [r1,r2] = await Promise.all([
+      fetch('https://fapi.binance.com/fapi/v1/openInterest?symbol=ETHUSDT'),
+      fetch('https://fapi.binance.com/futures/data/openInterestHist?symbol=ETHUSDT&contractType=PERPETUAL&period=1h&limit=2'),
+    ]);
+    const [curr, hist] = await Promise.all([r1.json(), r2.json()]);
+    const oi = parseFloat(curr.openInterest);
+    document.getElementById('eth-oi').textContent = fmtVol(oi)+' ETH';
+    if (hist.length >= 2) {
+      const latest = parseFloat(hist[hist.length-1].sumOpenInterest);
+      const old    = parseFloat(hist[0].sumOpenInterest);
+      const chg    = ((latest-old)/old*100).toFixed(2);
+      const chgEl  = document.getElementById('eth-oi-change');
+      chgEl.textContent = '1h è®å '+(chg>=0?'+':'')+chg+'%';
+      chgEl.style.color = chg>=0?'#4ade80':'#f87171';
+    }
+  } catch(e){}
+}
+
+// ================================================================
+// LONG/SHORT RATIO
+// ================================================================
+async function fetchLS() {
+  try {
+    const r = await fetch('https://fapi.binance.com/futures/data/topLongShortAccountRatio?symbol=ETHUSDT&period=5m&limit=1');
+    const d = await r.json();
+    if (!d.length) return;
+    const ratio  = parseFloat(d[0].longShortRatio);
+    const longPct  = parseFloat(d[0].longAccount)*100;
+    const shortPct = parseFloat(d[0].shortAccount)*100;
+    const ratioEl = document.getElementById('eth-ls-ratio');
+    ratioEl.textContent = ratio.toFixed(2);
+    ratioEl.style.color = ratio>1?'#4ade80':'#f87171';
+    document.getElementById('eth-ls-bar').style.width = longPct+'%';
+    document.getElementById('eth-ls-bar').style.background = ratio>1?'#22c55e':'#ef4444';
+    document.getElementById('eth-ls-pct').innerHTML =
+      `<span style="color:#4ade80">å¤ ${longPct.toFixed(1)}%</span> / <span style="color:#f87171">ç©º ${shortPct.toFixed(1)}%</span>`;
+  } catch(e){}
+}
+
+// ================================================================
+// INIT & REFRESH
+// ================================================================
+async function refreshAll() {
+  await Promise.allSettled([fetchFunding(), fetchOI(), fetchLS(), fetchFng()]);
+  const t = new Date().toLocaleTimeString('zh-TW',{timeZone:'Asia/Taipei'});
+  document.getElementById('last-update').textContent = 'æå¾æ´æ° '+t;
+}
+
+initCharts();
+refreshAll();
+
+setInterval(refreshAll, 30000);
+setInterval(() => { loadKlines('eth'); loadKlines('btc'); }, 300000);
+</script>
+</body>
+</html>
