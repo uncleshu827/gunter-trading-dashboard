@@ -5,1542 +5,667 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gunter Trading Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-
-        body {
-            background-color: #070b11;
-            color: #e8ecf1;
-        }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #070b11; color: #e8ecf1; }
 
         .header-sticky {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
             background-color: rgba(7, 11, 17, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
         .live-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #4ade80;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-            margin-right: 6px;
+            display: inline-block; width: 8px; height: 8px;
+            background-color: #4ade80; border-radius: 50%;
+            animation: pulse 2s infinite; margin-right: 6px;
         }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .price-card {
-            background-color: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 20px;
+        .card {
+            background-color: rgba(30,41,59,0.8);
+            border: 1px solid rgba(148,163,184,0.2);
+            border-radius: 12px; padding: 16px;
             transition: all 0.3s ease;
         }
-
-        .price-card:hover {
-            border-color: rgba(148, 163, 184, 0.4);
-            background-color: rgba(30, 41, 59, 1);
-        }
+        .card:hover { border-color: rgba(148,163,184,0.4); }
 
         .signal-banner {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
-            border: 2px solid rgba(148, 163, 184, 0.3);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
+            background: linear-gradient(135deg, rgba(30,41,59,0.9) 0%, rgba(15,23,42,0.9) 100%);
+            border: 2px solid rgba(148,163,184,0.3);
+            border-radius: 16px; padding: 20px; margin-bottom: 20px;
         }
-
-        .signal-banner.active {
-            border-color: rgba(74, 222, 128, 0.5);
-            background: linear-gradient(135deg, rgba(20, 40, 20, 0.9) 0%, rgba(15, 28, 15, 0.9) 100%);
-        }
-
-        .signal-banner.short {
-            border-color: rgba(248, 113, 113, 0.5);
-            background: linear-gradient(135deg, rgba(40, 20, 20, 0.9) 0%, rgba(28, 15, 15, 0.9) 100%);
-        }
+        .signal-banner.bullish { border-color: rgba(74,222,128,0.5); background: linear-gradient(135deg, rgba(20,40,20,0.9) 0%, rgba(15,28,15,0.9) 100%); }
+        .signal-banner.bearish { border-color: rgba(248,113,113,0.5); background: linear-gradient(135deg, rgba(40,20,20,0.9) 0%, rgba(28,15,15,0.9) 100%); }
+        .signal-banner.conflict { border-color: rgba(251,191,36,0.5); background: linear-gradient(135deg, rgba(40,35,15,0.9) 0%, rgba(28,25,10,0.9) 100%); }
 
         .badge {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 16px;
+            display: inline-block; padding: 6px 14px; border-radius: 20px;
+            font-weight: 600; font-size: 13px;
         }
-
-        .badge-long {
-            background-color: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-            border: 1px solid rgba(74, 222, 128, 0.5);
-        }
-
-        .badge-short {
-            background-color: rgba(248, 113, 113, 0.2);
-            color: #f87171;
-            border: 1px solid rgba(248, 113, 113, 0.5);
-        }
-
-        .badge-wait {
-            background-color: rgba(156, 163, 175, 0.2);
-            color: #9ca3af;
-            border: 1px solid rgba(156, 163, 175, 0.5);
-        }
+        .badge-long { background-color: rgba(74,222,128,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.5); }
+        .badge-short { background-color: rgba(248,113,113,0.2); color: #f87171; border: 1px solid rgba(248,113,113,0.5); }
+        .badge-conflict { background-color: rgba(251,191,36,0.2); color: #fbbf24; border: 1px solid rgba(251,191,36,0.5); }
+        .badge-wait { background-color: rgba(156,163,175,0.2); color: #9ca3af; border: 1px solid rgba(156,163,175,0.5); }
 
         .signal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 16px 0;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px; margin-top: 12px;
         }
-
         .signal-item {
-            background-color: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
+            background-color: rgba(15,23,42,0.6);
+            border: 1px solid rgba(148,163,184,0.2);
+            border-radius: 8px; padding: 10px; text-align: center;
         }
+        .signal-item-label { font-size: 11px; color: rgba(226,232,240,0.6); margin-bottom: 4px; }
+        .signal-item-value { font-size: 16px; font-weight: 700; }
 
-        .signal-item-label {
-            font-size: 12px;
-            color: rgba(226, 232, 240, 0.7);
-            margin-bottom: 6px;
-        }
-
-        .signal-item-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #e8ecf1;
-        }
-
-        .metrics-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .metric-box {
-            background-color: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .metric-label {
-            font-size: 11px;
-            color: rgba(226, 232, 240, 0.6);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .metric-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #e8ecf1;
-        }
-
-        .metric-value.positive {
-            color: #4ade80;
-        }
-
-        .metric-value.negative {
-            color: #f87171;
-        }
-
-        .chart-container {
-            background-color: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .chart-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #e8ecf1;
-            margin-bottom: 16px;
-        }
-
-        .timeframe-buttons {
-            display: flex;
+        .metric-row {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 8px;
-            margin-bottom: 16px;
         }
-
-        .tf-btn {
-            padding: 6px 14px;
-            border-radius: 6px;
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            background-color: rgba(30, 41, 59, 0.6);
-            color: rgba(226, 232, 240, 0.7);
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s ease;
+        .metric-box {
+            background-color: rgba(30,41,59,0.6);
+            border: 1px solid rgba(148,163,184,0.2);
+            border-radius: 8px; padding: 10px; text-align: center;
         }
-
-        .tf-btn:hover {
-            border-color: rgba(148, 163, 184, 0.6);
-            background-color: rgba(30, 41, 59, 0.8);
-        }
-
-        .tf-btn.active {
-            background-color: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-            border-color: rgba(74, 222, 128, 0.5);
-        }
+        .metric-label { font-size: 10px; color: rgba(226,232,240,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .metric-value { font-size: 15px; font-weight: 700; }
 
         .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px; margin-bottom: 20px;
         }
-
         .stat-card {
-            background-color: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 8px;
-            padding: 14px;
-            text-align: center;
+            background-color: rgba(15,23,42,0.6);
+            border: 1px solid rgba(148,163,184,0.2);
+            border-radius: 8px; padding: 12px; text-align: center;
         }
-
-        .stat-label {
-            font-size: 11px;
-            color: rgba(226, 232, 240, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #e8ecf1;
-        }
-
-        .stat-value.win {
-            color: #4ade80;
-        }
-
-        .stat-value.loss {
-            color: #f87171;
-        }
+        .stat-label { font-size: 10px; color: rgba(226,232,240,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .stat-value { font-size: 17px; font-weight: 700; }
 
         .history-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 8px;
-            overflow: hidden;
+            width: 100%; border-collapse: collapse;
+            background-color: rgba(30,41,59,0.6);
+            border: 1px solid rgba(148,163,184,0.2);
+            border-radius: 8px; overflow: hidden;
+        }
+        .history-table thead { background-color: rgba(15,23,42,0.8); border-bottom: 1px solid rgba(148,163,184,0.3); }
+        .history-table th { padding: 10px; text-align: left; font-size: 11px; font-weight: 600; color: rgba(226,232,240,0.6); text-transform: uppercase; letter-spacing: 0.5px; }
+        .history-table td { padding: 10px; border-bottom: 1px solid rgba(148,163,184,0.1); font-size: 12px; }
+        .history-table tbody tr { transition: background-color 0.2s; }
+        .history-table tbody tr:hover { background-color: rgba(148,163,184,0.1); }
+        .trade-row { border-left: 3px solid; }
+        .trade-row.win { border-left-color: #4ade80; }
+        .trade-row.loss { border-left-color: #f87171; }
+
+        .score-bar { height: 6px; border-radius: 3px; background: rgba(148,163,184,0.2); overflow: hidden; margin-top: 4px; }
+        .score-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+        .section-title { font-size: 15px; font-weight: 700; color: #e8ecf1; margin-bottom: 14px; }
+        .text-green { color: #4ade80; }
+        .text-red { color: #f87171; }
+        .text-yellow { color: #fbbf24; }
+        .text-gray { color: rgba(226,232,240,0.6); }
+        .text-xs { font-size: 11px; }
+        .text-sm { font-size: 12px; }
+
+        .dimension-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 6px; margin-top: 10px;
+        }
+        .dim-item {
+            background: rgba(15,23,42,0.4); border-radius: 6px;
+            padding: 6px 8px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .dim-name { font-size: 10px; color: rgba(226,232,240,0.5); }
+        .dim-score { font-size: 13px; font-weight: 700; }
+
+        .update-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3);
+            border-radius: 12px; padding: 2px 10px; font-size: 10px; color: #4ade80;
         }
 
-        .history-table thead {
-            background-color: rgba(15, 23, 42, 0.8);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-        }
-
-        .history-table th {
-            padding: 12px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(226, 232, 240, 0.7);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .history-table td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
-            font-size: 13px;
-        }
-
-        .history-table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
-        .history-table tbody tr:hover {
-            background-color: rgba(148, 163, 184, 0.1);
-        }
-
-        .trade-row {
-            border-left: 4px solid;
-        }
-
-        .trade-row.win {
-            border-left-color: #4ade80;
-        }
-
-        .trade-row.loss {
-            border-left-color: #f87171;
-        }
-
-        .trade-row.open {
-            border-left-color: #fbbf24;
-        }
-
-        .trade-row.closed {
-            border-left-color: #9ca3af;
-        }
-
-        .button {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .button-primary {
-            background-color: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-            border: 1px solid rgba(74, 222, 128, 0.5);
-        }
-
-        .button-primary:hover {
-            background-color: rgba(74, 222, 128, 0.3);
-        }
-
-        .button-danger {
-            background-color: rgba(248, 113, 113, 0.2);
-            color: #f87171;
-            border: 1px solid rgba(248, 113, 113, 0.5);
-        }
-
-        .button-danger:hover {
-            background-color: rgba(248, 113, 113, 0.3);
-        }
-
-        .button-secondary {
-            background-color: rgba(148, 163, 184, 0.2);
-            color: rgba(226, 232, 240, 0.8);
-            border: 1px solid rgba(148, 163, 184, 0.4);
-        }
-
-        .button-secondary:hover {
-            background-color: rgba(148, 163, 184, 0.3);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: #0f172a;
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            font-size: 18px;
-            font-weight: 700;
-            color: #e8ecf1;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(226, 232, 240, 0.8);
-            margin-bottom: 6px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 12px;
-            background-color: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(148, 163, 184, 0.3);
-            border-radius: 6px;
-            color: #e8ecf1;
-            font-size: 13px;
-            box-sizing: border-box;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: rgba(74, 222, 128, 0.6);
-            background-color: rgba(15, 23, 42, 0.95);
-        }
-
-        .form-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-gray {
-            color: rgba(226, 232, 240, 0.6);
-        }
-
-        .text-sm {
-            font-size: 12px;
-        }
-
-        .text-xs {
-            font-size: 11px;
-        }
-
-        .mb-4 {
-            margin-bottom: 16px;
-        }
-
-        .mb-6 {
-            margin-bottom: 24px;
-        }
-
-        .mt-4 {
-            margin-top: 16px;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .flex-center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .grid-cols-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        /* Tablet */
+        /* Responsive */
         @media (max-width: 768px) {
-            .signal-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .metrics-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .history-table {
-                font-size: 11px;
-            }
-            .history-table th, .history-table td {
-                padding: 8px 6px;
-            }
-            #eth-chart, #btc-chart {
-                height: 280px !important;
-            }
+            .signal-grid { grid-template-columns: repeat(3, 1fr); }
+            .dimension-grid { grid-template-columns: repeat(2, 1fr); }
+            .metric-row { grid-template-columns: repeat(3, 1fr); }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
         }
-
-        /* Mobile */
         @media (max-width: 480px) {
             body { font-size: 13px; }
-            .max-w-7xl { padding-left: 12px; padding-right: 12px; }
-            .signal-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .signal-item { padding: 8px; }
-            .signal-item-value { font-size: 15px; }
+            .signal-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .dimension-grid { grid-template-columns: 1fr 1fr; }
+            .metric-row { grid-template-columns: repeat(2, 1fr); }
             .signal-banner { padding: 14px; }
-            .metrics-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .metric-box { padding: 8px; }
-            .metric-value { font-size: 14px; }
-            .stats-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .price-card { padding: 12px; }
-            .price-card .text-3xl { font-size: 1.4rem; }
-            #eth-chart, #btc-chart {
-                height: 220px !important;
-            }
-            .history-table { font-size: 10px; }
-            .history-table th, .history-table td {
-                padding: 6px 4px;
-                white-space: nowrap;
-            }
-            /* Hide less critical columns on mobile */
-            .history-table .hide-mobile {
-                display: none;
-            }
-            .modal-content {
-                margin: 10px;
-                padding: 16px;
-                max-height: 85vh;
-                overflow-y: auto;
-                width: 95%;
-            }
-            .header-sticky { padding: 8px 0; }
-            h1.text-2xl { font-size: 1.1rem; }
+            .history-table .hide-mobile { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header-sticky">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <div class="flex-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-white">
-                        <span class="live-dot"></span>Gunter Trading Dashboard
-                    </h1>
-                </div>
-                <div class="text-right text-sm">
-                    <div class="text-gray mb-2">Taipei Time: <span id="current-time">--:--:--</span></div>
-                    <div class="text-gray text-xs">Last update: <span id="last-update">--:--:--</span></div>
-                </div>
+
+<!-- ========== DASHBOARD DATA (定時任務更新此區塊) ========== -->
+<script>
+/*
+ * DASHBOARD_DATA: 定時任務每次分析後更新此 JSON
+ * 部署流程: 修改此 JSON → base64 encode → GitHub Pages deploy
+ */
+const DASHBOARD_DATA = {
+    last_update: "2026-03-31T14:00:00+08:00",
+    analysis_mode: "Standard",  // Quick/Standard/Deep
+
+    // === 最新交易信號 ===
+    signal: {
+        direction: "CONFLICT",      // BULLISH / BEARISH / CONFLICT / NEUTRAL
+        strength: "弱多（CONFLICT短期服從）",
+        eth_signal: 54.2,
+        composite_score: 51.8,
+        regime: "震盪+高波動",
+        strategy: "均值回歸",
+        confidence: "low",
+        vote_result: "BULLISH 0.45 vs BEARISH 0.38 — 未過1.3x閾值",
+
+        entry: null,          // null = 觀望中無建議
+        sl: null,
+        tp1: null,
+        tp2: null,
+        position_pct: 0,
+        leverage: 0,
+        rr_ratio: null,
+        timeframe_note: "觀望等待方向明朗",
+
+        reason: "快慢信號層分歧：快信號(tech+deriv)偏空，慢信號(onchain+macro)偏多。底部保護模式啟動(onchain>80)，不建議做空。等待BULLISH投票閾值突破或ETH回測$1,950支撐確認後入場。",
+
+        // 9維度分數
+        dimensions: {
+            tech: 38,
+            onchain: 82,
+            derivatives: 55,
+            orderflow: 48,
+            fundflow: 52,
+            macro: 45,
+            sentiment: 58,
+            news: 50,
+            kol: 56
+        },
+
+        // 績效回填摘要
+        backfill: {
+            recent_3_correct: "1/3",
+            recent_5_tp1_hit: "2/5",
+            streak: "1連敗"
+        }
+    },
+
+    // === 交易歷史（真實數據） ===
+    trades: [
+        {
+            timestamp: "2026-03-30T12:05:00+08:00",
+            direction: "SHORT", symbol: "ETH",
+            entry: 1997, sl: 2041, tp1: 1958,
+            exit: 2041, pnl_pct: -2.15, result: "SL觸發",
+            note: "閃崩吸收後逆勢做空，V型反彈觸發止損"
+        },
+        {
+            timestamp: "2026-03-29T17:47:00+08:00",
+            direction: "SHORT", symbol: "ETH",
+            entry: 2040, sl: 2082, tp1: 1968,
+            exit: 1968, pnl_pct: 3.58, result: "TP1命中",
+            note: "閃崩行情，MFE 3.58%"
+        },
+        {
+            timestamp: "2026-03-28T22:00:00+08:00",
+            direction: "SHORT", symbol: "ETH",
+            entry: 2058, sl: 2095, tp1: 2020,
+            exit: 2020, pnl_pct: 1.85, result: "TP1命中",
+            note: "技術面+衍生品共振做空"
+        },
+        {
+            timestamp: "2026-03-28T10:30:00+08:00",
+            direction: "LONG", symbol: "ETH",
+            entry: 2015, sl: 1985, tp1: 2055,
+            exit: 2048, pnl_pct: 1.64, result: "接近TP1手動平倉",
+            note: "鏈上底部信號+資金費率極端負值"
+        },
+        {
+            timestamp: "2026-03-27T16:00:00+08:00",
+            direction: "SHORT", symbol: "ETH",
+            entry: 2072, sl: 2105, tp1: 2035,
+            exit: 2105, pnl_pct: -1.59, result: "SL觸發",
+            note: "宏觀利空已price-in，反彈力度超預期"
+        },
+        {
+            timestamp: "2026-03-26T20:15:00+08:00",
+            direction: "LONG", symbol: "ETH",
+            entry: 1985, sl: 1955, tp1: 2030,
+            exit: 2035, pnl_pct: 2.52, result: "TP1命中",
+            note: "Funding極端負+清算吸收完成"
+        },
+        {
+            timestamp: "2026-03-25T09:00:00+08:00",
+            direction: "SHORT", symbol: "ETH",
+            entry: 2048, sl: 2078, tp1: 2005,
+            exit: 2010, pnl_pct: 1.86, result: "接近TP1",
+            note: "OI過熊«CVD看空發散"
+        },
+        {
+            timestamp: "2026-03-24T14:30:00+08:00",
+            direction: "LONG", symbol: "ETH",
+            entry: 1970, sl: 1940, tp1: 2015,
+            exit: 2018, pnl_pct: 2.44, result: "TP1命中",
+            note: "底部保護模式觸發做多"
+        }
+    ],
+
+    // === 累積績效 ===
+    performance: {
+        total_profit_usdc: 20761,
+        eth_profit_usdc: 16232,
+        best_day: { date: "2026-03-16", amount: 8159 },
+        worst_day: { date: "2026-03-20", amount: -4088 }
+    }
+};
+</script>
+
+<!-- Header -->
+<div class="header-sticky">
+    <div class="max-w-6xl mx-auto px-4 py-3">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h1 style="font-size:18px; font-weight:700; color:#fff;">
+                    <span class="live-dot"></span>Gunter Trading Dashboard
+                </h1>
+            </div>
+            <div style="text-align:right;">
+                <div class="text-gray text-xs">Taipei <span id="current-time">--:--:--</span></div>
+                <div id="update-info" class="text-xs text-gray" style="margin-top:2px;">--</div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 py-6">
+<!-- Main Content -->
+<div class="max-w-6xl mx-auto px-4 py-4">
 
-        <!-- Active Signal Banner -->
-        <div id="active-signal" class="signal-banner">
-            <div class="flex-between">
-                <div>
-                    <span id="signal-badge" class="badge badge-wait">無信號</span>
-                    <div id="signal-symbol" class="text-2xl font-bold text-white">--</div>
-                </div>
-                <div class="text-right">
-                    <div id="active-floating-pnl" class="text-3xl font-bold text-gray">--</div>
-                    <div class="text-xs text-gray">浮動盈虨</div>
-                </div>
-            </div>
-
-            <div id="signal-content" style="display: none;">
-                <div class="signal-grid mt-4">
-                    <div class="signal-item">
-                        <div class="signal-item-label">進場價</div>
-                        <div class="signal-item-value" id="signal-entry">--</div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-item-label">止損</div>
-                        <div class="signal-item-value" id="signal-sl">--</div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-item-label">獲利目標</div>
-                        <div class="signal-item-value" id="signal-tp">--</div>
-                    </div>
-                    <div class="signal-item">
-                        <div class="signal-item-label">風險/回報</div>
-                        <div class="signal-item-value" id="signal-rr">--</div>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <div class="text-sm text-gray">分析理由</div>
-                    <div id="signal-reason" class="mt-2 p-3 bg-black bg-opacity-30 rounded text-sm">--</div>
-                </div>
-
-                <div class="mt-4 flex gap-3">
-                    <button onclick="closeActiveTrade()" class="button button-danger flex-1">平倉</button>
-                    <button onclick="deleteActiveTrade()" class="button button-danger flex-1">刪除</button>
-                </div>
-            </div>
-
-            <div id="no-signal-content">
-                <div class="text-center">
-                    <p class="text-gray mb-4">當前沒有活躍的交易信號</p>
-                    <button onclick="openAddModal()" class="button button-primary">新增建議</button>
-                </div>
-            </div>
+    <!-- Section 1: 市場概覽 (compact) -->
+    <div class="metric-row" style="margin-bottom:16px;">
+        <div class="metric-box">
+            <div class="metric-label">ETH/USDT</div>
+            <div class="metric-value" id="eth-price">--</div>
+            <div class="text-xs" id="eth-24h" style="margin-top:2px;">--</div>
         </div>
-
-        <!-- Price Cards Row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <!-- ETH Card -->
-            <div class="price-card">
-                <div class="text-gray text-sm mb-2">ETH/USDT</div>
-                <div class="text-3xl font-bold text-white mb-2">
-                    <span id="eth-price">--</span>
-                </div>
-                <div class="text-sm">
-                    <span id="eth-24h" class="text-gray">--</span>
-                </div>
-            </div>
-
-            <!-- BTC Card -->
-            <div class="price-card">
-                <div class="text-gray text-sm mb-2">BTC/USDT</div>
-                <div class="text-3xl font-bold text-white mb-2">
-                    <span id="btc-price">--</span>
-                </div>
-                <div class="text-sm">
-                    <span id="btc-24h" class="text-gray">--</span>
-                </div>
-            </div>
-
-            <!-- Fear & Greed Card -->
-            <div class="price-card">
-                <div class="text-gray text-sm mb-2">Fear & Greed Index</div>
-                <div class="text-3xl font-bold" id="fng-value">--</div>
-                <div class="text-sm" id="fng-label">--</div>
-            </div>
+        <div class="metric-box">
+            <div class="metric-label">BTC/USDT</div>
+            <div class="metric-value" id="btc-price">--</div>
+            <div class="text-xs" id="btc-24h" style="margin-top:2px;">--</div>
         </div>
-
-        <!-- Metrics Row -->
-        <div class="mb-6">
-            <div class="text-sm font-bold text-gray mb-4">衍生品指標</div>
-            <div class="metrics-row">
-                <div class="metric-box">
-                    <div class="metric-label">ETH 資金費率</div>
-                    <div class="metric-value" id="eth-funding">--</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">ETH OI</div>
-                    <div class="metric-value" id="eth-oi">--</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">ETH 多空比</div>
-                    <div class="metric-value" id="eth-ls">--</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">BTC 資金費率</div>
-                    <div class="metric-value" id="btc-funding">--</div>
-                </div>
-            </div>
+        <div class="metric-box">
+            <div class="metric-label">Fear & Greed</div>
+            <div class="metric-value" id="fng-value">--</div>
+            <div class="text-xs text-gray" id="fng-label">--</div>
         </div>
-
-        <!-- ETH K-line Chart -->
-        <div class="chart-container">
-            <div class="flex-between">
-                <div class="chart-title">ETH/USDT K線</div>
-                <div class="timeframe-buttons">
-                    <button class="tf-btn active" onclick="changeTimeframe('eth', '15m')">15M</button>
-                    <button class="tf-btn" onclick="changeTimeframe('eth', '1h')">1H</button>
-                    <button class="tf-btn" onclick="changeTimeframe('eth', '4h')">4H</button>
-                    <button class="tf-btn" onclick="changeTimeframe('eth', '1d')">1D</button>
-                </div>
-            </div>
-            <div id="eth-chart" style="height: 400px;"></div>
+        <div class="metric-box">
+            <div class="metric-label">ETH 資金費率</div>
+            <div class="metric-value" id="eth-funding">--</div>
+            <div class="text-xs text-gray">Binance</div>
         </div>
-
-        <!-- BTC K-line Chart -->
-        <div class="chart-container">
-            <div class="flex-between">
-                <div class="chart-title">BTC/USDT K線</div>
-                <div class="timeframe-buttons">
-                    <button class="tf-btn active" onclick="changeTimeframe('btc', '15m')">15M</button>
-                    <button class="tf-btn" onclick="changeTimeframe('btc', '1h')">1H</button>
-                    <button class="tf-btn" onclick="changeTimeframe('btc', '4h')">4H</button>
-                    <button class="tf-btn" onclick="changeTimeframe('btc', '1d')">1D</button>
-                </div>
-            </div>
-            <div id="btc-chart" style="height: 400px;"></div>
+        <div class="metric-box">
+            <div class="metric-label">BTC 資金賻率</div>
+            <div class="metric-value" id="btc-funding">--</div>
+            <div class="text-xs text-gray">Binance</div>
         </div>
-
-        <!-- Performance Dashboard Section -->
-        <div class="mb-6">
-            <h2 class="text-xl font-bold text-white mb-4">績效分析</h2>
-
-            <!-- Stats Row -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-label">總交易筆數</div>
-                    <div class="stat-value" id="stat-total">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">勝率</div>
-                    <div class="stat-value win" id="stat-winrate">0%</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">平均盈利%</div>
-                    <div class="stat-value" id="stat-avg-pnl">0%</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">累積盈利%</div>
-                    <div class="stat-value" id="stat-cumulative">0%</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">利潤因子</div>
-                    <div class="stat-value" id="stat-pf">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">最大連勝</div>
-                    <div class="stat-value win" id="stat-max-wins">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">最大連敗</div>
-                    <div class="stat-value loss" id="stat-max-losses">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">單筆最佳</div>
-                    <div class="stat-value win" id="stat-best">0%</div>
-                </div>
-            </div>
-
-            <!-- Charts Row -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Equity Curve -->
-                <div class="chart-container">
-                    <div class="chart-title">權益曲線</div>
-                    <canvas id="equity-chart"></canvas>
-                </div>
-
-                <!-- PnL Distribution -->
-                <div class="chart-container">
-                    <div class="chart-title">盈虧分佈</div>
-                    <canvas id="pnl-chart"></canvas>
-                </div>
-            </div>
-
-            <!-- Direction Breakdown -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div class="stat-card">
-                    <div class="stat-label">多頭勝率</div>
-                    <div class="stat-value win" id="stat-long-wr">0%</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">空頭勝率</div>
-                    <div class="stat-value win" id="stat-short-wr">0%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Trade History Table -->
-        <div class="mb-6">
-            <div class="flex-between mb-4">
-                <h2 class="text-xl font-bold text-white">交易歷史</h2>
-                <button onclick="openAddModal()" class="button button-primary">新增交易</button>
-            </div>
-
-            <div style="overflow-x: auto;">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>時間</th>
-                            <th>方向</th>
-                            <th class="hide-mobile">幣種</th>
-                            <th>進場</th>
-                            <th class="hide-mobile">止損</th>
-                            <th class="hide-mobile">獲利目標</th>
-                            <th>出場</th>
-                            <th>盈虧%</th>
-                            <th>狀態</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="trades-tbody">
-                        <tr>
-                            <td colspan="10" class="text-center text-gray py-8">暫無交易記錄</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Add/Edit Modal -->
-    <div id="add-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">新增交易</div>
-
-            <div class="form-group">
-                <label class="form-label">方向 *</label>
-                <select id="form-direction" class="form-input">
-                    <option value="">--選擇--</option>
-                    <option value="LONG">多頭 (LONG)</option>
-                    <option value="SHORT">空頭 (SHORT)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">幣種 *</label>
-                <select id="form-symbol" class="form-input">
-                    <option value="">--選擇--</option>
-                    <option value="ETH">ETH</option>
-                    <option value="BTC">BTC</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">進場價 *</label>
-                <input type="number" id="form-entry" class="form-input" placeholder="進場價格" step="0.01">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">止損價 *</label>
-                <input type="number" id="form-sl" class="form-input" placeholder="止損價格" step="0.01">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">獲利目標 *</label>
-                <input type="number" id="form-tp" class="form-input" placeholder="獲利目標價格" step="0.01">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">出場價</label>
-                <input type="number" id="form-exit" class="form-input" placeholder="出場價格（選填）" step="0.01">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">交易時間</label>
-                <input type="datetime-local" id="form-time" class="form-input">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">備註/理由</label>
-                <textarea id="form-reason" class="form-input" placeholder="交易理由或備註" rows="3"></textarea>
-            </div>
-
-            <div class="form-buttons">
-                <button onclick="closeAddModal()" class="button button-secondary">取消</button>
-                <button onclick="saveNewTrade()" class="button button-primary">保存</button>
-            </div>
+        <div class="metric-box">
+            <div class="metric-label">ETH RI 上化</div>
+            <div class="metric-value" id="eth-oi">--</div>
+            <div class="text-xs text-gray">24h</div>
         </div>
     </div>
 
-    <!-- Close Trade Modal -->
-    <div id="close-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">平倉交易</div>
-
-            <div class="form-group">
-                <label class="form-label">出場價 *</label>
-                <input type="number" id="close-exit-price" class="form-input" placeholder="出場價格" step="0.01">
+    <!-- Section 2: 最新交易信號 -->
+    <div id="signal-banner" class="signal-banner">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+            <div>
+                <span id="signal-badge" class="badge badge-wait">載入中...</span>
+                <span id="signal-mode" class="update-badge" style="margin-left:6px;">--</span>
+                <div id="signal-title" style="font-size:18px; font-weight:700; color:#fff; margin-top:8px;">--</div>
             </div>
-
-            <div class="form-group">
-                <label class="form-label">平倉時間</label>
-                <input type="datetime-local" id="close-time" class="form-input">
-            </div>
-
-            <div class="form-buttons">
-                <button onclick="closeCloseModal()" class="button button-secondary">取消</button>
-                <button onclick="confirmCloseTrade()" class="button button-primary">確認平倉</button>
+            <div style="text-align:right;">
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">ETH Signal</div>
+                <div id="signal-score" style="font-size:28px; font-weight:800; color:#e8ecf1;">--</div>
+                <div id="signal-regime" class="text-xs text-gray">--</div>
             </div>
         </div>
-    </div>
 
-    <!-- Script -->
-    <script>
-        // Default Trades Data
-        const DEFAULT_TRADES = [
-            {
-                id: 1,
-                timestamp: '2026-03-28T14:30:00',
-                direction: 'LONG',
-                symbol: 'ETH',
-                entry: 3450,
-                sl: 3380,
-                tp: 3580,
-                exit: 3560,
-                pnl: 3.19,
-                status: 'CLOSED',
-                reason: '週線突破支撐位，MACD金叉'
-            },
-            {
-                id: 2,
-                timestamp: '2026-03-27T09:15:00',
-                direction: 'SHORT',
-                symbol: 'BTC',
-                entry: 67500,
-                sl: 68200,
-                tp: 66500,
-                exit: 66600,
-                pnl: 1.34,
-                status: 'CLOSED',
-                reason: '日線高點形成，做空反彈'
-            },
-            {
-                id: 3,
-                timestamp: '2026-03-29T16:45:00',
-                direction: 'LONG',
-                symbol: 'ETH',
-                entry: 3420,
-                sl: 3350,
-                tp: 3550,
-                exit: null,
-                pnl: null,
-                status: 'OPEN',
-                reason: '4小時線止跌信號，資金面偏多'
-            },
-            {
-                id: 4,
-                timestamp: '2026-03-26T11:20:00',
-                direction: 'SHORT',
-                symbol: 'ETH',
-                entry: 3500,
-                sl: 3580,
-                tp: 3380,
-                exit: 3420,
-                pnl: -5.71,
-                status: 'CLOSED',
-                reason: '突破失敗，反向修正'
-            }
-        ];
-
-        let trades = [];
-        let ethChartInstance = null;
-        let btcChartInstance = null;
-        let equityChartInstance = null;
-        let pnlChartInstance = null;
-        let currentEditId = null;
-        let currentCloseId = null;
-        let ethPrices = { current: 0, change24h: 0 };
-        let btcPrices = { current: 0, change24h: 0 };
-
-        // Initialize
-        function init() {
-            loadTrades();
-            initCharts();
-            connectWebSocket();
-            fetchMetrics();
-            updateTime();
-            setInterval(updateTime, 1000);
-            setInterval(fetchMetrics, 30000);
-            updateActiveSignal();
-            renderTradesTable();
-            updatePerformanceStats();
-        }
-
-        // Load trades from localStorage
-        function loadTrades() {
-            const stored = localStorage.getItem('gunter_trades_v1');
-            const storedTrades = stored ? JSON.parse(stored) : [];
-
-            // Merge with defaults
-            const defaultMap = new Map(DEFAULT_TRADES.map(t => [t.id, t]));
-            const storedMap = new Map(storedTrades.map(t => [t.id, t]));
-
-            // Defaults first, then override with stored
-            trades = [
-                ...DEFAULT_TRADES.filter(d => !storedMap.has(d.id)),
-                ...storedTrades
-            ];
-
-            // Sort by timestamp descending
-            trades.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        }
-
-        // Save trades to localStorage
-        function saveTrades() {
-            localStorage.setItem('gunter_trades_v1', JSON.stringify(trades));
-        }
-
-        // Update time
-        function updateTime() {
-            const now = new Date();
-            const taipei = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
-            document.getElementById('current-time').textContent = taipei.toLocaleTimeString('zh-TW', { hour12: false });
-            document.getElementById('last-update').textContent = taipei.toLocaleTimeString('zh-TW', { hour12: false });
-        }
-
-        // Connect to Binance WebSocket
-        function connectWebSocket() {
-            const ws = new WebSocket('wss://stream.binance.com:9443/stream?streams=ethusdt@ticker/btcusdt@ticker');
-
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                const d = data.data;
-
-                if (d.s === 'ETHUSDT') {
-                    ethPrices.current = parseFloat(d.c);
-                    ethPrices.change24h = parseFloat(d.P);
-                    updateETHDisplay();
-                    updateFloatingPnL('ETH');
-                } else if (d.s === 'BTCUSDT') {
-                    btcPrices.current = parseFloat(d.c);
-                    btcPrices.change24h = parseFloat(d.P);
-                    updateBTCDisplay();
-                    updateFloatingPnL('BTC');
-                }
-            };
-
-            ws.onerror = () => {
-                console.log('WebSocket error');
-                setTimeout(connectWebSocket, 3000);
-            };
-        }
-
-        // Update ETH display
-        function updateETHDisplay() {
-            document.getElementById('eth-price').textContent = ethPrices.current.toFixed(2);
-            const color = ethPrices.change24h >= 0 ? '#4ade80' : '#f87171';
-            const sign = ethPrices.change24h >= 0 ? '+' : '';
-            document.getElementById('eth-24h').innerHTML =
-                `<span style="color: ${color}">${sign}${ethPrices.change24h.toFixed(2)}%</span>`;
-        }
-
-        // Update BTC display
-        function updateBTCDisplay() {
-            document.getElementById('btc-price').textContent = btcPrices.current.toFixed(2);
-            const color = btcPrices.change24h >= 0 ? '#4ade80' : '#f87171';
-            const sign = btcPrices.change24h >= 0 ? '+' : '';
-            document.getElementById('btc-24h').innerHTML =
-                `<span style="color: ${color}">${sign}${btcPrices.change24h.toFixed(2)}%</span>`;
-        }
-
-        // Update floating PnL
-        function updateFloatingPnL(symbol) {
-            const active = trades.find(t => t.status === 'OPEN' && t.symbol === symbol);
-            if (!active || !active.entry) {
-                if (symbol === 'ETH' && ethPrices.current === 0) return;
-                if (symbol === 'BTC' && btcPrices.current === 0) return;
-                return;
-            }
-
-            const currentPrice = symbol === 'ETH' ? ethPrices.current : btcPrices.current;
-            const pnl = active.direction === 'LONG'
-                ? ((currentPrice - active.entry) / active.entry * 100)
-                : ((active.entry - currentPrice) / active.entry * 100);
-
-            const pnlEl = document.getElementById('active-floating-pnl');
-            pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(2) + '%';
-            pnlEl.style.color = pnl >= 0 ? '#4ade80' : '#f87171';
-        }
-
-        // Fetch metrics from Coinglass API
-        async function fetchMetrics() {
-            try {
-                // Fear & Greed
-                const fng = await fetch('https://api.alternative.me/fng/')
-                    .then(r => r.json()).catch(() => ({}));
-
-                // Update FNG
-                if (fng.data && fng.data[0]) {
-                    const value = parseInt(fng.data[0].value);
-                    document.getElementById('fng-value').textContent = value;
-                    document.getElementById('fng-value').style.color = value > 50 ? '#4ade80' : '#f87171';
-
-                    let label = '恐懼';
-                    if (value > 75) label = '極度貪婪';
-                    else if (value > 55) label = '貪婪';
-                    else if (value > 45) label = '中立';
-                    else if (value > 25) label = '恐懼';
-                    document.getElementById('fng-label').textContent = label;
-                }
-
-                // Update mock metrics (API may not work without auth)
-                updateMetricsDisplay();
-
-            } catch (error) {
-                console.log('Metrics fetch error:', error);
-                updateMetricsDisplay();
-            }
-        }
-
-        function updateMetricsDisplay() {
-            document.getElementById('eth-funding').textContent = (Math.random() * 0.002 - 0.001).toFixed(4);
-            document.getElementById('eth-oi').textContent = '$' + Math.floor(Math.random() * 2000 + 1000) + 'M';
-            document.getElementById('eth-ls').textContent = (Math.random() * 0.5 + 0.8).toFixed(2);
-            document.getElementById('btc-funding').textContent = (Math.random() * 0.002 - 0.001).toFixed(4);
-        }
-
-        // Initialize charts
-        function initCharts() {
-            initETHChart();
-            initBTCChart();
-            initPerformanceCharts();
-        }
-
-        function initETHChart() {
-            const container = document.getElementById('eth-chart');
-            ethChartInstance = LightweightCharts.createChart(container, {
-                layout: { background: { color: '#070b11' }, textColor: '#e8ecf1' },
-                timeScale: { timeVisible: true, secondsVisible: false },
-                watermark: { visible: false }
-            });
-
-            const candleSeries = ethChartInstance.addCandlestickSeries({
-                upColor: '#4ade80',
-                downColor: '#f87171',
-                wickUpColor: '#4ade80',
-                wickDownColor: '#f87171',
-                borderVisible: false
-            });
-
-            loadKlines('ETH', '15m', candleSeries);
-            ethChartInstance.timeScale().fitContent();
-        }
-
-        function initBTCChart() {
-            const container = document.getElementById('btc-chart');
-            btcChartInstance = LightweightCharts.createChart(container, {
-                layout: { background: { color: '#070b11' }, textColor: '#e8ecf1' },
-                timeScale: { timeVisible: true, secondsVisible: false },
-                watermark: { visible: false }
-            });
-
-            const candleSeries = btcChartInstance.addCandlestickSeries({
-                upColor: '#4ade80',
-                downColor: '#f87171',
-                wickUpColor: '#4ade80',
-                wickDownColor: '#f87171',
-                borderVisible: false
-            });
-
-            loadKlines('BTC', '15m', candleSeries);
-            btcChartInstance.timeScale().fitContent();
-        }
-
-        async function loadKlines(symbol, timeframe, series) {
-            try {
-                const symbol_map = { 'ETH': 'ETHUSDT', 'BTC': 'BTCUSDT' };
-                const interval_map = { '15m': '15m', '1h': '1h', '4h': '4h', '1d': '1d' };
-
-                const response = await fetch(
-                    `https://api.binance.com/api/v3/klines?symbol=${symbol_map[symbol]}&interval=${interval_map[timeframe]}&limit=100`
-                );
-                const data = await response.json();
-
-                const candleData = data.map(candle => ({
-                    time: Math.floor(candle[0] / 1000),
-                    open: parseFloat(candle[1]),
-                    high: parseFloat(candle[2]),
-                    low: parseFloat(candle[3]),
-                    close: parseFloat(candle[4])
-                }));
-
-                series.setData(candleData);
-            } catch (error) {
-                console.log('Kline load error:', error);
-            }
-        }
-
-        function changeTimeframe(symbol, timeframe) {
-            const event = window.event;
-            event.target.parentElement.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (symbol === 'eth') {
-                ethChartInstance.series().forEach(s => ethChartInstance.removeSeries(s));
-                const candleSeries = ethChartInstance.addCandlestickSeries({
-                    upColor: '#4ade80',
-                    downColor: '#f87171',
-                    wickUpColor: '#4ade80',
-                    wickDownColor: '#f87171',
-                    borderVisible: false
-                });
-                loadKlines('ETH', timeframe, candleSeries);
-            } else {
-                btcChartInstance.series().forEach(s => btcChartInstance.removeSeries(s));
-                const candleSeries = btcChartInstance.addCandlestickSeries({
-                    upColor: '#4ade80',
-                    downColor: '#f87171',
-                    wickUpColor: '#4ade80',
-                    wickDownColor: '#f87171',
-                    borderVisible: false
-                });
-                loadKlines('BTC', timeframe, candleSeries);
-            }
-        }
-
-        function initPerformanceCharts() {
-            const equityCtx = document.getElementById('equity-chart').getContext('2d');
-            equityChartInstance = new Chart(equityCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: '累積收益%',
-                        data: [],
-                        borderColor: '#4ade80',
-                        backgroundColor: 'rgba(74, 222, 128, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: true, labels: { color: '#e8ecf1' } }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: 'rgba(226, 232, 240, 0.7)' },
-                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
-                        },
-                        x: {
-                            ticks: { color: 'rgba(226, 232, 240, 0.7)' },
-                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
-                        }
-                    }
-                }
-            });
-
-            const pnlCtx = document.getElementById('pnl-chart').getContext('2d');
-            pnlChartInstance = new Chart(pnlCtx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: '盈虧%',
-                        data: [],
-                        backgroundColor: []
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            ticks: { color: 'rgba(226, 232, 240, 0.7)' },
-                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
-                        },
-                        x: {
-                            ticks: { color: 'rgba(226, 232, 240, 0.7)' },
-                            grid: { color: 'rgba(148, 163, 184, 0.1)' }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update active signal
-        function updateActiveSignal() {
-            const active = trades.find(t => t.status === 'OPEN');
-            const signalDiv = document.getElementById('active-signal');
-            const badge = document.getElementById('signal-badge');
-            const content = document.getElementById('signal-content');
-            const noSignal = document.getElementById('no-signal-content');
-
-            signalDiv.classList.remove('active', 'short');
-
-            if (active) {
-                signalDiv.classList.add(active.direction === 'LONG' ? 'active' : 'short');
-                badge.textContent = active.direction === 'LONG' ? '多頭 ↑' : '空頭 ↓';
-                badge.className = active.direction === 'LONG' ? 'badge badge-long' : 'badge badge-short';
-
-                document.getElementById('signal-symbol').textContent = active.symbol;
-                document.getElementById('signal-entry').textContent = active.entry.toFixed(2);
-                document.getElementById('signal-sl').textContent = active.sl.toFixed(2);
-                document.getElementById('signal-tp').textContent = active.tp.toFixed(2);
-
-                const rr = Math.abs((active.tp - active.entry) / (active.entry - active.sl));
-                document.getElementById('signal-rr').textContent = rr.toFixed(2);
-
-                document.getElementById('signal-reason').textContent = active.reason || '無備註';
-
-                content.style.display = 'block';
-                noSignal.style.display = 'none';
-                updateFloatingPnL(active.symbol);
-            } else {
-                badge.textContent = '無信號';
-                badge.className = 'badge badge-wait';
-                document.getElementById('signal-symbol').textContent = '--';
-                document.getElementById('active-floating-pnl').textContent = '--';
-
-                content.style.display = 'none';
-                noSignal.style.display = 'block';
-            }
-        }
-
-        // Render trades table
-        function renderTradesTable() {
-            const tbody = document.getElementById('trades-tbody');
-
-            if (trades.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-gray py-8">暫無交易記錄</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = trades.map(trade => {
-                const pnlClass = trade.status === 'OPEN' ? 'open' : trade.pnl > 0 ? 'win' : 'loss';
-                const pnlColor = trade.status === 'OPEN' ? '#fbbf24' : trade.pnl > 0 ? '#4ade80' : '#f87171';
-
-                return `
-                    <tr class="trade-row ${pnlClass}">
-                        <td>${new Date(trade.timestamp).toLocaleString('zh-TW')}</td>
-                        <td><span style="color: ${trade.direction === 'LONG' ? '#4ade80' : '#f87171'}">${trade.direction}</span></td>
-                        <td class="hide-mobile">${trade.symbol}</td>
-                        <td>${trade.entry ? trade.entry.toFixed(2) : '--'}</td>
-                        <td class="hide-mobile">${trade.sl ? trade.sl.toFixed(2) : '--'}</td>
-                        <td class="hide-mobile">${trade.tp ? trade.tp.toFixed(2) : '--'}</td>
-                        <td>${trade.exit ? trade.exit.toFixed(2) : '--'}</td>
-                        <td><span style="color: ${pnlColor}">${trade.pnl !== null ? (trade.pnl > 0 ? '+' : '') + trade.pnl.toFixed(2) + '%' : '--'}</span></td>
-                        <td>${trade.status === 'OPEN' ? '進行中' : '已結束'}</td>
-                        <td>
-                            ${trade.status === 'OPEN' ?
-                                `<button onclick="openCloseModal(${trade.id})" class="button button-secondary text-xs">平倉</button>`
-                                : ''
-                            }
-                            <button onclick="deleteTrade(${trade.id})" class="button button-danger text-xs">刪除</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Update performance stats
-        function updatePerformanceStats() {
-            const closed = trades.filter(t => t.status === 'CLOSED');
-            const open = trades.filter(t => t.status === 'OPEN');
-
-            const wins = closed.filter(t => t.pnl > 0);
-            const losses = closed.filter(t => t.pnl <= 0);
-
-            const totalTrades = trades.length;
-            const winRate = totalTrades > 0 ? (wins.length / closed.length * 100) : 0;
-            const avgPnL = closed.length > 0 ? closed.reduce((sum, t) => sum + t.pnl, 0) / closed.length : 0;
-            const cumulativePnL = closed.reduce((sum, t) => sum + t.pnl, 0);
-
-            const profitFactor = losses.length > 0
-                ? Math.abs(wins.reduce((sum, t) => sum + t.pnl, 0) / losses.reduce((sum, t) => sum + t.pnl, 0))
-                : (wins.length > 0 ? 999 : 0);
-
-            let maxWins = 0, maxLosses = 0, currentWins = 0, currentLosses = 0;
-            closed.forEach(t => {
-                if (t.pnl > 0) {
-                    currentWins++;
-                    currentLosses = 0;
-                    maxWins = Math.max(maxWins, currentWins);
-                } else {
-                    currentLosses++;
-                    currentWins = 0;
-                    maxLosses = Math.max(maxLosses, currentLosses);
-                }
-            });
-
-            const bestTrade = closed.length > 0 ? Math.max(...closed.map(t => t.pnl)) : 0;
-
-            const longs = closed.filter(t => t.direction === 'LONG');
-            const shorts = closed.filter(t => t.direction === 'SHORT');
-            const longWR = longs.length > 0 ? (longs.filter(t => t.pnl > 0).length / longs.length * 100) : 0;
-            const shortWR = shorts.length > 0 ? (shorts.filter(t => t.pnl > 0).length / shorts.length * 100) : 0;
-
-            document.getElementById('stat-total').textContent = closed.length;
-            document.getElementById('stat-winrate').textContent = winRate.toFixed(1) + '%';
-            document.getElementById('stat-avg-pnl').textContent = (avgPnL >= 0 ? '+' : '') + avgPnL.toFixed(2) + '%';
-            document.getElementById('stat-cumulative').textContent = (cumulativePnL >= 0 ? '+' : '') + cumulativePnL.toFixed(2) + '%';
-            document.getElementById('stat-pf').textContent = profitFactor.toFixed(2);
-            document.getElementById('stat-max-wins').textContent = maxWins;
-            document.getElementById('stat-max-losses').textContent = maxLosses;
-            document.getElementById('stat-best').textContent = (bestTrade >= 0 ? '+' : '') + bestTrade.toFixed(2) + '%';
-            document.getElementById('stat-long-wr').textContent = longWR.toFixed(1) + '%';
-            document.getElementById('stat-short-wr').textContent = shortWR.toFixed(1) + '%';
-
-            // Update equity curve
-            updateEquityCurve();
-
-            // Update PnL distribution
-            updatePnLDistribution();
-        }
-
-        function updateEquityCurve() {
-            const closed = trades.filter(t => t.status === 'CLOSED').sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-            let cumulative = 0;
-            const labels = closed.map((t, i) => `Trade ${i + 1}`);
-            const data = closed.map(t => {
-                cumulative += t.pnl;
-                return cumulative;
-            });
-
-            equityChartInstance.data.labels = labels;
-            equityChartInstance.data.datasets[0].data = data;
-            equityChartInstance.update();
-        }
-
-        function updatePnLDistribution() {
-            const closed = trades.filter(t => t.status === 'CLOSED').sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-            const labels = closed.map((t, i) => `Trade ${i + 1}`);
-            const data = closed.map(t => t.pnl);
-            const colors = closed.map(t => t.pnl > 0 ? '#4ade80' : '#f87171');
-
-            pnlChartInstance.data.labels = labels;
-            pnlChartInstance.data.datasets[0].data = data;
-            pnlChartInstance.data.datasets[0].backgroundColor = colors;
-            pnlChartInstance.update();
-        }
-
-        // Modal functions
-        function openAddModal() {
-            currentEditId = null;
-            document.getElementById('form-direction').value = '';
-            document.getElementById('form-symbol').value = '';
-            document.getElementById('form-entry').value = '';
-            document.getElementById('form-sl').value = '';
-            document.getElementById('form-tp').value = '';
-            document.getElementById('form-exit').value = '';
-            document.getElementById('form-time').value = new Date().toISOString().slice(0, 16);
-            document.getElementById('form-reason').value = '';
-            document.getElementById('add-modal').classList.add('show');
-        }
-
-        function closeAddModal() {
-            document.getElementById('add-modal').classList.remove('show');
-        }
-
-        function saveNewTrade() {
-            const direction = document.getElementById('form-direction').value;
-            const symbol = document.getElementById('form-symbol').value;
-            const entry = parseFloat(document.getElementById('form-entry').value);
-            const sl = parseFloat(document.getElementById('form-sl').value);
-            const tp = parseFloat(document.getElementById('form-tp').value);
-            const exit = document.getElementById('form-exit').value ? parseFloat(document.getElementById('form-exit').value) : null;
-            const time = document.getElementById('form-time').value;
-            const reason = document.getElementById('form-reason').value;
-
-            if (!direction || !symbol || !entry || !sl || !tp) {
-                alert('請填寫所有必填項目');
-                return;
-            }
-
-            const status = exit ? 'CLOSED' : 'OPEN';
-            let pnl = null;
-            if (exit) {
-                pnl = direction === 'LONG'
-                    ? ((exit - entry) / entry * 100)
-                    : ((entry - exit) / entry * 100);
-            }
-
-            const newId = Math.max(...trades.map(t => t.id), 0) + 1;
-
-            trades.push({
-                id: newId,
-                timestamp: time,
-                direction,
-                symbol,
-                entry,
-                sl,
-                tp,
-                exit,
-                pnl,
-                status,
-                reason
-            });
-
-            saveTrades();
-            closeAddModal();
-            renderTradesTable();
-            updateActiveSignal();
-            updatePerformanceStats();
-        }
-
-        function openCloseModal(id) {
-            currentCloseId = id;
-            document.getElementById('close-exit-price').value = '';
-            document.getElementById('close-time').value = new Date().toISOString().slice(0, 16);
-            document.getElementById('close-modal').classList.add('show');
-        }
-
-        function closeCloseModal() {
-            document.getElementById('close-modal').classList.remove('show');
-        }
-
-        function confirmCloseTrade() {
-            const exitPrice = parseFloat(document.getElementById('close-exit-price').value);
-            const closeTime = document.getElementById('close-time').value;
-
-            if (!exitPrice) {
-                alert('請輸入出場價格');
-                return;
-            }
-
-            const trade = trades.find(t => t.id === currentCloseId);
-            trade.exit = exitPrice;
-            trade.status = 'CLOSED';
-            trade.timestamp = closeTime;
-            trade.pnl = trade.direction === 'LONG'
-                ? ((exitPrice - trade.entry) / trade.entry * 100)
-                : ((trade.entry - exitPrice) / trade.entry * 100);
-
-            saveTrades();
-            closeCloseModal();
-            renderTradesTable();
-            updateActiveSignal();
-            updatePerformanceStats();
-        }
-
-        function closeActiveTrade() {
-            const active = trades.find(t => t.status === 'OPEN');
-            if (active) {
-                currentCloseId = active.id;
-                openCloseModal(active.id);
-            }
-        }
-
-        function deleteActiveTrade() {
-            const active = trades.find(t => t.status === 'OPEN');
-            if (active && confirm('確認刪除此交易?')) {
-                deleteTrade(active.id);
-            }
-        }
-
-        function deleteTrade(id) {
-            if (!confirm('確認刪除此交易?')) return;
-            trades = trades.filter(t => t.id !== id);
-            saveTrades();
-            renderTradesTable();
-            updateActiveSignal();
-            updatePerformanceStats();
-        }
-
-        // Close modals on outside click
-        window.onclick = (event) => {
-            if (event.target.id === 'add-modal') closeAddModal();
-            if (event.target.id === 'close-modal') closeCloseModal();
-        };
-
-        // Start
-        init();
-    </script>
-</body>
-</html>
+        <!-- 信號該情 -->
+        <div id="signal-details">
+            <div class="signal-grid">
+                <div class="signal-item">
+                    <div class="signal-item-label">進場</div>
+                    <div class="signal-item-value" id="sig-entry">--</div>
+                </div>
+                <div class="signal-item">
+                    <div class="signal-item-label">止損</div>
+                    <div class="signal-item-value" id="sig-sl">--</div>
+                </div>
+                <div class="signal-item">
+                    <div class="signal-item-label">TP1</div>
+                    <div class="signal-item-value" id="sig-tp1">--</div>
+                </div>
+                <div class="signal-item">
+                    <div class="signal-item-label">倉位</div>
+                    <div class="signal-item-value" id="sig-position">--</div>
+                </div>
+                <div class="signal-item">
+                    <div class="signal-item-label">R:R</div>
+                    <div class="signal-item-value" id="sig-rr">--</div>
+                </div>
+                <div class="signal-item">
+                    <div class="signal-item-label">時間框架</div>
+                    <div class="signal-item-value text-xs" id="sig-timeframe" style="font-size:12px;">--</div>
+                </div>
+            </div>
+
+            <!-- 分析理由 -->
+            <div style="margin-top:12px; padding:10px; background:rgba(0,0,0,0.3); border-radius:8px;">
+                <div class="text-xs text-gray" style="margin-bottom:4px;">分析摘要</div>
+                <div id="signal-reason" class="text-sm" style="line-height:1.5;">--</div>
+            </div>
+
+            <!-- 投祢�結果 -->
+            <div style="margin-top:8px; padding:8px 10px; background:rgba(0,0,0,0.2); border-radius:6px;">
+                <div class="text-xs text-gray">投票結果: <span id="vote-result" style="color:#e8ecf1;">--</span></div>
+            </div>
+
+            <!-- 9維度分數 -->
+            <div style="margin-top:12px;">
+                <div class="text-xs text-gray" style="margin-bottom:6px;">信號維度評分</div>
+                <div class="dimension-grid" id="dimensions-grid"></div>
+            </div>
+
+            <!-- 績效回填 -->
+            <div style="margin-top:10px; display:flex; gap:16px; flex-wrap:wrap;">
+                <div class="text-xs text-gray">近1粆方向: <span id="bf-correct" style="color:#e8ecf1;">--</span></div>
+                <div class="text-xs text-gray">近5粆TP1: <span id="bf-tp1" style="color:#e8ecf1;">--</span></div>
+                <div class="text-xs text-gray">連勝/敗: <sp[�YH���\��XZȈ�[OH���܎��NXٌNȏ�KO��[���]����]����]����]����KKH�X�[ۈΈ9�/��b9b!���KO��]��[OH�X\��[�X���N��ȏ��]��\��H��X�[ۋ]]H���/��b9b!����]����]��\��H��]�\��ȏ��]��\��H��]X�\����]��\��H��][X�[���+��cy��9b*H
+T��O�]���]��\��H��]]�[YH^YܙY[��YH��]]�[\�ٚ]��KO�]����]���]��\��H��]X�\����]��\��H��][X�[��U9��9b*H
+T��O�]���]��\��H��]]�[YH^YܙY[��YH��]Y]\�ٚ]��KO�]����]���]��\��H��]X�\����]��\��H��][X�[��/�y�'�.�9�$��a��n�]���]��\��H��]]�[YH�YH��]]�[���]����]���]��\��H��]X�\����]��\��H��][X�[��b�y���]���]��\��H��]]�[YH^YܙY[��YH��]]�[��]H��	O�]����]���]��\��H��]X�\����]��\��H��][X�[��nl�ga���b*IO�]���]��\��H��]]�[YH�YH��]X]��\���	O�]����]���]��\��H��]X�\����]��\��H��][X�[��b*y�i9f�9kd�]���]��\��H��]]�[YH�YH��]\����]����]���]��\��H��]X�\����]��\��H��][X�[��� 9/l�e����O�]���]��\��H��]]�[YH^YܙY[��YH��]X�\�Y^H��KO�]����]���]��\��H��]X�\����]��\��H��][X�[��� 9m�e����O�]���]��\��H��]]�[YH^\�Y�YH��]]�ܜ�Y^H��KO�]����]����]����]��[OH�\�^N�ܚY�ܚY][\]KX��[[�ΌY��Y����\�M�ȏ��]��\��H��\����]��\��H�^^�^Yܘ^H��[OH�X\��[�X���N�ȏ��"��≦���
+:/�y�'�.�9�$�O�]����[��\�YH�\]Z]KX�\��ZY�H�N����[��\ς��]���]��\��H��\����]��\��H�^^�^Yܘ^H��[OH�X\��[�X���N�ȏ���:&g�b!�/b�]����[��\�YH��X�\��ZY�H�N����[��\ς��]����]����]��[OH�\�^N�ܚY�ܚY][\]KX��[[�ΌY��Y����\�M��X\��[�]��L�ȏ��]��\��H��]X�\����]��\��H��][X�[��i&�h+yb�y���]���]��\��H��]]�[YH^YܙY[��YH��][ۙ�]܈��	O�]����]���]��\��H��]X�\����]��\��H��][X�[���n�h+yb�y���]���]��\��H��]]�[YH^YܙY[��YH��]\�ܝ]܈��	O�]����]����]����]����KKH�X�[ۈ
+�9.�9�$��m�c�KO��]��[OH�X\��[�X���N��ȏ��]��\��H��X�[ۋ]]H��.�9�$��m�c��]���]��[OH�ݙ\����^�]]�ȏ��X�H�\��H�\�ܞK]X�H���XY�������`�e��������yd$O����`,�h-�����h��#O����\��H�YK[[ؚ[H��O����a�h-������&i�O�����d9������\��H�YK[[ؚ[H��`�z*.���������XY����HYH��Y\�]��H�����O���X�O���]����]����KKH���\�KO��]��[OH�^X[Yێ��[�\��Y[�ΌM���ܙ\�]��\��Y�ؘJMM��N
+�JNȏ��]��\��H�^^�^Yܘ^H���[�\��Y[���\�[H�K��8�%9k���`�.��b�z!�b�y��9��9�n9���]���]��\��H�^^�^Yܘ^H��[OH�X\��[�]��ȏ��9`�y�/9�n9�授�[�[��H�X�����]
+9cl��`�H9/�z&g��n9�授9k���`�b!���9.��b�H
+9��̋M9l#��`�B��]����]����]�����ܚ\����OOOOOOOOOOOOOOOOOOOH9cl��`��n9��
+�[�[��HTJHOOOOOOOOOOOOOOOOOOOB��]]�X�HH���X�HH����X�����]�܈]�H�X�\�[��[ۈ�ۛ�X��X�����]
+
+H�ۜ���H�]��X�����]
+	���΋����X[K��[�[��K���N�M
+����X[O���X[\�Y]\�X��\�؝�\�X��\��N�˛ۛY\��Y�HH
+]�[�
+HO��ۜ�]HH��Ӌ�\��J]�[��]JK�]NY�
+]K��OOH	�UT�	�H]�X�HH\��Q��]
+]K��N�ۜ��[��HH\��Q��]
+]K�
+N��[Y[���][[Y[��RY
+	�]\�X�I�K�^�۝[�H	�	�
+�]�X�K�њ^Y
+�N�ۜ�[H��[Y[���][[Y[��RY
+	�]L�	�N[�[��\�SH�[��[OH���܎���[��H�H�	��YN	��	�َ
+�M�I�H����[��H�H�	����	��I��[��K�њ^Y
+�_IO��[��H[�HY�
+]K��OOH	Е�T�	�H���X�HH\��Q��]
+]K��N�ۜ��[��HH\��Q��]
+]K�
+N��[Y[���][[Y[��RY
+	؝�\�X�I�K�^�۝[�H	�	�
+����X�K�њ^Y
+
+N�ۜ�[H��[Y[���][[Y[��RY
+	؝�L�	�N[�[��\�SH�[��[OH���܎���[��H�H�	��YN	��	�َ
+�M�I�H����[��H�H�	����	��I��[��K�њ^Y
+�_IO��[��B�N�˛ۙ\��܈H
+
+HO��][Y[�]
+�ۛ�X��X�����]
+L
+N�˛ۘ���HH
+
+HO��][Y[�]
+�ۛ�X��X�����]
+L
+NB�����]��X[�[�[���]\����H�[�[��B�\�[���[��[ۈ�]��[�[�Ԙ]\�
+H�H�ۜ��]�\��ԙ\�HH]�Z]��Z\�K�[
+�]�
+	�΋�٘\K��[�[��K���K٘\K݌K��[Z][R[�^��[X��QUT�	�K��]�
+	�΋�٘\K��[�[��K���K٘\K݌K��[Z][R[�^��[X��P��T�	�B�JN�ۜ�]]HH]�Z]]�\˚��ۊ
+N�ۜ���]HH]�Z]�ԙ\˚��ۊ
+N��ۜ�]�]HH\��Q��]
+]]K�\��[�[�Ԙ]JN�ۜ��Ԙ]HH\��Q��]
+��]K�\��[�[�Ԙ]JN��ۜ�][H��[Y[���][[Y[��RY
+	�]Y�[�[���N][�^�۝[�H
+]�]H
+�L
+K�њ^Y
+
+H
+�	�I�][��[K���܈H]�]H��H�	��YN	��]�]HL�H�	�َ
+�M�I��	��NXٌI���ۜ���[H��[Y[���][[Y[��RY
+	؝�Y�[�[���N��[�^�۝[�H
+�Ԙ]H
+�L
+K�њ^Y
+
+H
+�	�I���[��[K���܈H�Ԙ]H��H�	��YN	���Ԙ]HL�H�	�َ
+�M�I��	��NXٌI�H�]�
+JH�ۜ��K���	ѝ[�[���]H�]�\��܎��JNB�B�����]�U�[�[�\�\��[��B�\�[���[��[ۈ�]��P�[��J
+H�H�ۜ��\�H]�Z]�]�
+	�΋�٘\K��[�[��K���K٘\K݌K��[�[�\�\���[X��QUT�	�N�ۜ�]HH]�Z]�\˚��ۊ
+N�ۜ��HH\��Q��]
+]K��[�[�\�\�
+N�ۜ��Q[H��[Y[���][[Y[��RY
+	�][�I�N�Q[�^�۝[�H
+�H�L
+K�њ^Y
+
+H
+�	��U	�H�]�
+JH�ۜ��K���	��H�]�\��܎��JNB�B�����]��X\�	�ܙYY�\�[���[��[ۈ�]����
+H�H�ۜ��\�H]�Z]�]�
+	�΋��\K�[\��]]�K�YKٛ����N�ۜ�]HH]�Z]�\˚��ۊ
+NY�
+]K�]H	��]K�]V�JH�ۜ��[YHH\��R[�
+]K�]V�K��[YJN�ۜ�[H��[Y[���][[Y[��RY
+	ٛ��]�[YI�N[�^�۝[�H�[YN[��[K���܈H�[YH�
+MH�	��YN	���[YH
+
+H�	�َ
+�M�I��	�٘����	��]X�[H	��myn���d9��	�Y�
+�[YH�
+�JHX�[H	��myn��,��jj��[�HY�
+�[YH�
+MJHX�[H	�,��jj��[�HY�
+�[YH�
+
+JHX�[H	�.+y����[�HY�
+�[YH��JHX�[H	��d9��	���[Y[���][[Y[��RY
+	ٛ��[X�[	�K�^�۝[�HX�[B�H�]�
+JH��ۜ��K���	ѓ��\��܎��JN�B�B����OOOOOOOOOOOOOOOOOOOH9/�z&g��,����
+���HT���T��UJHOOOOOOOOOOOOOOOOOOOB���[��[ۈ�[�\��Yۘ[
+
+H�ۜ��HT���T��UK��Yۘ[�ۜ��[��\�H��[Y[���][[Y[��RY
+	��Yۘ[X�[��\��N�ۜ��Y�HH��[Y[���][[Y[��RY
+	��Yۘ[X�Y�I�N����[��\��[B��[��\���\��\���[[ݙJ	؝[\�	�	ؙX\�\�	�	��ۙ�X�	�NY�
+˙\�X�[ۈOOH	ЕST�	�H�[��\���\��\��Y
+	؝[\�	�N�Y�K�^�۝[�H	�`f�i&�8��I��Y�K��\�Ә[YHH	ؘY�H�Y�K[ۙ��H[�HY�
+˙\�X�[ۈOOH	БPT�T�	�H�[��\���\��\��Y
+	ؙX\�\�	�N�Y�K�^�۝[�H	�`f��n�8�����Y�K��\�Ә[YHH	ؘY�H�Y�K\�ܝ	�H[�HY�
+˙\�X�[ۈOOH	��ӑ�P�	�H�[��\���\��\��Y
+	��ۙ�X�	�N�Y�K�^�۝[�H	��ӑ�P�8��I��Y�K��\�Ә[YHH	ؘY�H�Y�KX�ۙ�X�	�H[�H�Y�K�^�۝[�H	�)�9�&���Y�K��\�Ә[YHH	ؘY�H�Y�K]�Z]	�B����[�B��ۜ�[�Q[H��[Y[���][[Y[��RY
+	��Yۘ[[[�I�N[�Q[�^�۝[�HT���T��UK�[�[\�\��[�N���]H	���ܙB���[Y[���][[Y[��RY
+	��Yۘ[]]I�K�^�۝[�H˜��[����[Y[���][[Y[��RY
+	��Yۘ[\��ܙI�K�^�۝[�H˙]��Yۘ[�њ^Y
+JN��[Y[���][[Y[��RY
+	��Yۘ[\�Y�[YI�K�^�۝[�H˜�Y�[YH
+�	�	�
+�˜��]Y�N�����ܙH��܂��ۜ���ܙQ[H��[Y[���][[Y[��RY
+	��Yۘ[\��ܙI�NY�
+˙]��Yۘ[�
+�
+H��ܙQ[��[K���܈H	��YN	�[�HY�
+˙]��Yۘ[
+
+H��ܙQ[��[K���܈H	�َ
+�M�I�[�H��ܙQ[��[K���܈H	�٘����	�����Yۘ[]Z[��[Y[���][[Y[��RY
+	��Y�Y[��I�K�^�۝[�H˙[��H�	�	�
+�˙[��K�њ^Y
+
+H�	�)�9�&�.+I���[Y[���][[Y[��RY
+	��Y�\�	�K�^�۝[�H˜��	�	�
+�˜��њ^Y
+
+H�	�KI���[Y[���][[Y[��RY
+	��Y�]I�K�^�۝[�H˝H�	�	�
+�˝K�њ^Y
+
+H�	�KI���[Y[���][[Y[��RY
+	��Y�\��][ۉ�K�^�۝[�H˜��][ۗ����˜��][ۗ��
+�	�I��	�	I���[Y[���][[Y[��RY
+	��Y�\���K�^�۝[�H˜��ܘ][��˜��ܘ][˝њ^Y
+�H�	�KI���[Y[���][[Y[��RY
+	��Y�][YY��[YI�K�^�۝[�H˝[YY��[YWۛ�N����X\�ۂ���[Y[���][[Y[��RY
+	��Yۘ[\�X\�ۉ�K�^�۝[�H˜�X\�ێ��[Y[���][[Y[��RY
+	ݛ�K\�\�[	�K�^�۝[�H˝��Wܙ\�[���[Y[��[ۜ�ۜ�ܚYH��[Y[���][[Y[��RY
+	�[Y[��[ۜ�YܚY	�N�ۜ�[S�[Y\�HX��	���:(d�gh��ۘ�Z[��	�c�9."��\�]�]]�\Έ	�(cy�'�d�I��ܙ\���Έ	�ܙ\������[���Έ	�,��a�zgh��XXܛΈ	�k��)�	���[�[Y[��	���y�����]�Έ	���: g�����	���	NܚY�[��\�SHؚ�X��[��Y\�˙[Y[��[ۜ�K�X\
+
+��^K�[JHO�]��܈H	�٘����	�Y�
+�[�
+�
+H��܈H	��YN	�[�HY�
+�[
+
+H��܈H	�َ
+�M�I��]\��]��\��H�[KZ][H����[��\��H�[K[�[YH���[S�[Y\���^WH�^_O��[����[��\��H�[K\��ܙH��[OH���܎����ܟH��ݘ[O��[����]��JK���[�	��N����X�ٚ[���[Y[���][[Y[��RY
+	ؙ�X�ܜ�X�	�K�^�۝[�H˘�X�ٚ[��X�[�����ܜ�X���[Y[���][[Y[��RY
+	ؙ�]I�K�^�۝[�H˘�X�ٚ[��X�[��W�W�]��[Y[���][[Y[��RY
+	ؙ�\��XZ��K�^�۝[�H˘�X�ٚ[���XZ����\]H[���ۜ�\]U[YHH�]�]JT���T��UK�\��\]JN��[Y[���][[Y[��RY
+	�\]KZ[����K�^�۝[�B�	�b!���9��9���	�
+�\]U[YK����[T��[��	ޚU����\�L���[�K[۝�	۝[Y\�X��^N�	۝[Y\�X���\��	̋YY�]	�Z[�]N�	̋YY�]	�JNB����OOOOOOOOOOOOOOOOOOOH9�/��b9�,����OOOOOOOOOOOOOOOOOOOB���[��[ۈ�[�\�\��ܛX[��J
+H�ۜ��Y\�HT���T��UK��Y\��ۜ�\��HT���T��UK�\��ܛX[��N���ݙ\�[�]��[Y[���][[Y[��RY
+	��]]�[\�ٚ]	�K�^�۝[�H	�	�
+�\����[��ٚ]�\�˝���[T��[��
+N��[Y[���][[Y[��RY
+	��]Y]\�ٚ]	�K�^�۝[�H	�	�
+�\���]��ٚ]�\�˝���[T��[��
+N��[Y[���][[Y[��RY
+	��]X�\�Y^I�K�^�۝[�H	��	�
+�\����\��^K�[[�[�����[T��[��
+N��[Y[���][[Y[��RY
+	��]]�ܜ�Y^I�K�^�۝[�H	�I	�
+�X]�X��\����ܜ��^K�[[�[�
+K����[T��[��
+N����YH�]�ۜ��[��H�Y\˙�[\�O������
+N�ۜ����\�H�Y\˙�[\�O�����H
+N���[Y[���][[Y[��RY
+	��]]�[	�K�^�۝[�H�Y\˛[����[Y[���][[Y[��RY
+	��]]�[��]I�K�^�۝[�H
+�[�˛[����Y\˛[��
+�L
+K�њ^Y
+JH
+�	�I���ۜ�]���H�Y\˜�YX�J
+�
+HO��
+�����
+H��Y\˛[���ۜ�]��[H��[Y[���][[Y[��RY
+	��]X]��\�	�N]��[�^�۝[�H
+]����H�	����	��H
+�]����њ^Y
+�H
+�	�I�]��[��[K���܈H]����H�	��YN	��	�َ
+�M�I���ۜ��[�[�H�[�˜�YX�J
+�
+HO��
+�����
+N�ۜ��[���HX]�X�����\˜�YX�J
+�
+HO��
+�����
+JN�ۜ��H�[�����
+�[�[���[���K�њ^Y
+�H�	��'����[Y[���][[Y[��RY
+	��]\��K�^�۝[�H����ۙ���ܝԂ��ۜ�ۙ��H�Y\˙�[\�O��\�X�[ۈOOH	�ӑ��N�ۜ��ܝ�H�Y\˙�[\�O��\�X�[ۈOOH	��ԕ	�N�ۜ�ۙ�ԈHۙ�˛[����
+ۙ�˙�[\�O������
+K�[���ۙ�˛[��
+�L
+H��ۜ��ܝԈH�ܝ˛[����
+�ܝ˙�[\�O������
+K�[����ܝ˛[��
+�L
+H���[Y[���][[Y[��RY
+	��][ۙ�]܉�K�^�۝[�Hۙ�ԋ�њ^Y
+JH
+�	�I���[Y[���][[Y[��RY
+	��]\�ܝ]܉�K�^�۝[�H�ܝԋ�њ^Y
+JH
+�	�I����\]Z]H�\��B��ۜ��ܝYHˋ���Y\�K��ܝ
+
+K�HO��]�]JK�[Y\�[\
+HH�]�]J��[Y\�[\
+JN]�[HH�ۜ��[Q]HH�ܝY�X\
+O���[H
+�H������]\���[N�JN�ۜ�X�[�H�ܝY�X\
+
+JHO�	���
+�
+H
+�JJN��]��\�
+��[Y[���][[Y[��RY
+	�\]Z]KX�\�	�K��]�۝^
+	̙	�K\N�	�[�I��]N�X�[��]\�]Έ�X�[�	��+��cy�-���I��]N��[Q]K��ܙ\���܎�	��YN	���X��ܛ�[���܎�	ܙؘJ
+����L��JI���ܙ\��Y���[��YK[��[ێ����[��Y]\Έ��[��X��ܛ�[���܎�	��YN	WB�K��[ۜΈ�\�ۜ�]�N��YKXZ[�Z[�\�X��][Έ�[�K�Y�[�Έ�Y�[���\�^N��[�HHK���[\ΈN��X��Έ���܎�	ܙؘJ����̋��JI��۝���^�N�LHKܚY����܎�	ܙؘJMM��N
+�JI�HK���X��Έ���܎�	ܙؘJ����̋��JI��۝���^�N�LHKܚY��\�^N��[�HHB�B�B�JN����\��X�][ۂ��]��\�
+��[Y[���][[Y[��RY
+	��X�\�	�K��]�۝^
+	̙	�K\N�	ؘ\���]N�X�[��]\�]Έ�]N��ܝY�X\
+O�����
+K��X��ܛ�[���܎��ܝY�X\
+O�������	ܙؘJ
+����L���I��	ܙؘJ�LL�LL���I�K��ܙ\��Y]\ΈWB�K��[ۜΈ�\�ۜ�]�N��YKXZ[�Z[�\�X��][Έ�[�K�Y�[�Έ�Y�[���\�^N��[�HHK���[\ΈN��X��Έ���܎�	ܙؘJ����̋��JI��۝���^�N�LHKܚY����܎�	ܙؘJMM��N
+�JI�HK���X��Έ���܎�	ܙؘJ����̋��JI��۝���^�N�LHKܚY��\�^N��[�HHB�B�B�JNB����OOOOOOOOOOOOOOOOOOOH9.�9�$��m�c칮,����OOOOOOOOOOOOOOOOOOOB���[��[ۈ�[�\��Y\�
+H�ۜ���HH��[Y[���][[Y[��RY
+	��Y\�]��I�N��K�[��\�SHT���T��UK��Y\˛X\
+O��ۜ���H������	��[���	������ۜ����܈H������	��YN	��	�َ
+�M�I��ۜ�\���܈H�\�X�[ۈOOH	�ӑ���	��YN	��	�َ
+�M�I��ۜ�[YHH�]�]J�[Y\�[\
+K����[T��[��	ޚU��[۝�	۝[Y\�X��^N�	۝[Y\�X���\��	̋YY�]	�Z[�]N�	̋YY�]	��\�L���[�B�JN�]\����\��H��YK\���	���H�����[Y_O�����[��[OH���܎��\���ܟNٛ۝]�ZY���ȏ���\�X�[۟O��[������	��[��_O����	���O����\��H�YK[[ؚ[H��	��_O����	��^]O�����[��[OH���܎�����ܟNٛ۝]�ZY���ȏ��������	����	��I������њ^Y
+�_IO��[�������[��[OH���܎�����ܟH�����\�[O��[������\��H�YK[[ؚ[H^^�^Yܘ^H������_O������JK���[�	��NB����OOOOOOOOOOOOOOOOOOOH9�`�d&OOOOOOOOOOOOOOOOOOOB���[��[ۈ\]P����
+H�ۜ����H�]�]J
+N�ۜ�Z\ZHH�]�]J��˝���[T��[��	�[�UT���[YV�ۙN�	�\�XK�Z\ZI�JJN��[Y[���][[Y[��RY
+	��\��[�][YI�K�^�۝[�HZ\ZK����[U[YT��[��	ޚU����\�L���[�HJNB����OOOOOOOOOOOOOOOOOOOH9b'yi��c%�OOOOOOOOOOOOOOOOOOOB���[��[ۈ[�]
+
+H\]P����
+N�][�\��[
+\]P����L
+N����X[][YH]B��ۛ�X��X�����]
+
+N�]��[�[�Ԙ]\�
+N�]����
+N�]��P�[��J
+N����Y��\�TH]H\�[�X�[B��][�\��[
+�]��[�[�Ԙ]\�
+�
+N���HZ[���][�\��[
+�]�����
+N���
+HZ[���][�\��[
+�]��P�[��K
+�
+N���HZ[������[�\����HT���T��UB��[�\��Yۘ[
+
+N�[�\�\��ܛX[��J
+N�[�\��Y\�
+NB��[�]
+
+N��ܚ\��؛�O���[
