@@ -201,7 +201,7 @@
     <div class="metric-card">
       <div class="text-xs text-gray-500 mb-2">📊 ETH 未平倉量</div>
       <div id="eth-oi" class="text-xl font-bold text-white">—</div>
-      <div id="eth-oi-change" class="text-xs text-gray-600 mt-1">1h 袺%�� —</div>
+      <div id="eth-oi-change" class="text-xs text-gray-600 mt-1">1h 變化 —</div>
     </div>
     <div class="metric-card">
       <div class="text-xs text-gray-500 mb-2">⚖️ ETH 大戶多空比</div>
@@ -622,14 +622,61 @@ async function refreshAll() {
 }
 
 // ================================================================
-// TRADING LOG  (localStorage)
+// TRADING LOG  (hardcoded base + localStorage overlay)
 // ================================================================
 const LS_KEY = 'gunter_trades_v1';
 let trades = [];
 let currentTab = 'current';
 
+// ── 硬編碼交易紀錄（所有訪客都能看到）──
+const DEFAULT_TRADES = [
+  {
+    id: 1743350400000, direction: 'WAIT', symbol: 'ETH',
+    entry: null, sl: 1985, tp: 2105, tf: '4h',
+    timestamp: '2026-03-30 16:00',
+    reason: '深度分析 Signal 61.3/100 首破CONFLICT→BULLISH | 閃崩$1,938後鏈上底部確認 | 條件多等回撤$2,005-$2,040 | SL $1,985 TP1 $2,105 TP2 $2,180',
+    status: 'CLOSED', exit: null, pnl: null, closedAt: '2026-03-31 01:00',
+    note: '觀望—最優入場區 $2,005-$2,040 未完全回踩，後續直接換信號'
+  },
+  {
+    id: 1743385800000, direction: 'SHORT', symbol: 'ETH',
+    entry: 2049, sl: 2082, tp: 2027, tf: '4h',
+    timestamp: '2026-03-31 01:30',
+    reason: 'Row22 快層41/100空信號 | 技術面反彈至壓力$2,050 | Funding微熱 | OI高位 | 條件空等$2,045+確認反壓',
+    status: 'WIN', exit: 2027, pnl: 1.07, closedAt: '2026-03-31 07:00',
+    note: 'TP1 $2,027 命中 ✅ | MFE +1.07%'
+  },
+  {
+    id: 1743387660000, direction: 'LONG', symbol: 'ETH',
+    entry: 2060, sl: 1990, tp: 2086, tf: '4h',
+    timestamp: '2026-03-31 08:11',
+    reason: 'Row23 深度分析 | 慢層60/100 BULLISH | 底部保護ACTIVE onchain=88 | 63天極恐逆向信號 | MVRV<0.80 | 交易所儲備7年新低',
+    status: 'WIN', exit: 2063, pnl: 0.15, closedAt: '2026-03-31 12:10',
+    note: 'TP1 $2,086差 $0.85未命中 | Row31新信號更新，轉倉至新區間'
+  },
+  {
+    id: 1743397800000, direction: 'LONG', symbol: 'ETH',
+    entry: 2037, sl: 1990, tp: 2085, tf: '4h',
+    timestamp: '2026-03-31 12:10',
+    reason: '標準分析 Row31 | ETH最終信號59.7/100 BULLISH | 底部保護ACTIVE(onchain=83) | 條件多$2,030-$2,045 | SL $1,990 TP1 $2,085 TP2 $2,130 | April 2關稅二元風險',
+    status: 'OPEN', exit: null, pnl: null, closedAt: null,
+    note: '⚠️ April 2 Liberation Day前務必SL掛妥或減倉50%'
+  }
+];
+
 function loadTrades() {
-  try { trades = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch(e) { trades = []; }
+  // 以 DEFAULT_TRADES 為基底，localStorage 中的同 id 項目會覆蓋（方便本機更新狀態）
+  try {
+    const local = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+    const localMap = {};
+    local.forEach(t => { localMap[t.id] = t; });
+    // 合併：預設資料先放，再加上 local 獨有的新增項目
+    const merged = DEFAULT_TRADES.map(t => localMap[t.id] || t);
+    const localOnly = local.filter(t => !DEFAULT_TRADES.find(d => d.id === t.id));
+    trades = [...merged, ...localOnly];
+  } catch(e) {
+    trades = [...DEFAULT_TRADES];
+  }
 }
 function saveTrades() {
   localStorage.setItem(LS_KEY, JSON.stringify(trades));
