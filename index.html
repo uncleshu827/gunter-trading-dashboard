@@ -26,16 +26,16 @@
         .card-lt { border-color: rgba(168,85,247,0.25); }
 
         /* Timeline */
-        .timeline-track { height: 4px; background: rgba(148,163,184,0.15); border-radius: 2px; position: relative; margin: 0 10px; }
+        .timeline-track { height: 4px; background: rgba(148,163,184,0.28); border-radius: 2px; position: relative; margin: 0 10px; }
         .timeline-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#f7931a,rgba(247,147,26,0.3)); position: absolute; top: 0; left: 0; }
         .timeline-node { position: absolute; top: 50%; transform: translate(-50%,-50%); display: flex; flex-direction: column; align-items: center; }
-        .node-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+        .node-dot { width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid; }
         .node-dot.current { background: #f7931a; border-color: #f7931a; box-shadow: 0 0 10px rgba(247,147,26,0.6); }
-        .node-dot.future-near { background: rgba(251,191,36,0.2); border-color: #fbbf24; }
-        .node-dot.future-bull { background: rgba(74,222,128,0.2); border-color: #4ade80; }
-        .node-dot.future-top { background: rgba(168,85,247,0.2); border-color: #a855f7; }
-        .node-label-above { font-size: 10px; font-weight: 700; margin-bottom: 6px; text-align: center; white-space: nowrap; }
-        .node-label-below { font-size: 9px; color: rgba(226,232,240,0.5); margin-top: 6px; text-align: center; white-space: nowrap; }
+        .node-dot.future-near { background: rgba(251,191,36,0.25); border-color: #fbbf24; box-shadow: 0 0 7px rgba(251,191,36,0.4); }
+        .node-dot.future-bull { background: rgba(74,222,128,0.25); border-color: #4ade80; box-shadow: 0 0 7px rgba(74,222,128,0.4); }
+        .node-dot.future-top { background: rgba(168,85,247,0.25); border-color: #a855f7; box-shadow: 0 0 7px rgba(168,85,247,0.4); }
+        .node-label-above { font-size: 11px; font-weight: 800; margin-bottom: 8px; text-align: center; white-space: nowrap; text-shadow: 0 1px 4px rgba(0,0,0,0.95); }
+        .node-label-below { font-size: 10px; color: rgba(226,232,240,0.75); font-weight: 600; margin-top: 8px; text-align: center; white-space: nowrap; }
 
         /* Bottom bars */
         .analyst-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
@@ -141,7 +141,7 @@
         .grid-lt    { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
         /* Timeline 滾動容器（手機自動橫滾） */
         .tl-wrap  { overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin:0 -4px; max-width:100%; }
-        .tl-inner { min-width:480px; padding:22px 10px 12px; position:relative; }
+        .tl-inner { min-width:560px; padding:62px 14px 32px; position:relative; }
 
         /* ── Responsive ── Mobile Optimized v2.0 ── */
 
@@ -328,7 +328,7 @@ const MACRO_DATA = {
         { price:69000, label:"強支撐測試 / 21周EMA",          pct:10, color:"#fbbf24", risk:"低" },
         { price:60000, label:"關鍵結構支撐",                   pct:15, color:"#f97316", risk:"中" },
         { price:54000, label:"Realized Price（Cowen保守底）",  pct:25, color:"#f87171", risk:"中高" },
-        { price:44000, label:"ETF6��撐保守底（歷史均值）",      pct:30, color:"#ef4444", risk:"高" },
+        { price:44000, label:"ETF機構支撐保守底（歷史均值）",      pct:30, color:"#ef4444", risk:"高" },
         { price:32000, label:"Balance Price 極端底（Cowen）",  pct:20, color:"#991b1b", risk:"極端" }
     ],
     btc_milestones: [
@@ -872,7 +872,23 @@ renderLongTerm();
 renderBtcLayers();
 renderBtcMilestones();
 renderEthLayers();
-</script>
+
+    // ─── Dashboard Update API (called by crypto-analysis scheduled task) ───
+    window.updateFromAnalysis = function(patch) {
+        if (patch.signal) Object.assign(DASHBOARD_DATA.signal, patch.signal);
+        if (patch.long_term) {
+            if (patch.long_term.status) Object.assign(DASHBOARD_DATA.long_term.status, patch.long_term.status);
+            if (patch.long_term.bottom_signals) Object.assign(DASHBOARD_DATA.long_term.bottom_signals, patch.long_term.bottom_signals);
+            if (patch.long_term.daily_log) DASHBOARD_DATA.long_term.daily_log = patch.long_term.daily_log;
+            if (patch.long_term.macro) Object.assign(DASHBOARD_DATA.long_term.macro, patch.long_term.macro);
+            if (patch.long_term.sell_signals) Object.assign(DASHBOARD_DATA.long_term.sell_signals, patch.long_term.sell_signals);
+        }
+        if (patch.last_update) DASHBOARD_DATA.last_update = patch.last_update;
+        renderSignal(); renderLongTerm(); renderBtcLayers(); renderBtcMilestones(); renderEthLayers();
+        console.log('[Dashboard] Updated at', patch.last_update || new Date().toISOString());
+    };
+
+    </script>
 
 <!-- Footer -->
 <div style="max-width:900px;margin:0 auto;padding:8px 14px 28px;font-size:9px;color:rgba(226,232,240,0.22);text-align:center;">
