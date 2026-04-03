@@ -5,327 +5,356 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gunter Macro Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
-        body { background-color: #070b11; color: #e8ecf1; }
+        * { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; box-sizing: border-box; }
+        body { background-color: #070b11; color: #e8ecf1; margin: 0; }
 
-        /* ── 通用 ── */
-        .section-label {
-            font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-            color: rgba(226,232,240,0.4); margin-bottom: 10px;
-        }
-        .section-title { font-size: 16px; font-weight: 700; color: #e8ecf1; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .section-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(226,232,240,0.4); margin-bottom: 10px; }
+        .section-title { font-size: 15px; font-weight: 700; color: #e8ecf1; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-        /* ── Header ── */
-        .header-sticky {
-            position: sticky; top: 0; z-index: 100;
-            background-color: rgba(7,11,17,0.96);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        .live-dot {
-            display: inline-block; width: 7px; height: 7px;
-            background-color: #4ade80; border-radius: 50%;
-            animation: pulse 2s infinite; margin-right: 6px;
-        }
+        /* Header */
+        .header-sticky { position: sticky; top: 0; z-index: 100; background-color: rgba(7,11,17,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .live-dot { display: inline-block; width: 7px; height: 7px; background-color: #4ade80; border-radius: 50%; animation: pulse 2s infinite; margin-right: 6px; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-        /* ── 卡片 ── */
-        .card {
-            background: rgba(15,23,42,0.7);
-            border: 1px solid rgba(148,163,184,0.15);
-            border-radius: 14px; padding: 18px;
-        }
+        /* Cards */
+        .card { background: rgba(15,23,42,0.7); border: 1px solid rgba(148,163,184,0.15); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
         .card-btc { border-color: rgba(247,147,26,0.25); }
         .card-eth { border-color: rgba(98,126,234,0.25); }
         .card-signal { border-color: rgba(74,222,128,0.2); }
+        .card-lt { border-color: rgba(168,85,247,0.25); }
 
-        /* ── 時間軸 ── */
-        .timeline-wrap { position: relative; padding: 20px 0 10px; }
-        .timeline-track {
-            height: 4px; background: rgba(148,163,184,0.15); border-radius: 2px;
-            position: relative; margin: 0 20px;
-        }
-        .timeline-fill {
-            height: 100%; border-radius: 2px;
-            background: linear-gradient(90deg, #f7931a 0%, rgba(247,147,26,0.3) 100%);
-            position: absolute; top: 0; left: 0;
-        }
-        .timeline-node {
-            position: absolute; top: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .node-dot {
-            width: 14px; height: 14px; border-radius: 50%;
-            border: 2px solid; display: flex; align-items: center; justify-content: center;
-        }
+        /* Timeline */
+        .timeline-track { height: 4px; background: rgba(148,163,184,0.15); border-radius: 2px; position: relative; margin: 0 10px; }
+        .timeline-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#f7931a,rgba(247,147,26,0.3)); position: absolute; top: 0; left: 0; }
+        .timeline-node { position: absolute; top: 50%; transform: translate(-50%,-50%); display: flex; flex-direction: column; align-items: center; }
+        .node-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
         .node-dot.current { background: #f7931a; border-color: #f7931a; box-shadow: 0 0 10px rgba(247,147,26,0.6); }
         .node-dot.future-near { background: rgba(251,191,36,0.2); border-color: #fbbf24; }
         .node-dot.future-bull { background: rgba(74,222,128,0.2); border-color: #4ade80; }
         .node-dot.future-top { background: rgba(168,85,247,0.2); border-color: #a855f7; }
-        .node-label-above { font-size: 11px; font-weight: 700; margin-bottom: 8px; text-align: center; white-space: nowrap; }
-        .node-label-below { font-size: 10px; color: rgba(226,232,240,0.5); margin-top: 8px; text-align: center; white-space: nowrap; }
+        .node-label-above { font-size: 10px; font-weight: 700; margin-bottom: 6px; text-align: center; white-space: nowrap; }
+        .node-label-below { font-size: 9px; color: rgba(226,232,240,0.5); margin-top: 6px; text-align: center; white-space: nowrap; }
 
-        /* ── 底部預測條 ── */
-        .analyst-bar {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-        }
-        .analyst-name { font-size: 11px; color: rgba(226,232,240,0.6); width: 70px; flex-shrink: 0; }
-        .bar-track { flex: 1; height: 8px; background: rgba(148,163,184,0.1); border-radius: 4px; position: relative; }
+        /* Bottom bars */
+        .analyst-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .analyst-name { font-size: 11px; color: rgba(226,232,240,0.6); width: 65px; flex-shrink: 0; }
+        .bar-track { flex: 1; height: 7px; background: rgba(148,163,184,0.1); border-radius: 4px; position: relative; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; position: absolute; }
-        .bar-label-right { font-size: 11px; font-weight: 700; width: 90px; text-align: right; flex-shrink: 0; }
+        .bar-label-right { font-size: 11px; font-weight: 700; width: 80px; text-align: right; flex-shrink: 0; }
 
-        /* ── 分層抄底 ── */
-        .accum-row {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 12px; border-radius: 10px;
-            background: rgba(15,23,42,0.5); margin-bottom: 6px;
-            border: 1px solid rgba(148,163,184,0.08);
-            transition: background 0.2s;
-        }
-        .accum-row:hover { background: rgba(30,41,59,0.6); }
-        .accum-price { font-size: 16px; font-weight: 800; width: 70px; }
-        .accum-label { flex: 1; font-size: 12px; color: rgba(226,232,240,0.7); }
-        .accum-pct { font-size: 13px; font-weight: 700; width: 40px; text-align: center; }
-        .position-bar { width: 100px; height: 6px; background: rgba(148,163,184,0.1); border-radius: 3px; overflow: hidden; }
-        .position-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #4ade80, #22c55e); }
+        /* Accum rows */
+        .accum-row { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 10px; background: rgba(15,23,42,0.5); margin-bottom: 5px; border: 1px solid rgba(148,163,184,0.08); }
+        .accum-price { font-size: 15px; font-weight: 800; width: 60px; }
+        .accum-label { flex: 1; font-size: 11px; color: rgba(226,232,240,0.7); }
+        .accum-pct { font-size: 12px; font-weight: 700; width: 36px; text-align: center; }
+        .position-bar { width: 80px; height: 5px; background: rgba(148,163,184,0.1); border-radius: 3px; overflow: hidden; }
+        .position-fill { height: 100%; border-radius: 3px; }
 
-        /* ── 信號維度 ── */
-        .dim-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
-        .dim-item {
-            background: rgba(15,23,42,0.6); border-radius: 8px;
-            padding: 8px; display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(148,163,184,0.1);
-        }
+        /* Signal */
+        .dim-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; }
+        .dim-item { background: rgba(15,23,42,0.6); border-radius: 8px; padding: 7px 9px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(148,163,184,0.1); }
         .dim-name { font-size: 10px; color: rgba(226,232,240,0.5); }
         .dim-score { font-size: 14px; font-weight: 800; }
 
-        /* ── 信號橫幅 ── */
-        .signal-banner {
-            border-radius: 14px; padding: 16px 20px; margin-bottom: 16px;
-            border: 2px solid;
-        }
-        .signal-banner.bullish { border-color: rgba(74,222,128,0.4); background: linear-gradient(135deg, rgba(20,40,20,0.8), rgba(15,28,15,0.8)); }
-        .signal-banner.bearish { border-color: rgba(248,113,113,0.4); background: linear-gradient(135deg, rgba(40,15,15,0.8), rgba(28,10,10,0.8)); }
-        .signal-banner.conflict { border-color: rgba(251,191,36,0.4); background: linear-gradient(135deg, rgba(40,30,10,0.8), rgba(28,20,5,0.8)); }
-        .signal-banner.neutral  { border-color: rgba(148,163,184,0.3); background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.8)); }
+        .signal-banner { border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; border: 2px solid; }
+        .signal-banner.bullish { border-color: rgba(74,222,128,0.4); background: linear-gradient(135deg,rgba(20,40,20,0.8),rgba(15,28,15,0.8)); }
+        .signal-banner.bearish { border-color: rgba(248,113,113,0.4); background: linear-gradient(135deg,rgba(40,15,15,0.8),rgba(28,10,10,0.8)); }
+        .signal-banner.conflict { border-color: rgba(251,191,36,0.4); background: linear-gradient(135deg,rgba(40,30,10,0.8),rgba(28,20,5,0.8)); }
+        .signal-banner.neutral  { border-color: rgba(148,163,184,0.3); background: linear-gradient(135deg,rgba(30,41,59,0.8),rgba(15,23,42,0.8)); }
 
-        .badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 11px; }
         .badge-long    { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.4); }
         .badge-short   { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.4); }
         .badge-conflict{ background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); }
         .badge-neutral { background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.4); }
 
-        /* ── 里程碑卡片 ── */
-        .milestone-card {
-            background: rgba(15,23,42,0.6); border-radius: 10px; padding: 12px;
-            border: 1px solid rgba(148,163,184,0.1); text-align: center;
-        }
-
-        /* ── 指標卡 ── */
-        .metric-box {
-            background: rgba(15,23,42,0.6); border-radius: 10px; padding: 12px; text-align: center;
-            border: 1px solid rgba(148,163,184,0.1);
-        }
-
-        /* ── S&P 情景 ── */
-        .scenario-card {
-            border-radius: 12px; padding: 14px; border: 1px solid;
-        }
+        .metric-box { background: rgba(15,23,42,0.6); border-radius: 10px; padding: 10px; text-align: center; border: 1px solid rgba(148,163,184,0.1); }
+        .milestone-card { background: rgba(15,23,42,0.6); border-radius: 10px; padding: 12px; border: 1px solid rgba(148,163,184,0.1); text-align: center; }
+        .scenario-card { border-radius: 10px; padding: 12px; border: 1px solid; }
         .scenario-opt  { border-color: rgba(74,222,128,0.3);  background: rgba(20,40,20,0.4); }
         .scenario-base { border-color: rgba(251,191,36,0.3);  background: rgba(40,30,10,0.4); }
         .scenario-bear { border-color: rgba(248,113,113,0.3); background: rgba(40,15,15,0.4); }
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .dim-grid { grid-template-columns: repeat(3,1fr); }
-            .milestone-grid { grid-template-columns: repeat(2,1fr) !important; }
-        }
-        @media (max-width: 480px) {
-            .dim-grid { grid-template-columns: repeat(2,1fr); }
-        }
+        /* ── Long-term module CSS ── */
+        .lt-status-banner { border-radius: 12px; padding: 14px; margin-bottom: 14px; border: 1px solid; }
+        .lt-status-banner.watch     { border-color: rgba(251,191,36,0.4); background: rgba(40,30,10,0.5); }
+        .lt-status-banner.accumulate{ border-color: rgba(74,222,128,0.4); background: rgba(10,40,20,0.5); }
+        .lt-status-banner.normal    { border-color: rgba(148,163,184,0.25); background: rgba(15,23,42,0.6); }
+        .lt-status-banner.sell      { border-color: rgba(248,113,113,0.4); background: rgba(40,10,10,0.5); }
 
-        /* 分隔線 */
-        .divider { height: 1px; background: rgba(148,163,184,0.08); margin: 20px 0; }
+        .bottom-indicator { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(148,163,184,0.06); }
+        .bottom-indicator:last-child { border-bottom: none; }
+        .bi-name { font-size: 11px; color: rgba(226,232,240,0.7); width: 120px; flex-shrink: 0; }
+        .bi-value { font-size: 11px; font-weight: 700; color: #e8ecf1; width: 80px; flex-shrink: 0; }
+        .bi-bar-wrap { flex: 1; height: 6px; background: rgba(148,163,184,0.1); border-radius: 3px; overflow: hidden; }
+        .bi-bar { height: 100%; border-radius: 3px; }
+        .bi-score { font-size: 12px; font-weight: 800; width: 32px; text-align: right; flex-shrink: 0; }
+        .bi-status { font-size: 10px; width: 80px; text-align: right; flex-shrink: 0; }
 
-        /* 小標籤 */
-        .tag {
-            display: inline-block; padding: 2px 8px; border-radius: 6px;
-            font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
-        }
+        .macro-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 7px; }
+        .macro-item { background: rgba(15,23,42,0.6); border: 1px solid rgba(148,163,184,0.1); border-radius: 9px; padding: 9px 11px; }
+        .macro-name { font-size: 10px; color: rgba(226,232,240,0.45); margin-bottom: 3px; }
+        .macro-value { font-size: 13px; font-weight: 800; color: #e8ecf1; }
+        .macro-note { font-size: 10px; color: rgba(226,232,240,0.45); margin-top: 2px; }
+        .trend-up   { color: #4ade80; }
+        .trend-down { color: #f87171; }
+        .trend-hold { color: #fbbf24; }
+
+        .sell-check { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(148,163,184,0.06); }
+        .sell-check:last-child { border-bottom: none; }
+        .sell-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .sell-dot.triggered { background: #f87171; box-shadow: 0 0 6px rgba(248,113,113,0.6); }
+        .sell-dot.safe { background: rgba(74,222,128,0.3); border: 1px solid #4ade80; }
+        .sell-name { flex: 1; font-size: 11px; color: rgba(226,232,240,0.7); }
+        .sell-current { font-size: 11px; font-weight: 700; color: #94a3b8; }
+
+        .log-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(148,163,184,0.06); font-size: 11px; }
+        .log-row:last-child { border-bottom: none; }
+        .log-date { color: rgba(226,232,240,0.4); width: 38px; flex-shrink: 0; }
+        .log-btc  { color: #f7931a; font-weight: 700; width: 55px; flex-shrink: 0; }
+        .log-eth  { color: #627eea; font-weight: 700; width: 50px; flex-shrink: 0; }
+        .log-fg   { width: 26px; flex-shrink: 0; font-weight: 700; }
+        .log-note { color: rgba(226,232,240,0.55); flex: 1; line-height: 1.3; }
+
+        .score-circle { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 50%; border: 3px solid; text-align: center; flex-shrink: 0; }
+        .score-num { font-size: 22px; font-weight: 900; line-height: 1; }
+        .score-label { font-size: 9px; color: rgba(226,232,240,0.5); }
+
+        /* Tags */
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
         .tag-orange { background: rgba(247,147,26,0.15); color: #f7931a; border: 1px solid rgba(247,147,26,0.3); }
         .tag-green  { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
         .tag-red    { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
         .tag-purple { background: rgba(168,85,247,0.15); color: #a855f7; border: 1px solid rgba(168,85,247,0.3); }
         .tag-gray   { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+        .tag-blue   { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+
+        .divider { height: 1px; background: rgba(148,163,184,0.08); margin: 14px 0; }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .dim-grid { grid-template-columns: repeat(3,1fr); }
+            .macro-grid { grid-template-columns: repeat(2,1fr); }
+            .bi-name { width: 100px; }
+            .bi-value { width: 60px; }
+            .bi-status { width: 60px; }
+            .header-prices { gap: 10px !important; }
+            .header-price-item { min-width: 52px; }
+        }
+        @media (max-width: 420px) {
+            .dim-grid { grid-template-columns: repeat(2,1fr); }
+        }
     </style>
 </head>
 <body>
 
-<!-- ======================================================
-     DASHBOARD_DATA — 定時任務更新此區塊
-     ====================================================== -->
+<!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-01T09:00:00+08:00",
-    analysis_mode: "Standard",
+    last_update: "2026-04-03T09:20:00+08:00",
+    analysis_mode: "Deep",
 
     signal: {
-        direction: "CONFLICT",
-        strength: "弱多（CONFLICT短期服從）",
-        eth_signal: 54.2,
-        composite_score: 51.8,
-        regime: "震盪+高波動",
+        direction: "BEARISH",
+        strength: "條件空（等觸發）",
+        eth_signal: 43.3,
+        composite_score: 45.5,
+        regime: "震盪+中波動",
         strategy: "均值回歸",
         confidence: "low",
-        vote_result: "BULLISH 0.45 vs BEARISH 0.38 — 未過1.3x閾值",
-        entry: null, sl: null, tp1: null, tp2: null,
-        position_pct: 0, leverage: 0, rr_ratio: null,
-        timeframe_note: "觀望等待方向明朗",
-        reason: "快慢信號層分歧：快信號(tech+deriv)偏空，慢信號(onchain+macro)偏多。底部保護模式啟動(onchain>80)，不建議做空。等待BULLISH投票閾值突破或ETH回測$1,950支撐確認後入場。",
+        vote_result: "BEARISH 5票 vs NEUTRAL 4票 vs BULLISH 0票",
+        entry: 2065, sl: 2130, tp1: 2036, tp2: 1993,
+        position_pct: 3.1, leverage: 2, rr_ratio: "0.6/1.1",
+        timeframe_note: "等Liberation Day關稅消化後，CVD確認方向再進場",
+        reason: "5:0 BEARISH投票。BTC遠低於$83K熊市線，ETH大幅跑輸BTC（-3.1% vs -1.2%）。Liberation Day關稅今日落地，NFP在11h後。IV Skew+13=極端恐懼，禁止未確認就衝空。等$2,080阻力CVD轉負或跌破$2,010確認後入場。",
         dimensions: {
-            tech: 38, onchain: 82, derivatives: 55,
-            orderflow: 48, fundflow: 52, macro: 45,
-            sentiment: 58, news: 50, kol: 56
+            tech:38, onchain:47, derivatives:52,
+            orderflow:46, fundflow:45, macro:30,
+            sentiment:35, news:30, kol:40
         },
-        backfill: { recent_3_correct: "1/3", recent_5_tp1_hit: "2/5", streak: "1連敗" }
+        backfill: { recent_3_correct:"0/2", recent_5_tp1_hit:"1/2", streak:"2連敗⚠️" }
+    },
+
+    /* ── 長線宏觀監控（每日 Deep 分析更新）── */
+    long_term: {
+        last_update: "2026-04-03",
+        cycle_phase: "熊市中段 — Window of Weakness",
+
+        status: {
+            changed: true,
+            alert_level: "normal",   // normal | watch | accumulate | sell
+            summary: "Liberation Day關稅落地，宏觀Risk-Off加劇",
+            key_changes: [
+                "📉 ETH/BTC跌至0.031（年內新低），ETH繼續失血",
+                "📉 Liberation Day關稅全面落地，宏觀risk-off確認",
+                "📊 F&G=12維持50日極端恐懼（歷史底部前兆）"
+            ],
+            long_term_view: "BTC仍在熊市結構（$67K < $83K 熊市線），符合Cowen中期年四月回調劇本。長線尚無建倉觸發條件（BTC需接近$54K Realized Price）。預計底部 $44-54K 區間（2026 Q3-Q4）。"
+        },
+
+        bottom_signals: {
+            overall: 58,
+            status: "接近但尚未到底",
+            alert: null,
+            indicators: [
+                {name:"MVRV Z-Score",      value:"-0.42",   detail:"<0為底部區",   score:80, signal:"green"},
+                {name:"F&G恐貪（持續）",   value:"12 / 50天", detail:"極端恐懼50天", score:88, signal:"green"},
+                {name:"BTC vs Realized Price", value:"+24%", detail:"$67K vs $54K", score:45, signal:"yellow"},
+                {name:"交易所儲備",         value:"14.9M",   detail:"16年歷史低位", score:78, signal:"green"},
+                {name:"BTC vs 200W MA",    value:"+49%",    detail:"$67K vs $45K", score:30, signal:"red"},
+                {name:"ETH/BTC比值走勢",   value:"0.031",   detail:"持續下跌趨勢", score:28, signal:"red"}
+            ],
+            advice: "鏈上情緒指標（MVRV、F&G）已進底部區，但BTC現價離Realized Price($54K)仍有24%下行空間，200W MA($45K)更遠。建議僅在BTC到達$54K以下才啟動第3層，現價不追。"
+        },
+
+        macro: {
+            indicators: [
+                {name:"M2增速 (YoY)",      value:"+7.2%",         trend:"up",   note:"持續擴張，中長期利多"},
+                {name:"Fed利率",            value:"4.25-4.50%",    trend:"hold", note:"降息預期43%（5月CME）"},
+                {name:"DXY美元指數",        value:"104.2",         trend:"up",   note:"強美元壓制短線BTC"},
+                {name:"VIX恐慌指數",        value:"24.5",          trend:"down", note:"從30.6回落，緩解中"},
+                {name:"SPX vs 200日MA",     value:"-8.5%",         trend:"down", note:"已跌破200日均線"},
+                {name:"10Y美債殖利率",      value:"4.35%",         trend:"down", note:"降息預期推低"},
+                {name:"殖利率曲線(10Y-2Y)", value:"-0.12%",        trend:"flat", note:"輕微倒掛，衰退訊號"},
+                {name:"BTC ETF 7日淨流",    value:"-$820M",        trend:"down", note:"機構仍在減倉"},
+                {name:"全球流動性",          value:"收縮中",         trend:"down", note:"G4央行同步縮表"},
+                {name:"Liberation Day關稅", value:"全面落地 ⚡",    trend:"down", note:"宏觀風險事件確認"}
+            ]
+        },
+
+        sell_signals: {
+            triggered_count: 0,
+            next_check: "2027 Q3-Q4（預期牛市頂部區前6個月）",
+            indicators: [
+                {name:"MVRV Z-Score > 3.0",       triggered:false, current:"-0.42",   target:">3.0"},
+                {name:"F&G > 85 持續7天",          triggered:false, current:"12",       target:">85"},
+                {name:"BTC >> 21W EMA +30%",       triggered:false, current:"待牛市",   target:"突破確認"},
+                {name:"Funding > 0.05% 持續",      triggered:false, current:"-0.002%", target:">0.05%"},
+                {name:"交易所流入激增",              triggered:false, current:"正常",     target:">50K BTC/週"}
+            ]
+        },
+
+        daily_log: [
+            {date:"04/03", btc:66752, eth:2053, fg:12, note:"Liberation Day關稅落地，ETH -3.1%大幅跑輸"},
+            {date:"04/02", btc:68813, eth:2131, fg:8,  note:"ETH反彈至2165後被壓回，Liberation Day後第一天"},
+            {date:"04/01", btc:68203, eth:2107, fg:8,  note:"Liberation Day前夕，高波動觀望"},
+            {date:"03/31", btc:66706, eth:2048, fg:10, note:"月底拋售壓力，ETH破$2,050支撐"},
+            {date:"03/30", btc:71201, eth:2189, fg:20, note:"反彈被$83K壓力打回，假突破"},
+            {date:"03/28", btc:70231, eth:2098, fg:18, note:"週末低流動性橫盤"},
+            {date:"03/27", btc:69503, eth:2060, fg:15, note:"FOMC前夕謹慎，等NFP數據"}
+        ]
     }
 };
 
-/* ──────────────────────────────────────────────
-   MACRO_DATA — 宏觀靜態數據（季度 or 里程碑更新）
-   ────────────────────────────────────────────── */
 const MACRO_DATA = {
-    btc_ath: 128000,
-    btc_current_rank: 10,
-    btc_market_cap_t: 1.32,
-    gold_market_cap_t: 22.0,
-
-    // 週期時間軸
+    btc_ath: 128000, btc_current_rank: 10, btc_market_cap_t: 1.32, gold_market_cap_t: 22.0,
     cycle: {
-        current: { date: "2026-04", label: "現在", note: "熊市中段" },
-        bottom:  { date: "2026-10", label: "預計底部區", note: "AI歷史均值" },
-        bull:    { date: "2027-10-24", label: "牛市啟動", note: "疊加第5次減半催化" },
-        halving: { date: "2028-04", label: "第5次減半", note: "2028-04" },
-        top:     { date: "2028-Q4", label: "下輪頂部區", note: "保守$150K~$168K" }
+        current:{ date:"2026-04", label:"現在",      note:"熊市中段" },
+        bottom: { date:"2026-10", label:"預計底部區", note:"AI歷史均值" },
+        bull:   { date:"2027-10", label:"牛市啟動",  note:"疊加第5次減半" },
+        halving:{ date:"2028-04", label:"第5次減半",  note:"2028-04" },
+        top:    { date:"2028-Q4", label:"下輪頂部區", note:"保守$150K-$168K" }
     },
-
-    // BTC 底部共識（三分析師）
     btc_bottom: {
-        zishi:  { conservative: 44000, extreme: 32000, timeframe: "2026-10", note: "AI跑歷史均值；ETF後熊市變短" },
-        cowen:  { conservative: 54000, extreme: 39000, timeframe: "2026 Q2-Q4", note: "Realized Price $54K; Balance Price $39K" },
-        hist:   { conservative: 44000, extreme: 32000, timeframe: "2026 Q3-Q4", note: "歷史均值跌幅-74.6%；ETF支撐保守$44K" },
-        consensus: { low: 44000, high: 54000, extreme: 32000 }
+        cowen:   { conservative:54000, extreme:39000, note:"Realized Price $54K; Balance Price $39K" },
+        hist:    { conservative:44000, extreme:32000, note:"歷史均值跌幅-74.6%；ETF支撐保守$44K" },
+        consensus:{ low:44000, high:54000, extreme:32000 }
     },
-
-    // BTC 分層抄底計劃
     btc_layers: [
-        { price: 69000, label: "強支撐測試 / 21周EMA", pct: 10, color: "#fbbf24", risk: "低" },
-        { price: 60000, label: "關鍵結構支撐", pct: 15, color: "#f97316", risk: "中" },
-        { price: 54000, label: "Realized Price（Cowen保守底）", pct: 25, color: "#f87171", risk: "中高" },
-        { price: 44000, label: "ETF支撐保守底（子時 / 歷史均值）", pct: 30, color: "#ef4444", risk: "高" },
-        { price: 32000, label: "Balance Price 極端底（Cowen）", pct: 20, color: "#991b1b", risk: "極端" }
+        { price:69000, label:"強支撐測試 / 21周EMA",          pct:10, color:"#fbbf24", risk:"低" },
+        { price:60000, label:"關鍵結構支撐",                   pct:15, color:"#f97316", risk:"中" },
+        { price:54000, label:"Realized Price（Cowen保守底）",  pct:25, color:"#f87171", risk:"中高" },
+        { price:44000, label:"ETF支撐保守底（歷史均值）",      pct:30, color:"#ef4444", risk:"高" },
+        { price:32000, label:"Balance Price 極端底（Cowen）",  pct:20, color:"#991b1b", risk:"極端" }
     ],
-
-    // BTC 里程碑上升路徑
     btc_milestones: [
-        { price: 91000,  label: "追平白銀",   market_cap: "1.8T", upside: "+59%",  color: "#94a3b8" },
-        { price: 112000, label: "黃金1/10",   market_cap: "2.2T", upside: "+74%",  color: "#fbbf24" },
-        { price: 168000, label: "追平蘋果（下輪頂部）", market_cap: "3.3T", upside: "+150%", color: "#4ade80" },
-        { price: 1120000,label: "追平黃金",   market_cap: "22T",  upside: "+1567%",color: "#a855f7" }
+        { price:91000,   label:"追平白銀",              market_cap:"1.8T",  upside:"+36%",   color:"#94a3b8" },
+        { price:112000,  label:"黃金1/10",              market_cap:"2.2T",  upside:"+68%",   color:"#fbbf24" },
+        { price:168000,  label:"追平蘋果（下輪頂部）",  market_cap:"3.3T",  upside:"+151%",  color:"#4ade80" },
+        { price:1120000, label:"追平黃金",              market_cap:"22T",   upside:"+1576%", color:"#a855f7" }
     ],
-
-    // ETH 框架
     eth: {
-        log_regression_home: 1589,
-        bottom_zone_low: 1300,
-        bottom_zone_high: 1800,
-        next_cycle_low:  3500,
-        next_cycle_high: 5000,
-        eth_btc_target: 0.053,
-        layers: [
-            { price: 1800, label: "底部區上沿", pct: 20, color: "#fbbf24" },
-            { price: 1589, label: "Log回歸 Home（Cowen）", pct: 30, color: "#f87171" },
-            { price: 1300, label: "底部區下沿 / 極端底", pct: 35, color: "#ef4444" }
+        log_regression_home:1589, bottom_zone_low:1300, bottom_zone_high:1800,
+        next_cycle_low:3500, next_cycle_high:5000, eth_btc_target:0.053,
+        layers:[
+            { price:1800, label:"底部區上沿",               pct:20, color:"#fbbf24" },
+            { price:1589, label:"Log回歸 Home（Cowen）",    pct:30, color:"#f87171" },
+            { price:1300, label:"底部區下沿 / 極端底",      pct:35, color:"#ef4444" }
         ]
     },
-
-    // 美股 S&P500 情景
     sp500: {
-        current_cape: 37,
-        scenarios: [
-            { label: "樂觀",  prob: 30, drawdown: -13, bottom: 6071, recovery_months: 6,  color: "#4ade80" },
-            { label: "基準",  prob: 45, drawdown: -25, bottom: 5225, recovery_months: 18, color: "#fbbf24" },
-            { label: "悲觀",  prob: 25, drawdown: -36, bottom: 4467, recovery_months: 36, color: "#f87171" }
+        current_cape:37,
+        scenarios:[
+            { label:"樂觀", prob:30, drawdown:-13, bottom:6071, recovery_months:6,  color:"#4ade80" },
+            { label:"基準", prob:45, drawdown:-25, bottom:5225, recovery_months:18, color:"#fbbf24" },
+            { label:"悲觀", prob:25, drawdown:-36, bottom:4467, recovery_months:36, color:"#f87171" }
         ]
-    },
-
-    // 關鍵觸媒
-    catalysts: [
-        { icon: "🏦", label: "Fed降息重啟", status: "待觀察", detail: "鮑威爾5月離任，新主席Warsh偏鷹，降息預期需重新定價", color: "yellow" },
-        { icon: "📈", label: "BTC ETF淨流入轉正", status: "監控中", detail: "機構資金是ETF時代底部支撐，淨流入持續轉正是復蘇信號", color: "green" },
-        { icon: "₿", label: "第5次減半", status: "2028-04", detail: "疊加牛市啟動12個月後，作為中期催化劑", color: "orange" }
-    ]
+    }
 };
 </script>
 
 <!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
 <div class="header-sticky">
-    <div class="max-w-6xl mx-auto px-4 py-3" style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="max-width:900px; margin:0 auto; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
         <div>
-            <h1 style="font-size:17px; font-weight:800; color:#fff; letter-spacing:-0.3px;">
-                <span class="live-dot"></span>Gunter Macro Dashboard
-            </h1>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-top:1px;">宏觀週期 · BTC/ETH抄底導航</div>
-        </div>
-        <div style="display:flex; gap:16px; align-items:center;">
-            <div style="text-align:center;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.4);">BTC</div>
-                <div id="btc-price" style="font-size:15px; font-weight:800; color:#f7931a;">--</div>
-                <div id="btc-chg" style="font-size:10px;">--</div>
+            <div style="font-size:15px; font-weight:800; color:#fff; letter-spacing:-0.3px;">
+                <span class="live-dot"></span>Gunter Macro
             </div>
-            <div style="text-align:center;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.4);">ETH</div>
-                <div id="eth-price" style="font-size:15px; font-weight:800; color:#627eea;">--</div>
-                <div id="eth-chg" style="font-size:10px;">--</div>
+            <div style="font-size:9px; color:rgba(226,232,240,0.35);">BTC/ETH 週期 · 抄底賣出導航</div>
+        </div>
+        <div class="header-prices" style="display:flex; gap:14px; align-items:center;">
+            <div class="header-price-item" style="text-align:center;">
+                <div style="font-size:9px; color:rgba(226,232,240,0.4);">BTC</div>
+                <div id="btc-price" style="font-size:14px; font-weight:800; color:#f7931a;">--</div>
+                <div id="btc-chg" style="font-size:9px;">--</div>
+            </div>
+            <div class="header-price-item" style="text-align:center;">
+                <div style="font-size:9px; color:rgba(226,232,240,0.4);">ETH</div>
+                <div id="eth-price" style="font-size:14px; font-weight:800; color:#627eea;">--</div>
+                <div id="eth-chg" style="font-size:9px;">--</div>
             </div>
             <div style="text-align:right;">
-                <div style="font-size:11px; color:rgba(226,232,240,0.5);" id="clock">--:--:--</div>
-                <div id="fng-display" style="font-size:10px; color:rgba(226,232,240,0.4);">恐貪--</div>
+                <div id="clock" style="font-size:10px; color:rgba(226,232,240,0.5);">--:--</div>
+                <div id="fng-display" style="font-size:9px; color:rgba(226,232,240,0.4);">恐貪--</div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- ══════════════════════════════ MAIN ══════════════════════════════ -->
-<div class="max-w-6xl mx-auto px-4 py-5" id="app">
+<div style="max-width:900px; margin:0 auto; padding:10px 12px 32px;">
 
-    <!-- ① 宏觀週期時間軸 -->
-    <div class="card" style="margin-bottom:16px;">
-        <div class="section-label">① 宏觀週期導航</div>
+    <!-- ① 短期交易信號（最重要：即時操作） -->
+    <div id="signal-section"></div>
+
+    <!-- ② 長線宏觀監控（策略：什麼時候抄底賣出） -->
+    <div class="card card-lt" id="lt-section">
+        <!-- 由 JS 渲染 -->
+    </div>
+
+    <!-- ③ BTC 宏觀週期導航 -->
+    <div class="card" style="margin-bottom:12px;">
+        <div class="section-label">③ 宏觀週期導航</div>
         <div class="section-title">
             <span>📡</span>BTC 四年週期定位
             <span class="tag tag-red" style="margin-left:auto;">2026 熊市中段</span>
         </div>
-
-        <!-- 時間軸 -->
-        <div class="timeline-wrap" style="margin-bottom:24px;">
+        <div style="position:relative; padding:22px 0 12px;">
             <div class="timeline-track">
                 <div class="timeline-fill" style="width:15%;"></div>
-                <!-- 節點 -->
                 <div class="timeline-node" style="left:0%;">
-                    <div class="node-label-above" style="color:#f7931a;">▲ ATH<br/><span style="font-size:14px;">$128K</span></div>
+                    <div class="node-label-above" style="color:#f7931a; font-size:11px;">▲ ATH<br/>$128K</div>
                     <div class="node-dot current"></div>
                     <div class="node-label-below">2025 Q4</div>
                 </div>
                 <div class="timeline-node" style="left:15%;">
-                    <div class="node-label-above" style="color:#fbbf24; font-size:13px; font-weight:800;">● 現在</div>
+                    <div class="node-label-above" style="color:#fbbf24; font-size:12px; font-weight:800;">● 現在</div>
                     <div class="node-dot current"></div>
                     <div class="node-label-below">2026-04</div>
                 </div>
                 <div class="timeline-node" style="left:38%;">
-                    <div class="node-label-above" style="color:#f87171;">底部區<br/>$32K–$54K</div>
+                    <div class="node-label-above" style="color:#f87171;">底部區<br/>$32-54K</div>
                     <div class="node-dot future-near"></div>
                     <div class="node-label-below">2026-10</div>
                 </div>
@@ -334,91 +363,110 @@ const MACRO_DATA = {
                     <div class="node-dot future-bull"></div>
                     <div class="node-label-below">2027-10</div>
                 </div>
-                <div class="timeline-node" style="left:80%;">
+                <div class="timeline-node" style="left:83%;">
                     <div class="node-label-above" style="color:#a855f7;">第5次減半</div>
                     <div class="node-dot future-top"></div>
                     <div class="node-label-below">2028-04</div>
                 </div>
                 <div class="timeline-node" style="left:100%;">
-                    <div class="node-label-above" style="color:#a855f7;">下輪頂部<br/>~$168K</div>
+                    <div class="node-label-above" style="color:#a855f7;">頂部<br/>~$168K</div>
                     <div class="node-dot future-top"></div>
                     <div class="node-label-below">2028 Q4</div>
                 </div>
             </div>
         </div>
-
-        <!-- 關鍵觸媒 -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:8px; margin-top:8px;">
-            <div style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:10px; padding:12px;">
-                <div style="font-size:11px; color:#fbbf24; font-weight:700; margin-bottom:4px;">🏦 Fed降息重啟</div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.6);">鮑威爾5月離任，新主席Warsh偏鷹，降息預期需重新定價</div>
-                <div class="tag tag-gray" style="margin-top:6px;">待觀察</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:7px; margin-top:10px;">
+            <div style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:9px; padding:10px;">
+                <div style="font-size:11px; color:#fbbf24; font-weight:700; margin-bottom:3px;">🏦 Fed降息重啟</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">Warsh偏鷹，降息預期43%需重新定價</div>
+                <div class="tag tag-gray" style="margin-top:5px;">待觀察</div>
             </div>
-            <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:10px; padding:12px;">
-                <div style="font-size:11px; color:#4ade80; font-weight:700; margin-bottom:4px;">📈 BTC ETF淨流入</div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.6);">機構資金是ETF時代底部支撐，持續轉正為復蘇信號</div>
-                <div class="tag tag-green" style="margin-top:6px;">監控中</div>
+            <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:9px; padding:10px;">
+                <div style="font-size:11px; color:#4ade80; font-weight:700; margin-bottom:3px;">📈 BTC ETF淨流入</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">機構淨流入轉正為底部確認信號</div>
+                <div class="tag tag-red" style="margin-top:5px;">7D -$820M</div>
             </div>
-            <div style="background:rgba(247,147,26,0.08); border:1px solid rgba(247,147,26,0.2); border-radius:10px; padding:12px;">
-                <div style="font-size:11px; color:#f7931a; font-weight:700; margin-bottom:4px;">₿ 第5次減半</div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.6);">2028-04 觸發，疊加牛市啟動12個月後形成中期催化</div>
-                <div class="tag tag-orange" style="margin-top:6px;">2028-04</div>
+            <div style="background:rgba(247,147,26,0.08); border:1px solid rgba(247,147,26,0.2); border-radius:9px; padding:10px;">
+                <div style="font-size:11px; color:#f7931a; font-weight:700; margin-bottom:3px;">₿ 第5次減半</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">2028-04 觸發，形成中期牛市催化</div>
+                <div class="tag tag-orange" style="margin-top:5px;">2028-04</div>
             </div>
         </div>
     </div>
 
-    <!-- ② BTC 底部預測共識 -->
-    <div class="card card-btc" style="margin-bottom:16px;">
-        <div class="section-label">② BTC 底部分析</div>
-        <div class="section-title"><span>₿</span>多分析師底部共識</div>
+    <!-- ④ BTC 分層抄底 + 里程碑（並排，手機改為單欄） -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+        <div class="card card-btc" style="margin-bottom:0;">
+            <div class="section-label">④ BTC 抄底計劃</div>
+            <div class="section-title" style="font-size:14px;"><span>📊</span>分層建倉策略</div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">ATH $128K → 各層位建議倉位</div>
+            <div id="btc-layers-container"></div>
+            <div class="divider"></div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4);">⚠️ 每層確認收盤後再加。極端底（$32-39K）需雙確認：Realized Price 觸及 + F&G &lt; 15。</div>
+        </div>
+        <div class="card card-btc" style="margin-bottom:0;">
+            <div class="section-label">④ BTC 上升路徑</div>
+            <div class="section-title" style="font-size:14px;"><span>🏆</span>里程碑市值對比</div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">現在 $1.32T（全球#10）</div>
+            <div id="btc-milestones-container"></div>
+            <div class="divider"></div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4);">下輪目標：追平蘋果（$168K），ETH/BTC 目標 0.053</div>
+        </div>
+    </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-            <!-- 左：底部預測對比 -->
+    <!-- ⑤ ETH 框架 -->
+    <div class="card card-eth">
+        <div class="section-label">⑤ ETH 宏觀框架</div>
+        <div class="section-title"><span>Ξ</span>ETH 對數回歸分析</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;">
+            <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:10px; padding:12px;">
+                <div style="font-size:10px; color:#627eea; font-weight:700; margin-bottom:3px;">🎯 抄底目標區</div>
+                <div style="font-size:20px; font-weight:900; color:#627eea;">$1,300</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">─ $1,800</div>
+                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">Log Regression 底部帶</div>
+            </div>
+            <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:10px; padding:12px;">
+                <div style="font-size:10px; color:#60a5fa; font-weight:700; margin-bottom:3px;">🏠 Log回歸 Home</div>
+                <div style="font-size:20px; font-weight:900; color:#60a5fa;">$1,589</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">Cowen 中位數</div>
+                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">對數回歸帶中線</div>
+            </div>
+            <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:10px; padding:12px;">
+                <div style="font-size:10px; color:#4ade80; font-weight:700; margin-bottom:3px;">🚀 下輪牛市目標</div>
+                <div style="font-size:20px; font-weight:900; color:#4ade80;">$3,500</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">─ $5,000</div>
+                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">ETH/BTC 目標 0.053</div>
+            </div>
+        </div>
+        <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:8px;">ETH 分層抄底</div>
+        <div id="eth-layers-container"></div>
+        <div class="divider" style="margin:10px 0;"></div>
+        <div style="font-size:10px; color:rgba(226,232,240,0.5);">⚠️ ETH Bull Trap 風險：BTC底部未確認前，ETH假突破風險高。建議 ETH 滯後 BTC 底部確認 1-2 週後再建倉。</div>
+    </div>
+
+    <!-- ⑥ BTC 底部分析（分析師共識 + 美股情景） -->
+    <div class="card card-btc">
+        <div class="section-label">⑥ BTC 底部分析</div>
+        <div class="section-title"><span>₿</span>多分析師底部共識</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
             <div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:10px;">保守底 vs 極端底（從ATH $128K計）</div>
-                <!-- 子時 -->
-                <div style="margin-bottom:14px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span style="font-size:11px; color:#f7931a; font-weight:700;">子時 AI分析</span>
-                        <span style="font-size:10px; color:rgba(226,232,240,0.4);">底部時間 2026-10</span>
-                    </div>
-                    <div class="analyst-bar">
-                        <div class="analyst-name">保守底</div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width:34%; background:linear-gradient(90deg,#f7931a,#f97316); left:0;"></div>
-                        </div>
-                        <div class="bar-label-right" style="color:#f7931a;">$44K</div>
-                    </div>
-                    <div class="analyst-bar">
-                        <div class="analyst-name">極端底</div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width:25%; background:linear-gradient(90deg,#ef4444,#dc2626); left:0;"></div>
-                        </div>
-                        <div class="bar-label-right" style="color:#ef4444;">$32K</div>
-                    </div>
-                </div>
-                <!-- Cowen -->
-                <div style="margin-bottom:14px;">
+                <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:10px;">保守底 vs 極端底</div>
+                <div style="margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                         <span style="font-size:11px; color:#60a5fa; font-weight:700;">Benjamin Cowen</span>
                         <span style="font-size:10px; color:rgba(226,232,240,0.4);">2026 Q2-Q4</span>
                     </div>
                     <div class="analyst-bar">
                         <div class="analyst-name">Realized</div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width:42%; background:linear-gradient(90deg,#60a5fa,#3b82f6); left:0;"></div>
-                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:42%; background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div></div>
                         <div class="bar-label-right" style="color:#60a5fa;">$54K</div>
                     </div>
                     <div class="analyst-bar">
                         <div class="analyst-name">Balance</div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width:30%; background:linear-gradient(90deg,#ef4444,#dc2626); left:0;"></div>
-                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:30%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
                         <div class="bar-label-right" style="color:#ef4444;">$39K</div>
                     </div>
                 </div>
-                <!-- 歷史均值 -->
                 <div>
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                         <span style="font-size:11px; color:#a855f7; font-weight:700;">歷史均值回撤</span>
@@ -426,337 +474,347 @@ const MACRO_DATA = {
                     </div>
                     <div class="analyst-bar">
                         <div class="analyst-name">ETF支撐估</div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width:34%; background:linear-gradient(90deg,#a855f7,#9333ea); left:0;"></div>
-                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:34%; background:linear-gradient(90deg,#a855f7,#9333ea);"></div></div>
                         <div class="bar-label-right" style="color:#a855f7;">$44K</div>
                     </div>
                     <div class="analyst-bar">
                         <div class="analyst-name">純均值</div>
-                        <div class="bar-track">
-                            <div class="bar-fill" style="width:25%; background:linear-gradient(90deg,#ef4444,#dc2626); left:0;"></div>
-                        </div>
+                        <div class="bar-track"><div class="bar-fill" style="width:25%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
                         <div class="bar-label-right" style="color:#ef4444;">$32K</div>
                     </div>
                 </div>
             </div>
-
-            <!-- 右：共識框 + 美股情景 -->
             <div>
-                <!-- 共識中位 -->
-                <div style="background:rgba(247,147,26,0.1); border:1px solid rgba(247,147,26,0.3); border-radius:12px; padding:14px; margin-bottom:10px;">
-                    <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:6px;">多分析師共識中位</div>
+                <div style="background:rgba(247,147,26,0.1); border:1px solid rgba(247,147,26,0.3); border-radius:10px; padding:12px; margin-bottom:8px;">
+                    <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:5px;">多分析師共識中位</div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                         <div>
-                            <div style="font-size:12px; color:rgba(226,232,240,0.6);">保守底</div>
-                            <div style="font-size:24px; font-weight:900; color:#f7931a;">$44–54K</div>
+                            <div style="font-size:11px; color:rgba(226,232,240,0.5);">保守底</div>
+                            <div style="font-size:21px; font-weight:900; color:#f7931a;">$44–54K</div>
                         </div>
                         <div style="text-align:right;">
-                            <div style="font-size:12px; color:rgba(226,232,240,0.6);">極端底</div>
-                            <div style="font-size:24px; font-weight:900; color:#ef4444;">$32–39K</div>
+                            <div style="font-size:11px; color:rgba(226,232,240,0.5);">極端底</div>
+                            <div style="font-size:21px; font-weight:900; color:#ef4444;">$32–39K</div>
                         </div>
                     </div>
-                    <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-top:6px; text-align:center;">預期底部時間：2026 Q3–Q4</div>
+                    <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:4px; text-align:center;">預期底部時間：2026 Q3–Q4</div>
                 </div>
-
-                <!-- 美股 S&P 情景 -->
-                <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:8px;">美股 S&P500 三情景（CAPE 37x）</div>
-                <div style="display:flex; flex-direction:column; gap:6px;">
+                <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:6px;">美股 S&P500 三情景（CAPE 37x）</div>
+                <div style="display:flex; flex-direction:column; gap:5px;">
                     <div class="scenario-card scenario-opt">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:12px; font-weight:700; color:#4ade80;">樂觀 30%</span>
-                            <span style="font-size:18px; font-weight:900; color:#4ade80;">-13%</span>
+                            <span style="font-size:11px; font-weight:700; color:#4ade80;">樂觀 30%</span>
+                            <span style="font-size:16px; font-weight:900; color:#4ade80;">-13%</span>
                         </div>
-                        <div style="font-size:11px; color:rgba(226,232,240,0.5);">底部~6,071點 · 恢復6個月</div>
+                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">底部~6,071 · 恢復6個月</div>
                     </div>
                     <div class="scenario-card scenario-base">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:12px; font-weight:700; color:#fbbf24;">基準 45%</span>
-                            <span style="font-size:18px; font-weight:900; color:#fbbf24;">-25%</span>
+                            <span style="font-size:11px; font-weight:700; color:#fbbf24;">基準 45%</span>
+                            <span style="font-size:16px; font-weight:900; color:#fbbf24;">-25%</span>
                         </div>
-                        <div style="font-size:11px; color:rgba(226,232,240,0.5);">底部~5,225點 · 恢復18個月</div>
+                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">底部~5,225 · 恢復18個月</div>
                     </div>
                     <div class="scenario-card scenario-bear">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:12px; font-weight:700; color:#f87171;">悲觀 25%</span>
-                            <span style="font-size:18px; font-weight:900; color:#f87171;">-36%</span>
+                            <span style="font-size:11px; font-weight:700; color:#f87171;">悲觀 25%</span>
+                            <span style="font-size:16px; font-weight:900; color:#f87171;">-36%</span>
                         </div>
-                        <div style="font-size:11px; color:rgba(226,232,240,0.5);">底部~4,467點 · 恢復36個月</div>
+                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">底部~4,467 · 恢復36個月</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ③ BTC 分層抄底計劃 + 里程碑路徑 -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
-        <!-- 抄底計劃 -->
-        <div class="card card-btc">
-            <div class="section-label">③ BTC 抄底計劃</div>
-            <div class="section-title"><span>📊</span>分層建倉策略</div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:12px;">ATH $128K → 各層位建議倉位（總倉位100%）</div>
-
-            <div id="btc-layers-container">
-                <!-- 由 JS 渲染 -->
-            </div>
-            <div class="divider"></div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4);">
-                ⚠️ 建議分批入場，每層確認收盤後再加。極端底（$32K-$39K）僅在 Realized Price + 恐貪指數<15 雙確認時啟動。
-            </div>
-        </div>
-
-        <!-- 里程碑路徑 -->
-        <div class="card card-btc">
-            <div class="section-label">③ BTC 上升路徑</div>
-            <div class="section-title"><span>🏆</span>里程碑市值對比</div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:12px;">現在 $1.32T（全球第10）→ 晉升路徑</div>
-
-            <div id="btc-milestones-container"></div>
-
-            <div class="divider"></div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4);">
-                歷史規律：BTC每輪周期都晉升全球資產排名。2017衝前50，2021衝前2，下輪目標：追平蘋果（$168K）
-            </div>
-        </div>
-    </div>
-
-    <!-- ④ ETH 獨立框架 -->
-    <div class="card card-eth" style="margin-bottom:16px;">
-        <div class="section-label">④ ETH 宏觀框架</div>
-        <div class="section-title"><span>Ξ</span>ETH 對數回歸分析</div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px;">
-            <!-- 底部區 -->
-            <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:12px; padding:14px;">
-                <div style="font-size:10px; color:#627eea; font-weight:700; margin-bottom:4px;">🎯 抄底目標區</div>
-                <div style="font-size:22px; font-weight:900; color:#627eea;">$1,300</div>
-                <div style="font-size:12px; color:rgba(226,232,240,0.5);">─ $1,800</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-top:4px;">Log Regression 底部帶</div>
-            </div>
-            <!-- Log回歸 Home -->
-            <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:12px; padding:14px;">
-                <div style="font-size:10px; color:#60a5fa; font-weight:700; margin-bottom:4px;">🏠 Log回歸 Home</div>
-                <div style="font-size:22px; font-weight:900; color:#60a5fa;">$1,589</div>
-                <div style="font-size:12px; color:rgba(226,232,240,0.5);">Cowen 中位數</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-top:4px;">對數回歸帶中線</div>
-            </div>
-            <!-- 下輪目標 -->
-            <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:12px; padding:14px;">
-                <div style="font-size:10px; color:#4ade80; font-weight:700; margin-bottom:4px;">🚀 下輪牛市目標</div>
-                <div style="font-size:22px; font-weight:900; color:#4ade80;">$3,500</div>
-                <div style="font-size:12px; color:rgba(226,232,240,0.5);">─ $5,000</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-top:4px;">ETH/BTC 目標 0.053</div>
-            </div>
-        </div>
-
-        <!-- ETH 分層 -->
-        <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:8px;">ETH 分層抄底</div>
-        <div id="eth-layers-container"></div>
-
-        <div class="divider" style="margin:12px 0;"></div>
-        <div style="font-size:11px; color:rgba(226,232,240,0.5);">
-            ⚠️ 注意 ETH Bull Trap 風險：若 BTC 結構未走穩，ETH 可能出現假突破後繼續殺跌。建議 ETH 倉位滯後 BTC 底部確認信號 1-2 週再入場。
-        </div>
-    </div>
-
-    <!-- ⑤ 短期信號 -->
-    <div id="signal-section">
-        <!-- 由 JS 渲染 -->
-    </div>
-
-</div><!-- /app -->
+</div><!-- /main -->
 
 <!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
 <script>
-/* ── 時鐘 ── */
+/* ── Clock ── */
 function updateClock() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    document.getElementById('clock').textContent = `Taipei ${h}:${m}:${s}`;
+    const n = new Date();
+    document.getElementById('clock').textContent =
+        `Taipei ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(updateClock, 1000); updateClock();
 
-/* ── 價格 ── */
+/* ── Live prices ── */
 async function fetchPrices() {
     try {
         const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
         const d = await r.json();
-        const btcP = d.bitcoin.usd;
-        const btcC = d.bitcoin.usd_24h_change;
-        const ethP = d.ethereum.usd;
-        const ethC = d.ethereum.usd_24h_change;
-        document.getElementById('btc-price').textContent = '$' + btcP.toLocaleString();
-        document.getElementById('btc-chg').textContent = (btcC>0?'+':'') + btcC.toFixed(2)+'%';
-        document.getElementById('btc-chg').style.color = btcC>0?'#4ade80':'#f87171';
-        document.getElementById('eth-price').textContent = '$' + ethP.toLocaleString();
-        document.getElementById('eth-chg').textContent = (ethC>0?'+':'') + ethC.toFixed(2)+'%';
-        document.getElementById('eth-chg').style.color = ethC>0?'#4ade80':'#f87171';
-    } catch(e) { console.log('Price fetch error',e); }
+        const fmt = (p,c,el,chgEl,col) => {
+            document.getElementById(el).textContent = '$'+p.toLocaleString();
+            document.getElementById(chgEl).textContent = (c>0?'+':'')+c.toFixed(2)+'%';
+            document.getElementById(chgEl).style.color = c>0?'#4ade80':'#f87171';
+        };
+        fmt(d.bitcoin.usd, d.bitcoin.usd_24h_change, 'btc-price','btc-chg');
+        fmt(d.ethereum.usd, d.ethereum.usd_24h_change, 'eth-price','eth-chg');
+    } catch(e){}
 }
-fetchPrices();
-setInterval(fetchPrices, 30000);
+fetchPrices(); setInterval(fetchPrices, 30000);
 
-/* ── 恐貪指數 ── */
+/* ── F&G ── */
 async function fetchFNG() {
     try {
         const r = await fetch('https://api.alternative.me/fng/');
         const d = await r.json();
-        const val = d.data[0].value;
-        const cls = d.data[0].value_classification;
-        document.getElementById('fng-display').textContent = `恐貪 ${val} · ${cls}`;
+        const val = +d.data[0].value;
         const el = document.getElementById('fng-display');
-        if(val<25) el.style.color='#f87171';
-        else if(val<45) el.style.color='#fb923c';
-        else if(val<55) el.style.color='#fbbf24';
-        else el.style.color='#4ade80';
-    } catch(e) {}
+        el.textContent = `恐貪 ${val}`;
+        el.style.color = val<25?'#f87171':val<45?'#fb923c':val<55?'#fbbf24':'#4ade80';
+    } catch(e){}
 }
 fetchFNG();
 
-/* ── 渲染 BTC 分層 ── */
+/* ── Render BTC layers ── */
 function renderBtcLayers() {
-    const container = document.getElementById('btc-layers-container');
-    container.innerHTML = MACRO_DATA.btc_layers.map(l => `
+    document.getElementById('btc-layers-container').innerHTML =
+        MACRO_DATA.btc_layers.map(l=>`
         <div class="accum-row">
-            <div class="accum-price" style="color:${l.color};">$${(l.price/1000).toFixed(0)}K</div>
+            <div class="accum-price" style="color:${l.color}; font-size:13px;">$${(l.price/1000).toFixed(0)}K</div>
             <div class="accum-label">${l.label}</div>
             <div class="position-bar"><div class="position-fill" style="width:${l.pct*3.3}%; background:${l.color};"></div></div>
             <div class="accum-pct" style="color:${l.color};">${l.pct}%</div>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
 
-/* ── 渲染 BTC 里程碑 ── */
+/* ── Render BTC milestones ── */
 function renderBtcMilestones() {
-    const container = document.getElementById('btc-milestones-container');
-    container.innerHTML = MACRO_DATA.btc_milestones.map(m => `
+    document.getElementById('btc-milestones-container').innerHTML =
+        MACRO_DATA.btc_milestones.map(m=>`
         <div class="accum-row" style="justify-content:space-between;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="font-size:16px; font-weight:900; color:${m.color};">$${m.price >= 100000 ? (m.price/1000).toFixed(0)+'K' : (m.price/1000).toFixed(0)+'K'}</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div style="font-size:14px; font-weight:900; color:${m.color};">$${(m.price/1000).toFixed(0)}K</div>
                 <div>
-                    <div style="font-size:12px; color:rgba(226,232,240,0.8);">${m.label}</div>
-                    <div style="font-size:10px; color:rgba(226,232,240,0.4);">市值 $${m.market_cap}</div>
+                    <div style="font-size:11px; color:rgba(226,232,240,0.8);">${m.label}</div>
+                    <div style="font-size:9px; color:rgba(226,232,240,0.4);">市值 $${m.market_cap}</div>
                 </div>
             </div>
-            <div style="font-size:14px; font-weight:800; color:${m.color};">${m.upside}</div>
-        </div>
-    `).join('');
+            <div style="font-size:13px; font-weight:800; color:${m.color};">${m.upside}</div>
+        </div>`).join('');
 }
 
-/* ── 渲染 ETH 分層 ── */
+/* ── Render ETH layers ── */
 function renderEthLayers() {
-    const container = document.getElementById('eth-layers-container');
-    container.innerHTML = MACRO_DATA.eth.layers.map(l => `
+    document.getElementById('eth-layers-container').innerHTML =
+        MACRO_DATA.eth.layers.map(l=>`
         <div class="accum-row">
-            <div class="accum-price" style="color:${l.color}; font-size:14px;">$${l.price.toLocaleString()}</div>
+            <div class="accum-price" style="color:${l.color}; font-size:13px;">$${l.price.toLocaleString()}</div>
             <div class="accum-label">${l.label}</div>
             <div class="position-bar"><div class="position-fill" style="width:${l.pct*3}%; background:${l.color};"></div></div>
             <div class="accum-pct" style="color:${l.color};">${l.pct}%</div>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
 
-/* ── 渲染信號區 ── */
+/* ── Render Signal ── */
 function renderSignal() {
     const s = DASHBOARD_DATA.signal;
-    const cls = s.direction === 'BULLISH' ? 'bullish' : s.direction === 'BEARISH' ? 'bearish' : s.direction === 'CONFLICT' ? 'conflict' : 'neutral';
-    const badge = s.direction === 'BULLISH' ? 'badge-long' : s.direction === 'BEARISH' ? 'badge-short' : s.direction === 'CONFLICT' ? 'badge-conflict' : 'badge-neutral';
-    const dirText = s.direction === 'BULLISH' ? '做多 LONG' : s.direction === 'BEARISH' ? '做空 SHORT' : s.direction === 'CONFLICT' ? '訊號衝突' : '觀望';
-
-    // 維度顏色
-    const dimColor = v => v >= 65 ? '#4ade80' : v >= 40 ? '#fbbf24' : '#f87171';
-    const dimNames = { tech:'技術面', onchain:'鏈上', derivatives:'衍生品', orderflow:'訂單流', fundflow:'資金流', macro:'宏觀', sentiment:'情緒', news:'新聞', kol:'KOL' };
-
-    // 更新時間
+    const cls = s.direction==='BULLISH'?'bullish':s.direction==='BEARISH'?'bearish':s.direction==='CONFLICT'?'conflict':'neutral';
+    const badge = s.direction==='BULLISH'?'badge-long':s.direction==='BEARISH'?'badge-short':s.direction==='CONFLICT'?'badge-conflict':'badge-neutral';
+    const dirText = s.direction==='BULLISH'?'做多 LONG':s.direction==='BEARISH'?'做空 SHORT':s.direction==='CONFLICT'?'訊號衝突':'觀望';
+    const dimColor = v => v>=65?'#4ade80':v>=40?'#fbbf24':'#f87171';
+    const dimNames = {tech:'技術面',onchain:'鏈上',derivatives:'衍生品',orderflow:'訂單流',fundflow:'資金流',macro:'宏觀',sentiment:'情緒',news:'新聞',kol:'KOL'};
     const upd = new Date(DASHBOARD_DATA.last_update);
     const updStr = `${upd.getMonth()+1}/${upd.getDate()} ${String(upd.getHours()).padStart(2,'0')}:${String(upd.getMinutes()).padStart(2,'0')}`;
 
-    // 入場計劃
-    let entryBlock = '';
-    if(s.entry) {
-        entryBlock = `
-        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px;">
-            <div class="metric-box"><div style="font-size:10px; color:rgba(226,232,240,0.5);">入場</div><div style="font-weight:800; color:#fbbf24;">$${s.entry}</div></div>
-            <div class="metric-box"><div style="font-size:10px; color:rgba(226,232,240,0.5);">止損</div><div style="font-weight:800; color:#f87171;">$${s.sl}</div></div>
-            <div class="metric-box"><div style="font-size:10px; color:rgba(226,232,240,0.5);">目標TP1</div><div style="font-weight:800; color:#4ade80;">$${s.tp1}</div></div>
-            <div class="metric-box"><div style="font-size:10px; color:rgba(226,232,240,0.5);">倉位/槓桿</div><div style="font-weight:800; color:#fbbf24;">${s.position_pct}% · ${s.leverage}x</div></div>
-        </div>`;
-    } else {
-        entryBlock = `<div style="margin-top:10px; padding:10px; background:rgba(148,163,184,0.06); border-radius:8px; font-size:12px; color:rgba(226,232,240,0.5);">⏳ ${s.timeframe_note}</div>`;
-    }
+    const entryBlock = s.entry ? `
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:10px;">
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">入場</div><div style="font-weight:800;color:#fbbf24;font-size:13px;">$${s.entry}</div></div>
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">止損</div><div style="font-weight:800;color:#f87171;font-size:13px;">$${s.sl}</div></div>
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">TP1</div><div style="font-weight:800;color:#4ade80;font-size:13px;">$${s.tp1}</div></div>
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">倉位/槓桿</div><div style="font-weight:800;color:#fbbf24;font-size:12px;">${s.position_pct}%·${s.leverage}x</div></div>
+    </div>` : `<div style="margin-top:8px;padding:9px;background:rgba(148,163,184,0.06);border-radius:8px;font-size:11px;color:rgba(226,232,240,0.5);">⏳ ${s.timeframe_note}</div>`;
 
     document.getElementById('signal-section').innerHTML = `
-    <div class="card card-signal" style="margin-bottom:16px;">
-        <div class="section-label">⑤ 短期交易信號</div>
+    <div class="card card-signal" style="margin-bottom:12px;">
+        <div class="section-label">① 短期交易信號（最新）</div>
         <div class="signal-banner ${cls}">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
-                <div>
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap;">
                         <span class="badge ${badge}">${dirText}</span>
-                        <span style="font-size:13px; color:rgba(226,232,240,0.7);">${s.strength}</span>
+                        <span style="font-size:12px;color:rgba(226,232,240,0.7);">${s.strength}</span>
                     </div>
-                    <div style="font-size:12px; color:rgba(226,232,240,0.6); max-width:600px; line-height:1.5;">${s.reason}</div>
+                    <div style="font-size:11px;color:rgba(226,232,240,0.6);line-height:1.55;">${s.reason}</div>
                 </div>
-                <div style="text-align:right;">
-                    <div style="font-size:10px; color:rgba(226,232,240,0.4);">ETH 信號</div>
-                    <div style="font-size:28px; font-weight:900; color:#627eea;">${s.eth_signal}</div>
-                    <div style="font-size:10px; color:rgba(226,232,240,0.4);">/ 100</div>
+                <div style="text-align:center;flex-shrink:0;">
+                    <div style="font-size:9px;color:rgba(226,232,240,0.4);">ETH信號</div>
+                    <div style="font-size:26px;font-weight:900;color:#627eea;">${s.eth_signal}</div>
+                    <div style="font-size:9px;color:rgba(226,232,240,0.4);">/100</div>
                 </div>
             </div>
             ${entryBlock}
         </div>
-
-        <!-- 9維度 -->
-        <div class="dim-grid" style="margin-bottom:14px;">
-            ${Object.entries(s.dimensions).map(([k,v]) => `
-                <div class="dim-item">
-                    <span class="dim-name">${dimNames[k]||k}</span>
-                    <span class="dim-score" style="color:${dimColor(v)};">${v}</span>
-                </div>
-            `).join('')}
+        <div class="dim-grid" style="margin-bottom:12px;">
+            ${Object.entries(s.dimensions).map(([k,v])=>`
+            <div class="dim-item">
+                <span class="dim-name">${dimNames[k]||k}</span>
+                <span class="dim-score" style="color:${dimColor(v)};">${v}</span>
+            </div>`).join('')}
         </div>
-
-        <!-- 綜合分 + 績效 -->
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <div class="metric-box" style="flex:1; min-width:100px;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.5);">綜合分</div>
-                <div style="font-size:22px; font-weight:900; color:#fbbf24;">${s.composite_score}</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+            <div class="metric-box" style="flex:1;min-width:80px;">
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">綜合分</div>
+                <div style="font-size:20px;font-weight:900;color:#fbbf24;">${s.composite_score}</div>
             </div>
-            <div class="metric-box" style="flex:1; min-width:100px;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.5);">體制</div>
-                <div style="font-size:13px; font-weight:700; color:#94a3b8; margin-top:2px;">${s.regime}</div>
+            <div class="metric-box" style="flex:2;min-width:100px;">
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">體制</div>
+                <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-top:2px;">${s.regime}</div>
             </div>
-            <div class="metric-box" style="flex:1; min-width:100px;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.5);">近3筆正確率</div>
-                <div style="font-size:22px; font-weight:900; color:#4ade80;">${s.backfill.recent_3_correct}</div>
+            <div class="metric-box" style="flex:1;min-width:80px;">
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">近期正確率</div>
+                <div style="font-size:20px;font-weight:900;color:${s.backfill.recent_3_correct.startsWith('0')?'#f87171':'#4ade80'};">${s.backfill.recent_3_correct}</div>
             </div>
-            <div class="metric-box" style="flex:1; min-width:100px;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.5);">連勝/連敗</div>
-                <div style="font-size:13px; font-weight:700; color:#f87171; margin-top:2px;">${s.backfill.streak}</div>
+            <div class="metric-box" style="flex:1;min-width:80px;">
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">連勝/連敗</div>
+                <div style="font-size:12px;font-weight:700;color:#f87171;margin-top:2px;">${s.backfill.streak}</div>
             </div>
-            <div class="metric-box" style="flex:1; min-width:120px;">
-                <div style="font-size:10px; color:rgba(226,232,240,0.5);">更新時間</div>
-                <div style="font-size:13px; font-weight:700; color:#94a3b8; margin-top:2px;">${updStr}</div>
+            <div class="metric-box" style="flex:1;min-width:90px;">
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">更新</div>
+                <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-top:2px;">${updStr}</div>
             </div>
         </div>
     </div>`;
 }
 
-/* ── 初始化 ── */
+/* ── Render Long-Term Monitor ── */
+function renderLongTerm() {
+    const lt = DASHBOARD_DATA.long_term;
+    const st = lt.status;
+    const bs = lt.bottom_signals;
+    const mac = lt.macro;
+    const sel = lt.sell_signals;
+
+    // Score color
+    const scoreColor = s => s>=80?'#4ade80':s>=60?'#fbbf24':s>=40?'#f97316':'#f87171';
+    const scoreBorder = s => s>=80?'rgba(74,222,128,0.5)':s>=60?'rgba(251,191,36,0.5)':s>=40?'rgba(249,115,22,0.5)':'rgba(248,113,113,0.5)';
+    const signalColor = s => s==='green'?'#4ade80':s==='yellow'?'#fbbf24':'#f87171';
+    const barBg = s => s==='green'?'linear-gradient(90deg,#4ade80,#22c55e)':s==='yellow'?'linear-gradient(90deg,#fbbf24,#f59e0b)':'linear-gradient(90deg,#f87171,#ef4444)';
+    const trendIcon = t => t==='up'?'<span class="trend-up">↑</span>':t==='down'?'<span class="trend-down">↓</span>':'<span class="trend-hold">→</span>';
+    const alertCls = st.alert_level==='accumulate'?'accumulate':st.alert_level==='sell'?'sell':st.alert_level==='watch'?'watch':'normal';
+
+    // Status banner
+    const changedBadge = st.changed
+        ? `<span class="tag tag-red" style="font-size:9px;">今日有變化</span>`
+        : `<span class="tag tag-green" style="font-size:9px;">與昨日相同</span>`;
+    const alertLabel = st.alert_level==='accumulate'
+        ? `<span class="tag tag-green">🟢 可開始抄底</span>`
+        : st.alert_level==='sell'
+        ? `<span class="tag tag-red">🔴 考慮減倉</span>`
+        : st.alert_level==='watch'
+        ? `<span class="tag tag-orange">🟡 密切觀察</span>`
+        : `<span class="tag tag-gray">⚪ 觀望等待</span>`;
+
+    const keyChangesHTML = st.key_changes.map(c=>`
+        <div style="font-size:11px;color:rgba(226,232,240,0.65);margin-bottom:5px;padding-left:2px;">${c}</div>`).join('');
+
+    // Bottom signals
+    const bottomHTML = bs.indicators.map(ind=>`
+        <div class="bottom-indicator">
+            <div class="bi-name">${ind.name}</div>
+            <div class="bi-value" style="color:${signalColor(ind.signal)};">${ind.value}</div>
+            <div class="bi-bar-wrap"><div class="bi-bar" style="width:${ind.score}%;background:${barBg(ind.signal)};"></div></div>
+            <div class="bi-score" style="color:${scoreColor(ind.score)};">${ind.score}</div>
+            <div class="bi-status" style="font-size:9px;color:${signalColor(ind.signal)};text-align:right;">${ind.detail}</div>
+        </div>`).join('');
+
+    // Macro grid
+    const macroHTML = mac.indicators.map(m=>`
+        <div class="macro-item">
+            <div class="macro-name">${m.name}</div>
+            <div class="macro-value">${m.value} ${trendIcon(m.trend)}</div>
+            <div class="macro-note">${m.note}</div>
+        </div>`).join('');
+
+    // Sell signals
+    const sellHTML = sel.indicators.map(s=>`
+        <div class="sell-check">
+            <div class="sell-dot ${s.triggered?'triggered':'safe'}"></div>
+            <div class="sell-name">${s.name}</div>
+            <div class="sell-current">${s.current}</div>
+        </div>`).join('');
+
+    // Daily log
+    const fgColor = v => v<=15?'#f87171':v<=25?'#fb923c':v<=40?'#fbbf24':'#4ade80';
+    const logHTML = lt.daily_log.map((row,i)=>`
+        <div class="log-row" style="${i===0?'background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 5px;':''}">
+            <div class="log-date">${row.date}</div>
+            <div class="log-btc">$${(row.btc/1000).toFixed(1)}K</div>
+            <div class="log-eth">$${(row.eth/1).toFixed(0)}</div>
+            <div class="log-fg" style="color:${fgColor(row.fg)};">${row.fg}</div>
+            <div class="log-note">${row.note}</div>
+        </div>`).join('');
+
+    document.getElementById('lt-section').innerHTML = `
+    <div class="section-label">② 長線宏觀監控（每日更新）</div>
+    <div class="section-title">
+        <span>🔭</span>長線抄底賣出雷達
+        <span style="margin-left:auto;display:flex;gap:6px;align-items:center;">${changedBadge}${alertLabel}</span>
+    </div>
+
+    <!-- 今日狀態橫幅 -->
+    <div class="lt-status-banner ${alertCls}" style="margin-bottom:14px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+            <div class="score-circle" style="border-color:${scoreBorder(bs.overall)};">
+                <div class="score-num" style="color:${scoreColor(bs.overall)};">${bs.overall}</div>
+                <div class="score-label">底部分</div>
+            </div>
+            <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:800;color:#e8ecf1;margin-bottom:6px;">${st.summary}</div>
+                ${keyChangesHTML}
+            </div>
+        </div>
+        <div class="divider" style="margin:10px 0 10px;"></div>
+        <div style="font-size:11px;color:rgba(226,232,240,0.6);line-height:1.5;">${st.long_term_view}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <!-- 底部信號 -->
+        <div>
+            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">📊 底部信號評分（${bs.overall}/100）</div>
+            ${bottomHTML}
+            <div class="divider" style="margin:10px 0;"></div>
+            <div style="font-size:10px;color:rgba(226,232,240,0.5);line-height:1.5;">${bs.advice}</div>
+        </div>
+        <!-- 長線賣出信號 + 日誌 -->
+        <div>
+            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">🚨 長線賣出信號（${sel.triggered_count}/5 觸發）</div>
+            ${sellHTML}
+            <div style="font-size:10px;color:rgba(226,232,240,0.4);margin-top:6px;">下次檢查：${sel.next_check}</div>
+            <div class="divider" style="margin:10px 0;"></div>
+            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">📅 每日觀測日誌</div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;">
+                <div style="width:38px;font-size:9px;color:rgba(226,232,240,0.3);">日期</div>
+                <div style="width:55px;font-size:9px;color:rgba(226,232,240,0.3);">BTC</div>
+                <div style="width:50px;font-size:9px;color:rgba(226,232,240,0.3);">ETH</div>
+                <div style="width:26px;font-size:9px;color:rgba(226,232,240,0.3);">FG</div>
+                <div style="flex:1;font-size:9px;color:rgba(226,232,240,0.3);">今日變化</div>
+            </div>
+            ${logHTML}
+        </div>
+    </div>
+
+    <!-- 宏觀數據 -->
+    <div>
+        <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">🌍 宏觀數據面板</div>
+        <div class="macro-grid">${macroHTML}</div>
+    </div>`;
+}
+
+/* ── Init ── */
+renderSignal();
+renderLongTerm();
 renderBtcLayers();
 renderBtcMilestones();
 renderEthLayers();
-renderSignal();
 </script>
 
 <!-- Footer -->
-<div style="max-width:1152px; margin:0 auto; padding:16px 16px 32px; font-size:10px; color:rgba(226,232,240,0.25); text-align:center;">
-    宏觀預測僅供參考，不構成投資建議。分析來源：Benjamin Cowen (IntoTheCryptoverse)、子時 (@silverfang88)、AI歷史均值分析。<br/>
+<div style="max-width:900px;margin:0 auto;padding:8px 14px 28px;font-size:9px;color:rgba(226,232,240,0.22);text-align:center;">
+    宏觀預測僅供參考，不構成投資建議。分析來源：Benjamin Cowen、Cowen週期框架、子時AI分析、量化宏觀模型。<br/>
     里程碑觸發時更新：BTC跌破 $83K / $60K / $54K / $45K / $39K
 </div>
-
 </body>
 </html>
