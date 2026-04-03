@@ -132,18 +132,40 @@
 
         .divider { height: 1px; background: rgba(148,163,184,0.08); margin: 14px 0; }
 
+        /* ── 響應式 grid 輔助 class ── */
+        .grid-two   { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+        .grid-two-lg{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .grid-three { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+        .grid-entry { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:10px; }
+        .grid-lt    { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+        /* Timeline 滾動容器（手機自動橫滾） */
+        .tl-wrap  { overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin:0 -4px; }
+        .tl-inner { min-width:480px; padding:22px 10px 12px; position:relative; }
+
         /* ── Responsive ── */
-        @media (max-width: 640px) {
-            .dim-grid { grid-template-columns: repeat(3,1fr); }
-            .macro-grid { grid-template-columns: repeat(2,1fr); }
-            .bi-name { width: 100px; }
-            .bi-value { width: 60px; }
-            .bi-status { width: 60px; }
-            .header-prices { gap: 10px !important; }
-            .header-price-item { min-width: 52px; }
+        @media (max-width: 600px) {
+            /* 所有 2 欄 → 1 欄 */
+            .grid-two, .grid-two-lg, .grid-lt { grid-template-columns:1fr; }
+            /* ETH 目標 3 欄 → 1 欄 */
+            .grid-three { grid-template-columns:1fr; }
+            /* 入場/SL/TP 4 欄 → 2×2 */
+            .grid-entry { grid-template-columns:repeat(2,1fr); }
+            /* macro 保持 2 欄 */
+            .macro-grid { grid-template-columns:repeat(2,1fr); }
+            /* 底部信號行寬縮減 */
+            .bi-name   { width:80px; font-size:10px; }
+            .bi-value  { width:46px; font-size:10px; }
+            .bi-status { display:none; }          /* 隱藏最右備注 */
+            .bi-score  { width:24px; font-size:11px; }
+            /* 分析師 bar 縮減 */
+            .analyst-name    { width:52px; }
+            .bar-label-right { width:44px; font-size:10px; }
+            /* header 縮緊 */
+            .header-prices      { gap:8px !important; }
+            .header-price-item  { min-width:48px; }
         }
         @media (max-width: 420px) {
-            .dim-grid { grid-template-columns: repeat(2,1fr); }
+            .dim-grid { grid-template-columns:repeat(2,1fr); }
         }
     </style>
 </head>
@@ -265,7 +287,7 @@ const MACRO_DATA = {
         { price:69000, label:"強支撐測試 / 21周EMA",          pct:10, color:"#fbbf24", risk:"低" },
         { price:60000, label:"關鍵結構支撐",                   pct:15, color:"#f97316", risk:"中" },
         { price:54000, label:"Realized Price（Cowen保守底）",  pct:25, color:"#f87171", risk:"中高" },
-        { price:44000, label:"ETF支撐保守底（歷史均值）",      pct:30, color:"#ef4444", risk:"高" },
+        { price:44000, label:"ETF6��撐保守底（歷史均值）",      pct:30, color:"#ef4444", risk:"高" },
         { price:32000, label:"Balance Price 極端底（Cowen）",  pct:20, color:"#991b1b", risk:"極端" }
     ],
     btc_milestones: [
@@ -340,7 +362,7 @@ const MACRO_DATA = {
             <span>📡</span>BTC 四年週期定位
             <span class="tag tag-red" style="margin-left:auto;">2026 熊市中段</span>
         </div>
-        <div style="position:relative; padding:22px 0 12px;">
+        <div class="tl-wrap"><div class="tl-inner">
             <div class="timeline-track">
                 <div class="timeline-fill" style="width:15%;"></div>
                 <div class="timeline-node" style="left:0%;">
@@ -374,8 +396,8 @@ const MACRO_DATA = {
                     <div class="node-label-below">2028 Q4</div>
                 </div>
             </div>
-        </div>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:7px; margin-top:10px;">
+        </div></div><!-- /tl-wrap -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:7px; margin-top:10px;">
             <div style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:9px; padding:10px;">
                 <div style="font-size:11px; color:#fbbf24; font-weight:700; margin-bottom:3px;">🏦 Fed降息重啟</div>
                 <div style="font-size:10px; color:rgba(226,232,240,0.55);">Warsh偏鷹，降息預期43%需重新定價</div>
@@ -395,10 +417,10 @@ const MACRO_DATA = {
     </div>
 
     <!-- ④ BTC 分層抄底 + 里程碑（並排，手機改為單欄） -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+    <div class="grid-two">
         <div class="card card-btc" style="margin-bottom:0;">
             <div class="section-label">④ BTC 抄底計劃</div>
-            <div class="section-title" style="font-size:14px;"><span>📊</span>分層建倉策略</div>
+            <div class="section-title" style="font-size:14px;"><span>🍊</span>分層建倉策略</div>
             <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">ATH $128K → 各層位建議倉位</div>
             <div id="btc-layers-container"></div>
             <div class="divider"></div>
@@ -418,7 +440,7 @@ const MACRO_DATA = {
     <div class="card card-eth">
         <div class="section-label">⑤ ETH 宏觀框架</div>
         <div class="section-title"><span>Ξ</span>ETH 對數回歸分析</div>
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;">
+        <div class="grid-three">
             <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:10px; padding:12px;">
                 <div style="font-size:10px; color:#627eea; font-weight:700; margin-bottom:3px;">🎯 抄底目標區</div>
                 <div style="font-size:20px; font-weight:900; color:#627eea;">$1,300</div>
@@ -448,7 +470,7 @@ const MACRO_DATA = {
     <div class="card card-btc">
         <div class="section-label">⑥ BTC 底部分析</div>
         <div class="section-title"><span>₿</span>多分析師底部共識</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div class="grid-two-lg">
             <div>
                 <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:10px;">保守底 vs 極端底</div>
                 <div style="margin-bottom:12px;">
@@ -620,7 +642,7 @@ function renderSignal() {
     const updStr = `${upd.getMonth()+1}/${upd.getDate()} ${String(upd.getHours()).padStart(2,'0')}:${String(upd.getMinutes()).padStart(2,'0')}`;
 
     const entryBlock = s.entry ? `
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:10px;">
+    <div class="grid-entry">
         <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">入場</div><div style="font-weight:800;color:#fbbf24;font-size:13px;">$${s.entry}</div></div>
         <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">止損</div><div style="font-weight:800;color:#f87171;font-size:13px;">$${s.sl}</div></div>
         <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">TP1</div><div style="font-weight:800;color:#4ade80;font-size:13px;">$${s.tp1}</div></div>
@@ -770,7 +792,7 @@ function renderLongTerm() {
         <div style="font-size:11px;color:rgba(226,232,240,0.6);line-height:1.5;">${st.long_term_view}</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+    <div class="grid-lt">
         <!-- 底部信號 -->
         <div>
             <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">📊 底部信號評分（${bs.overall}/100）</div>
