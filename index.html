@@ -897,44 +897,30 @@ renderEthLayers();
 </div>
 
 <script>
-// Auto-updated by crypto-analysis scheduled task 2026-04-03T12:10:00Z
+// Auto-updated by crypto-analysis scheduled task 2026-04-04T07:20:00+08:00
 document.addEventListener('DOMContentLoaded', function() {
   if (window.updateFromAnalysis) {
     window.updateFromAnalysis({
       "signal": {
-        "direction": "觀望 OBSERVE",
-        "condition": "NFP靜默期 + Good Friday薄流動性",
-        "rationale": "CONFLICT投票（空0.31 vs 多0.27）。BTC<$83K熊市。Liberation Day關稅+NFP雙重事件風險。後NFP: 強>100K→多$2,085 SL$2,035 TP1$2,110; 弱<30K→空$2,040 SL$2,080 TP1$2,020",
-        "eth_signal": 50.8,
-        "entry": null,
-        "sl": null,
-        "tp1": null,
-        "position": "0%·0x（觀望）",
-        "tech": 40,
-        "onchain": 82,
-        "derivatives": 52,
-        "orderflow": 45,
-        "fundflow": 45,
-        "macro": 20,
-        "sentiment": 70,
-        "news": 30,
-        "kol": 34,
-        "composite": 50.0,
+        "direction": "OBSERVE",
+        "strength": "觀望（CONFLICT Zone — 等觸發條件）",
+        "eth_signal": 48.64,
+        "composite_score": 34.4,
         "regime": "震盪+中波動",
-        "wins": 3,
-        "losses": 4,
-        "recent_accuracy": "CONFLICT觀望",
-        "updated_at": "4/3 12:10"
+        "strategy": "均值回歸 + 觀望",
+        "confidence": "low",
+        "vote_result": "BEARISH 4票(w=0.33) vs N/A 4票(w=0.59) vs BULLISH 1票(w=0.08)",
+        "entry": null, "sl": null, "tp1": null, "tp2": null,
+        "position_pct": 0, "leverage": 0, "rr_ratio": "觀望",
+        "timeframe_note": "🚨 活躍空單01:20Z@2065已30hr→立即移SL至保本$2065！ | 條件空:CVD確認後$2065-2080 | 條件多:Funding<-0.01%後$1980-2010",
+        "reason": "ETH信號48.64落入CONFLICT Zone（宏觀BEARISH vs ETH鏈上底部BULLISH）。CVD未確認v5.3規則，CONFLICT多頭軟觸發未達標(Funding -0.0014%)。Good Friday+伊朗4/6週末。鏈上底部信號強烈(85/100)為慢信號。",
+        "dimensions": {"tech":25,"onchain":85,"derivatives":50,"orderflow":45,"fundflow":45,"macro":20,"sentiment":55,"news":35,"kol":41},
+        "backfill": {"recent_3_correct":"N/A(observe)","recent_5_tp1_hit":"N/A","streak":"觀望模式"},
+        "updated_at": "4/4 07:20"
       },
-      "long_term": {
-        "daily_log": [
-          {"date": "04/03", "btc": "67.0K", "eth": "2,062", "fg": 9, "note": "NFP+GoodFriday | F&G=9第52天 | BTC Q1最差-22%"}
-        ]
-      },
-      "last_update": "2026-04-03T12:10:00+08:00"
+      "last_update": "2026-04-04T07:20:00+08:00"
     });
   }
-});
-</script>
+});</script>
 </body>
 </html>
