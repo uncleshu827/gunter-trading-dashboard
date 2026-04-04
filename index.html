@@ -215,28 +215,28 @@
 <!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-04T12:10:00Z",
+    last_update: "2026-04-05T04:37:00+08:00",
     analysis_mode: "Standard",
 
     signal: {
         direction: "OBSERVE",
-        strength: "觀望（BEARISH — 等伊朗4/6+CVD確認）",
-        eth_signal: 42.5,
-        composite_score: 38.2,
-        regime: "震盪+低波動(BB極端Squeeze)",
-        strategy: "均值回歸 + 觀望（BB極端壓縮待解除）",
+        strength: "觀望（CONFLICT — Iran延期10天 + 4H空頭軋空x10.4）",
+        eth_signal: 49.2,
+        composite_score: 51.5,
+        regime: "震盪+低波動(BB壓縮/Iran延期)",
+        strategy: "觀望 — 等CVD確認方向",
         confidence: "low",
-        vote_result: "BEARISH 4票(w=0.427) vs BULLISH 2票(w=0.286)",
+        vote_result: "CONFLICT: BULLISH 4票(w=0.541) vs BEARISH 4票(w=0.459)",
         entry: null, sl: null, tp1: null, tp2: null,
         position_pct: 0, leverage: 0, rr_ratio: "觀望",
-        timeframe_note: "條件空: CVD確認B 進$2050-2065 | SL$2110 | TP1$2030\n條件多: 伊朗解決+CVD翻正 進$2025-2045 | SL$1985 | TP1$2065",
-        reason: "ETH信號50.8=CONFLICT(BTC宏觀BEARISH 0.61票 vs ETH鏈上底部BULLISH 0.39票)。RSI4H=27.2超賣，鏈上調整分=78/100(NUPL負/儲量16年低/IV偏度+13)。CVD未確認→空頭信號無法入場。CONFLICT溫和多頭2/3條件未達。伊朗4/6截止48hr+Good Friday低流動性，嚴格觀望。",
+        timeframe_note: "條件空: 跌破$2,040+CVD 2根負K → 入場$2,038 | SL$2,090 | TP1$2,021(4-8hr)\n條件多: Funding<-0.01%+3/3 Soft Trigger（暫不符合）",
+        reason: "4:4投票衝突(bull 0.541 vs bear 0.459)，兩方均未達1.3x閾值→CONFLICT。Iran延期10天(Trump 4/5)+4H空頭軋空$6.98M使Orderflow+News翻多。但BTC仍在$83K熊市線下，Cowen WoW核心期，宏觀Risk-Off持續。CVD未出現負斜率，v5.3規則禁止入空。等CVD確認再動。",
         dimensions: {
-            tech:38, onchain:82, derivatives:49,
-            orderflow:"N/A", fundflow:45, macro:15,
-            sentiment:70, news:25, kol:36
+            tech:32, onchain:82, derivatives:48,
+            orderflow:56, fundflow:38, macro:25,
+            sentiment:70, news:58, kol:35
         },
-        backfill: { recent_3_correct:"2/3✓", recent_5_tp1_hit:"1/5→持續收緊TP1", streak:"無連敗" }
+        backfill: { recent_3_correct:"0/3（全observe，不計入）", recent_5_tp1_hit:"N/A", streak:"無方向信號" }
     },
 
     /* ── 長線宏觀監控（每日 Deep 分析更新）── */
@@ -299,6 +299,7 @@ const DASHBOARD_DATA = {
         },
 
         daily_log: [
+            {date:"04/05", btc:67302, eth:2064, fg:12, note:"CONFLICT 49.2 觀望。Trump Iran延期10天→Risk-On vs 宏觀熊市。4H空頭軋空x10.4。BB極端壓縮。等CVD確認。"},
             {date:"04/04", btc:67083, eth:2055, fg:11, note:"BEARISH 42.5 觀望。BB極端Squeeze(BTC 1.93%史低)。伊朗4/6截止36hr。鏈上82/100底部強信號 vs 宏觀15/100矛盾。CVD未確認，等4/6方向。"},
             {date:"04/03", btc:66752, eth:2053, fg:12, note:"NFP 178K強勁，BTC反彈$67K後震盪。Liberation Day後伊朗4/6前夕"},
             {date:"04/02", btc:68813, eth:2131, fg:8,  note:"ETH反彈至2165後被壓回，Liberation Day後第一天"},
