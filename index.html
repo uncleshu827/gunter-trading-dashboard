@@ -215,28 +215,28 @@
 <!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-03T09:20:00+08:00",
+    last_update: "2026-04-04T07:20:00+08:00",
     analysis_mode: "Deep",
 
     signal: {
-        direction: "BEARISH",
-        strength: "條件空（等觸發）",
-        eth_signal: 43.3,
-        composite_score: 45.5,
+        direction: "OBSERVE",
+        strength: "觀望（CONFLICT Zone — 等觸發條件）",
+        eth_signal: 48.64,
+        composite_score: 34.4,
         regime: "震盪+中波動",
-        strategy: "均值回歸",
+        strategy: "均值回歸 + 觀望",
         confidence: "low",
-        vote_result: "BEARISH 5票 vs NEUTRAL 4票 vs BULLISH 0票",
-        entry: 2065, sl: 2130, tp1: 2036, tp2: 1993,
-        position_pct: 3.1, leverage: 2, rr_ratio: "0.6/1.1",
-        timeframe_note: "等Liberation Day關稅消化後，CVD確認方向再進場",
-        reason: "5:0 BEARISH投票。BTC遠低於$83K熊市線，ETH大幅跑輸BTC（-3.1% vs -1.2%）。Liberation Day關稅今日落地，NFP在11h後。IV Skew+13=極端恐懼，禁止未確認就衝空。等$2,080阻力CVD轉負或跌破$2,010確認後入場。",
+        vote_result: "BEARISH 4票(w=0.33) vs N/A 4票(w=0.59) vs BULLISH 1票(w=0.08)",
+        entry: null, sl: null, tp1: null, tp2: null,
+        position_pct: 0, leverage: 0, rr_ratio: "觀望",
+        timeframe_note: "🚨 活躍空單01:20Z@2065已30hr→立即移SL至保本$2065！ | 條件空:CVD確認後$2065-2080 | 條件多:Funding<-0.01%後$1980-2010",
+        reason: "ETH信號48.64落入CONFLICT Zone（宏觀BEARISH vs ETH鏈上底部BULLISH）。CVD未確認v5.3規則，CONFLICT多頭軟觸發未達標(Funding -0.0014%≠<-0.01%)。Good Friday+伊朗4/6週末binary event。鏈上底部信號強烈(85/100)但為慢信號不作4H入場依據。",
         dimensions: {
-            tech:38, onchain:47, derivatives:52,
-            orderflow:46, fundflow:45, macro:30,
-            sentiment:35, news:30, kol:40
+            tech:25, onchain:85, derivatives:50,
+            orderflow:45, fundflow:45, macro:20,
+            sentiment:55, news:35, kol:41
         },
-        backfill: { recent_3_correct:"0/2", recent_5_tp1_hit:"1/2", streak:"2連敗⚠️" }
+        backfill: { recent_3_correct:"N/A(observe)", recent_5_tp1_hit:"N/A", streak:"觀望模式" }
     },
 
     /* ── 長線宏觀監控（每日 Deep 分析更新）── */
@@ -247,13 +247,13 @@ const DASHBOARD_DATA = {
         status: {
             changed: true,
             alert_level: "normal",   // normal | watch | accumulate | sell
-            summary: "Liberation Day關稅落地，宏觀Risk-Off加劇",
+            summary: "ETH鏈上底部信號與宏觀空頭形成結構性矛盾，觀望伊朗4/6落地",
             key_changes: [
-                "📉 ETH/BTC跌至0.031（年內新低），ETH繼續失血",
-                "📉 Liberation Day關稅全面落地，宏觀risk-off確認",
-                "📊 F&G=12維持50日極端恐懼（歷史底部前兆）"
+                "🟢 F&G從極端恐慌(8)回升至28，ETH鏈上底部信號強烈（85/100）",
+                "⚠️ BTC仍在$83K熊市線以下，Cowen Window of Weakness核心期（4月上旬）",
+                "📉 ETH/BTC跌至0.031年內新低，ETH繼續相對弱勢 | 伊朗4/6週末binary event"
             ],
-            long_term_view: "BTC仍在熊市結構（$67K < $83K 熊市線），符合Cowen中期年四月回調劇本。長線尚無建倉觸發條件（BTC需接近$54K Realized Price）。預計底部 $44-54K 區間（2026 Q3-Q4）。"
+            long_term_view: "宏觀空頭（Liberation Day+SPX VIX45）vs ETH鏈上底部（負NUPL+16yr低儲備+負Funding），形成結構性矛盾。CVD未確認，觀望伊朗4/6事件落地後再評估。長線建倉觸發條件：BTC需跌近$54K Realized Price。預計底部$44-54K（2026 Q3-Q4）。"
         },
 
         bottom_signals: {
@@ -299,13 +299,13 @@ const DASHBOARD_DATA = {
         },
 
         daily_log: [
-            {date:"04/03", btc:66752, eth:2053, fg:12, note:"Liberation Day關稅落地，ETH -3.1%大幅跑輸"},
+            {date:"04/04", btc:66883, eth:2051, fg:28, note:"Deep分析：CONFLICT觀望。CVD未確認，伊朗週末event。鏈上底部85/100。F&G回升至28。"},
+            {date:"04/03", btc:66752, eth:2053, fg:12, note:"NFP 178K強勁，BTC反彈$67K後震盪。Liberation Day後伊朗4/6前夕"},
             {date:"04/02", btc:68813, eth:2131, fg:8,  note:"ETH反彈至2165後被壓回，Liberation Day後第一天"},
             {date:"04/01", btc:68203, eth:2107, fg:8,  note:"Liberation Day前夕，高波動觀望"},
             {date:"03/31", btc:66706, eth:2048, fg:10, note:"月底拋售壓力，ETH破$2,050支撐"},
             {date:"03/30", btc:71201, eth:2189, fg:20, note:"反彈被$83K壓力打回，假突破"},
-            {date:"03/28", btc:70231, eth:2098, fg:18, note:"週末低流動性橫盤"},
-            {date:"03/27", btc:69503, eth:2060, fg:15, note:"FOMC前夕謹慎，等NFP數據"}
+            {date:"03/28", btc:70231, eth:2098, fg:18, note:"週末低流動性橫盤"}
         ]
     }
 };
