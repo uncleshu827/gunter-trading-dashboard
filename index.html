@@ -215,27 +215,30 @@
 <!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-05T12:09:00+08:00",
+    last_update: "2026-04-06T00:10:00+08:00",
     analysis_mode: "Standard",
 
     signal: {
         direction: "OBSERVE",
-        strength: "觀望（BEARISH弱47.1 — CVD未確認禁空）",
-        eth_signal: 47.1,
-        composite_score: 44.9,
-        regime: "震盪+低波動(BB極端壓縮D3/Iran延期/Liberation Anniversary)",
-        strategy: "觀望 — 等BB突破+CVD確認",
+        strength: "條件空（BEARISH弱41 — 等CVD確認+跌破$2,025）",
+        eth_signal: 41.0,
+        composite_score: 38.0,
+        regime: "震盪+低波動(BB_Squeeze_Day6/WoW_Day87/4月9日升級關稅)",
+        strategy: "觀望 — 等跌破$2,025+CVD負2Bar確認",
         confidence: "low",
-        vote_result: "BEARISH: 空票0.27 vs 多票0.20×1.3=0.26（barely）",
-        entry: null, sl: null, tp1: null, tp2: null,
-        position_pct: 0, leverage: 0, rr_ratio: "觀望",
-        timeframe_note: "條件空: $2,040跌破+CVD負2bar→入場$2,042|SL$2,090|TP1$2,025(4-12hr)\n條件多: $2,085 BB突破+CVD正→入場$2,085|SL$2,018|TP1$2,103(4-6hr)",
-        reason: "BEARISH弱(47.1/100)，信心17%。空票barely超門檻。鏈上底部(75)+資金面(55)多，但技術(28)+KOL(35)+宏觀(38)空。BB壓縮D3突破在即，方向未定。伊朗延期10天+Liberation Day周年SPX回升，CVD未確認→v5.3禁空。",
+        vote_result: "BEARISH: 空票0.49 vs 多票0.25（5空:2多，1/3觸發達標）",
+        entry: 2022, sl: 2070, tp1: 1990, tp2: 1968,
+        position_pct: 0.84, leverage: 2,
+        rr_ratio: "TP1 0.78:1 / TP2 1.22:1",
+        timeframe_note: "條件空: 跌破$2,025+CVD負2bar→入場$2,020-2,025|SL$2,070|TP1$1,990(4-8hr)|TP2$1,968(1-3d)",
+        reason: "BEARISH 41/100，信心40%。5空票(tech28+macro15+news35+deriv38+kol33) vs 2多票(onchain78+sentiment70)。BB Day6壓縮突破在即，4/9升級關稅=二次催化劑。CVD 7連未確認=禁止主動空。",
         dimensions: {
-            tech:28, onchain:75, derivatives:48, orderflow:48,
-            fundflow:55, macro:38, sentiment:50, news:52, kol:35
+            tech:28, onchain:78, derivatives:38, orderflow:50,
+            fundflow:45, macro:15, sentiment:70, news:35, kol:33
         },
-        perf: { recent_3_correct:"N/A(全觀望)", recent_5_tp1_hit:"N/A", streak:"無方向信號" }
+        performance: {
+            last3_direction_correct: "N/A(條件/觀望無進場)",
+            last5_tp1_hit: "N/A", streak: "連敗3x降信心" }
     },
 
         long_term: {
@@ -297,6 +300,7 @@ const DASHBOARD_DATA = {
         },
 
         daily_log: [
+            {date:"04/06", btc:67320, eth:2055, fg:12, note:"BEARISH 41/100 條件空。BB Squeeze Day6。4/9升級關稅在即。5空票 vs 2多票(鏈上78+情緒70)。CVD 7連未確認禁空。等$2,025跌破+CVD確認。"},
             {date:"04/05", btc:67302, eth:2064, fg:12, note:"CONFLICT 49.2 觀望。Trump Iran延期10天→Risk-On vs 宏觀熊市。4H空頭軋空x10.4。BB極端壓縮。等CVD確認。"},
             {date:"04/04", btc:67083, eth:2055, fg:11, note:"BEARISH 42.5 觀望。BB極端Squeeze(BTC 1.93%史低)。伊朗4/6截止36hr。鏈上82/100底部強信號 vs 宏觀15/100矛盾。CVD未確認，等4/6方向。"},
             {date:"04/03", btc:66752, eth:2053, fg:12, note:"NFP 178K強勁，BTC反彈$67K後震盪。Liberation Day後伊朗4/6前夕"},
