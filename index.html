@@ -917,6 +917,22 @@ document.addEventListener('DOMContentLoaded', function() {
   if (window.updateFromAnalysis) { window.updateFromAnalysis({"signal":{"direction":"條件多 LONG","condition":"BB突破上軌+ATR確認 → 限價$2,100-2,115","rationale":"BB擠壓Day9→向上突破！5:3 BULLISH投票。ETH RSI~30超賣，F&G=12極度恐懼反向信號，CVD拒絕看空8次。⚠️Apr9關稅強制平倉","eth_signal":60.7,"entry":2105,"sl":2055,"tp1":2146,"position":"2.8%·2x","tech":75,"onchain":82,"derivatives":62,"orderflow":70,"fundflow":50,"macro":10,"sentiment":70,"news":30,"kol":43,"composite":65.5,"regime":"BB擠壓突破→新興趨勢","wins":1,"losses":3,"recent_accuracy":"1/4","updated_at":"4/6 08:10"},"long_term":{"status":{"score":35,"label":"短多/長空","badge_text":"BB突破上軌","badge_style":"active","indicator_style":"neutral","indicator_text":"條件多","headline":"BB擠壓Day9→向上突破，Apr9關稅前短線機會","bullets":["⭐ BB擠壓9天後向上突破，BTC $69K/ETH $2,120 同步升破BB上軌","📉 BTC仍在熊市線$83K以下，Cowen WoW Day88，中長期看空不變","⚠️ Apr 9關稅生效，策略：短多2.8%，Apr8 20:00 UTC前強制平倉"],"summary":"短線BB突破信號BULLISH(5:3投票)，ETH超賣RSI~30+鏈上底部共振。但Cowen熊市框架+Apr9關稅構成中期壓力。","bottom_score":45,"sell_score":0,"sell_triggers":"0/5 觸發"},"daily_log":[{"date":"04/06","btc":"69.3K","eth":"2120","fg":12,"note":"BB擠壓Day9突破上軌，5:3 BULLISH，條件多2.8%·2x，Apr8強制平倉"}]},"last_update":"2026-04-06T08:10:00+08:00"}); }
 });
 </script>
+
+<script>
+(function() {
+  function tryUpdate() {
+    if (window.updateFromAnalysis) {
+      window.updateFromAnalysis({"signal":{"direction":"做多 LONG","condition":"強多（BB Day9突破確認）","rationale":"5:1 BULLISH投票。BB壓縮9天後向上突破，空單大量清算22.7x，Exchange Reserves 14.9M 16年低位，NUPL負值，ETH RSI 28.7超賣反彈結構。Apr 9關稅截止前操作窗口。","eth_signal":73,"entry":2095,"sl":2038,"tp1":2148,"tp2":2205,"tp3":2285,"position":"4%·2x","tech":65,"onchain":82,"derivatives":72,"orderflow":75,"fundflow":55,"macro":30,"sentiment":62,"news":45,"kol":46,"composite":68.4,"regime":"趨勢+中波動(BB_Day9突破)","wins":0,"losses":0,"recent_accuracy":"observe×3→突破","updated_at":"4/6 09:10"},"long_term":{"status":{"score":45,"label":"謹慎偏多（短線）","badge_text":"BB突破 觀察中","badge_style":"active","indicator_style":"caution","indicator_text":"謹慎偏多","headline":"BB壓縮9天突破上方，空單清算22.7x，但Apr 9關稅風險壓頂","bullets":["📈 BB 9天壓縮突破，短線多方結構確認，TP最遠 $2,285","⚠️ Apr 9 09:00 UTC 互惠關稅生效，持倉必須硬性截止","📉 Cowen：BTC仍低於 $83K 熊市線，月線結構仍偏空"],"summary":"BB Day9突破給出短線做多機會，但Apr 9關稅事件前必須出清。宏觀背景（BTC<$83K）不支持中長期多頭。2-3天短線操作，嚴守截止。","bottom_score":45,"sell_score":0,"sell_triggers":"0/5 觸發"},"daily_log":[{"date":"04/06","btc":"69.0K","eth":"2120","fg":30,"note":"BB Day9突破，22.7x空清算，強多信號。Apr9關稅硬截止"}]},"last_update":"2026-04-06T09:10:00+08:00"});
+      console.log('Dashboard updated: ETH 73.0 BULLISH BB Day9 Breakout 2026-04-06');
+    } else {
+      setTimeout(tryUpdate, 500);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryUpdate);
+  } else { tryUpdate(); }
+})();
+</script>
 </body>
 </html>
 <!DOCTYPE html>
@@ -1831,14 +1847,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-// Auto-updated by crypto-analysis scheduled task 2026-04-05T12:10Z
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({"signal":{"direction":"條件空 SHORT","condition":"等 BB 跌破 $2,025 + CVD↓ 2根4H確認","rationale":"BEARISH投票(空0.27>多0.16)。BTC低於$83K熊市線，Cowen WoW核心期。鏈上MVRV -0.42極端底部是主要對立信號，謹慎追空。","eth_signal":45.9,"entry":2018,"sl":2048,"tp1":2003,"position":"0%(觀望) → ~2%·≤2x 若觸發","tech":30,"onchain":85,"derivatives":48,"orderflow":45,"fundflow":50,"macro":20,"sentiment":60,"news":52,"kol":40,"composite":43.2,"regime":"震盪+低波動(BB壓縮)","wins":2,"losses":1,"recent_accuracy":"2/3","updated_at":"4/5 20:10"},"long_term":{"daily_log":[{"date":"04/05","btc":"66.9K","eth":"2040","fg":20,"note":"BB極端壓縮待方向，MVRV -0.42歷史底部 vs WoW"}]},"last_update":"2026-04-05T12:10:00+08:00"});
-  }
-});
-</script>
+
 
 <script id="auto-update-patch">
 document.addEventListener('DOMContentLoaded', function() {
@@ -2800,14 +2809,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-// Auto-updated by crypto-analysis scheduled task 2026-04-05T12:10Z
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({"signal":{"direction":"條件空 SHORT","condition":"等 BB 跌破 $2,025 + CVD↓ 2根4H確認","rationale":"BEARISH投票(空0.27>多0.16)。BTC低於$83K熊市線，Cowen WoW核心期。鏈上MVRV -0.42極端底部是主要對立信號，謹慎追空。","eth_signal":45.9,"entry":2018,"sl":2048,"tp1":2003,"position":"0%(觀望) → ~2%·≤2x 若觸發","tech":30,"onchain":85,"derivatives":48,"orderflow":45,"fundflow":50,"macro":20,"sentiment":60,"news":52,"kol":40,"composite":43.2,"regime":"震盪+低波動(BB壓縮)","wins":2,"losses":1,"recent_accuracy":"2/3","updated_at":"4/5 20:10"},"long_term":{"daily_log":[{"date":"04/05","btc":"66.9K","eth":"2040","fg":20,"note":"BB極端壓縮待方向，MVRV -0.42歷史底部 vs WoW"}]},"last_update":"2026-04-05T12:10:00+08:00"});
-  }
-});
-</script>
+
 
 <script id="auto-update-patch">
 document.addEventListener('DOMContentLoaded', function() {
