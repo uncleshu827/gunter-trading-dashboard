@@ -215,30 +215,33 @@
 <!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-06T22:15:00+08:00",
+    last_update: "2026-04-07T04:10:00+08:00",
     analysis_mode: "Standard",
 
     signal: {
-        direction: "\u689d\u4ef6\u591a CONDITIONAL LONG",
-        strength: "\u689d\u4ef6\u591a\uff08\u4fe1\u5fc3\u964d\u7d1a\uff1a0/3\u9023\u6557\uff0cRSI 75\u8d85\u8cb7\u7b49\u56de\u8e29\uff09",
-        eth_signal: 65.3,
-        composite_score: 62.2,
-        regime: "\u9707\u76ea+\u4e2d\u6ce2\u52d5(\u53cd\u5f48\u4e2d)",
-        strategy: "\u7b49\u56de\u8e29$2,126\u9644\u8fd1\u5165\u5834\uff0cRSI\u8d85\u8cb7\u9700\u6d88\u5316",
-        confidence: "low",
-        vote_result: "BULLISH: \u591a\u7968 0.590 vs \u7a7a\u7968 0.160\uff085\u591a:1\u7a7a:3\u68c4\u6b0a\uff09",
-        entry: 2126, sl: 2070, tp1: 2148, tp2: 2168,
-        position_pct: 3.9, leverage: 3,
-        rr_ratio: "TP1 0.4:1 / TP2 0.75:1",
-        timeframe_note: "\u689d\u4ef6\u591a: \u56de\u8e29$2,126\u2192\u5206\u6279\u5165\u5834\u2460$2,130(30%)\u2461$2,126(40%)\u2462$2,098(30%)|SL$2,070|TP1$2,148(4-8hr)|TP2$2,168(1-2d)",
-        reason: "BULLISH 62.2/100\uff0c\u4fe1\u5fc3\u964d\u7d1a(0/3\u9023\u6557\u00d70.7)\u30025\u591a\u7968(onchain95+sentiment70+fundflow60+news59+orderflow55) vs 1\u7a7a\u7968(macro40)\u3002\u4f0a\u6717\u505c\u706b\u53cd\u5f48\u4f46\u91cf\u80fd\u4e0d\u8db3\uff0cRSI 75.8\u8d85\u8cb7\u9700\u56de\u8e29\u6d88\u5316\u3002\u93c8\u4e0a\u5e95\u90e8\u4fe1\u865f\u6975\u5f37\u4f46\u5b8f\u89c0risk-off\u672a\u89e3\u9664\u3002",
-        dimensions: {
-            tech:40, onchain:95, derivatives:56, orderflow:55,
-            fundflow:60, macro:40, sentiment:70, news:59, kol:50
-        },
-        backfill: {
-            recent_3_correct: "0/3\uff08\u689d\u4ef6\u55ae\u672a\u89f8\u767c\uff09",
-            recent_5_tp1: "N/A", streak: "\u9023\u6557 3x \u964d\u4fe1\u5fc3\u00d70.7" }
+        direction: "條件空 CONDITIONAL SHORT",
+        strength: "弱空（6:2投票）",
+        condition: "等CVD向下確認+價格反彈至$2,115",
+        rationale: "6:2 BEARISH投票。Apr9關稅44h倒計時，post-bounce衰竭，BTC低於$83K熊市線，ETH連續lower high從$2,175回落",
+        eth_signal: 49.4,
+        entry: 2108,
+        sl: 2165,
+        tp1: 2083,
+        tp2: 2054,
+        tp3: 2020,
+        position: "2.5%·≤3x",
+        tech: 40,
+        onchain: 78,
+        derivatives: 55,
+        orderflow: 38,
+        fundflow: 40,
+        macro: 22,
+        sentiment: 70,
+        news: 28,
+        kol: 38,
+        composite: 45.7,
+        regime: "趨勢→震盪+低波動",
+        updated_at: "4/7 12:10"
     },
 
         long_term: {
@@ -254,22 +257,22 @@ const DASHBOARD_DATA = {
                 "\ud83d\udcc8 \u4f0a\u6717\u505c\u706b\u63a8\u52d5ETH\u53cd\u5f48\u81f3$2,161\uff0c\u4f46\u91cf\u80fd\u50c578%\u4e14RSI 75.8\u8d85\u8cb7",
                 "\u26a0\ufe0f BTC\u4ecd\u5728$83K\u718a\u5e02\u7dda\u4ee5\u4e0b\uff0c4/9\u95dc\u7a05\u5347\u7d1a=\u4e0b\u500bbinary event"
             ],
-            long_term_view: "\u5b8f\u89c0\u7a7a\u982d\uff08BTC<$83K+SPX\u56de\u843d+4/9\u95dc\u7a05\u5347\u7d1a\uff09vs ETH\u93c8\u4e0a\u5e95\u90e8\uff08\u8ca0NUPL+16yr\u4f4e\u5132\u5099+\u8ca0Funding+MVRV<0\uff09\uff0c\u7d50\u69cb\u6027\u77db\u76fe\u6301\u7e8c\u3002\u4f0a\u6717\u505c\u706b\u63a8\u52d5\u77ed\u671f\u53cd\u5f48\u4f46\u91cf\u80fd\u4e0d\u8db3\u3002BULLISH\u6295\u79685:1\u4f46\u4fe1\u5fc3\u964d\u7d1a\uff080/3\u9023\u6557\uff09\u3002\u9577\u7dda\u5efa\u5009\u7b49BTC\u8dcc\u8fd1$54K Realized Price\u3002"
+            long_term_view: "\u5b8f\u89c0\u7a7a\u982d\uff08BTC<$83K+SPX\u56de\u843d+4/9\u95dc\u7a05\u5347\u7d1a\uff09vs ETH\u93c8\u4e0a\u5e95\u90e8\uff08\u8ca0NUPL+16yr\u4f4e\u5132\u5099+\u8ca0Funding+MVRV<0\uff09\uff0c\u7d50\u69cb\u6027\u77db\u76fe\u6301\u7e8c\u3002\u4f0a\u6717\u505c\u706b\u63a8\u52d5\u77ed\u671f\u53cd\u5f48\u4f46\u91cf\u80fd\u4e0d\u8db3\u3002BULLISHV\u6295\u79685:1\u4f46\u4fe1\u5fc3\u964d\u7d1a\uff080/3\u9023\u6557\uff09\u3002\u9577\u7dda\u5efa\u5009\u7b49BTB\u8dcc\u8fd1$54K Realized Price\u3002"
         },
 
         bottom_signals: {
             overall: 58,
-            status: "接近但尚未到底",
+            status: "接拿丆尚暩到底",
             alert: null,
             indicators: [
-                {name:"MVRV Z-Score",      value:"-0.42",   detail:"<0為底部區",   score:80, signal:"green"},
-                {name:"F&G恐貪（持續）",   value:"12 / 50天", detail:"極端恐懼50天", score:88, signal:"green"},
+                {name:"MVRV Z-Score",      value:"-0.42",   detail:"<0為帕部區",   score:80, signal:"green"},
+                {name:"F&G恐貪（持續）",   value:"12 / 50天", detail:"敵端恐�<50天", score:88, signal:"green"},
                 {name:"BTC vs Realized Price", value:"+24%", detail:"$67K vs $54K", score:45, signal:"yellow"},
-                {name:"交易所儲備",         value:"14.9M",   detail:"16年歷史低位", score:78, signal:"green"},
+                {name:"交易所儲備",         value:"14.9M",   detail:"16年涷史低位", score:78, signal:"green"},
                 {name:"BTC vs 200W MA",    value:"+49%",    detail:"$67K vs $45K", score:30, signal:"red"},
-                {name:"ETH/BTC比值走勢",   value:"0.031",   detail:"持續下跌趨勢", score:28, signal:"red"}
+                {name:"ETH/BTC比值走勢",   value:"0.031",   detail:"持續下���趨勢", score:28, signal:"red"}
             ],
-            advice: "鏈上情緒指標（MVRV、F&G）已進底部區，但BTC現價離Realized Price($54K)仍有24%下行空間，200W MA($45K)更遠。建議僅在BTC到達$54K以下才啟動第3層，現價不追。"
+            advice: "揈上情緒指樉（MVRV、F&G）h��耲底部區，但BTC現e��黢Realized Price($54K)仍朙24%下���空間，200W MA($45K)直遠。建��僅在BTC到達$54K���下才啟動竬35d�，現價不追。"
         },
 
         macro: {
@@ -300,6 +303,7 @@ const DASHBOARD_DATA = {
         },
 
         daily_log: [
+            { date: "04/07", btc: "$68.7K", eth: "$2,106", fg: 11, note: "反彈衰竭，Apr9關稅44h，ETH高點$2,175未守，條件空信號" },
             {date:"04/06", btc:67320, eth:2055, fg:12, note:"BEARISH 41/100 條件空。BB Squeeze Day6。4/9升級關稅在即。5空票 vs 2多票(鏈上78+情緒70)。CVD 7連未確認禁空。等$2,025跌破+CVD確認。"},
             {date:"04/05", btc:67302, eth:2064, fg:12, note:"CONFLICT 49.2 觀望。Trump Iran延期10天→Risk-On vs 宏觀熊市。4H空頭軋空x10.4。BB極端壓縮。等CVD確認。"},
             {date:"04/04", btc:67083, eth:2055, fg:11, note:"BEARISH 42.5 觀望。BB極端Squeeze(BTC 1.93%史低)。伊朗4/6截止36hr。鏈上82/100底部強信號 vs 宏觀15/100矛盾。CVD未確認，等4/6方向。"},
@@ -552,7 +556,7 @@ const MACRO_DATA = {
             </div>
             <div>
                 <div style="background:rgba(247,147,26,0.1); border:1px solid rgba(247,147,26,0.3); border-radius:10px; padding:12px; margin-bottom:8px;">
-                    <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:5px;">多分析師共識中位</div>
+                    <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:5px;">多分析師共識$��位</div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                         <div>
                             <div style="font-size:11px; color:rgba(226,232,240,0.5);">保守底</div>
