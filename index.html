@@ -240,7 +240,11 @@ const DASHBOARD_DATA = {
         kol: 38,
         composite: 38.4,
         regime: "震盪+中波動",
-        updated_at: "4/8 09:23"
+        updated_at: "4/8 09:23",
+        backfill: {
+            recent_3_correct: "2/3",
+            streak: "連2勝"
+        }
     },
 
         long_term: {
@@ -355,7 +359,7 @@ const MACRO_DATA = {
     sp500: {
         current_cape:37,
         scenarios:[
-            { label:"樂觀", prob:30, drawdown:-13, bottom:6071, recovery_months06,  color:"#4ade80" },
+            { label:"樂觀", prob:30, drawdown:-13, bottom:6071, recovery_months:6,  color:"#4ade80" },
             { label:"基準", prob:45, drawdown:-25, bottom:5225, recovery_months:18, color:"#fbbf24" },
             { label:"悲觀", prob:25, drawdown:-36, bottom:4467, recovery_months:36, color:"#f87171" }
         ]
@@ -734,7 +738,7 @@ function renderSignal() {
             </div>
             <div class="metric-box" style="flex:1;min-width:80px;">
                 <div style="font-size:9px;color:rgba(226,232,240,0.5);">近期正確率</div>
-                <div style="font-size:20px;font-weight:900;color:${s.backfill.recent_3_correct.startsWith('0')?'#f87171':'#4ade80']}">${s.backfill.recent_3_correct}</div>
+                <div style="font-size:20px;font-weight:900;color:${s.backfill.recent_3_correct.startsWith('0')?'#f87171':'#4ade80'}">${s.backfill.recent_3_correct}</div>
             </div>
             <div class="metric-box" style="flex:1;min-width:80px;">
                 <div style="font-size:9px;color:rgba(226,232,240,0.5);">連勝/連敗</div>
@@ -911,52 +915,6 @@ renderEthLayers();
 <!-- auto-update-patch removed -->
 
 
-<script>
-// Auto-updated by crypto-deep scheduled task 2026-04-07T09:05+08:00
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({
-  "signal": {
-        "direction": "觀望 WAIT",
-        "condition": "CONFLICT 事件風險觀望（等Apr9關稅落地）",
-        "rationale": "5:4投票CONFLICT。鏈上底部信號(MVRV<0.8+儲備16年低+NUPL負)vs技術空頭+CVD下行+Apr9關稅黑天鵝。不確定性過高，靜待Apr9後方向確認。",
-        "eth_signal": 53,
-        "entry": "觀望，不入場",
-        "sl": "N/A",
-        "tp1": "N/A",
-        "position": "0% (觀望)",
-        "tech": 30,
-        "onchain": 82,
-        "derivatives": 62,
-        "orderflow": 33,
-        "fundflow": 62,
-        "macro": 25,
-        "sentiment": 70,
-        "news": 38,
-        "kol": 36,
-        "composite": 54.5,
-        "regime": "震盪+中波動",
-        "wins": 2,
-        "losses": 3,
-        "recent_accuracy": "0/2",
-        "updated_at": "4/7 20:10"
-},
-  "long_term": {
-    "daily_log": [
-      {
-        "date": "04/07",
-        "btc": "68.7K",
-        "eth": "2107",
-        "fg": 13,
-        "note": "Iran拒停火+Trump最後通牒+Apr9關稅，三重黑天鵝。鏈上底部信號強(MVRV 0.87)，Signal 56.2 BULLISH barely"
-      }
-    ]
-  },
-  "last_update": "2026-04-07T09:05:00+08:00"
-});
-  }
-});
-</script>
 
 
 </body>
