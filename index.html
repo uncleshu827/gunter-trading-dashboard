@@ -919,48 +919,72 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-// Auto-updated by crypto-analysis scheduled task
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({
-  "signal": {
-    "direction": "條件多 LONG",
-    "condition": "等回調 $2,165–$2,195",
-    "rationale": "6:1 BULLISH投票。關稅90天暫停引發軋空後高位震盪，RSI71過熱，等回調入場。BTC仍低於$83K熊市線，Cowen WoW April持續。",
-    "eth_signal": 58.9,
-    "entry": 2180,
-    "sl": 2091,
-    "tp1": 2247,
-    "position": "2.5%·2x",
-    "tech": 70,
-    "onchain": 82,
-    "derivatives": 62,
-    "orderflow": 52,
-    "fundflow": 60,
-    "macro": 55,
-    "sentiment": 65,
-    "news": 70,
-    "kol": 35,
-    "composite": 65.4,
-    "regime": "趨勢+低波動 (ADX55.9/RSI71過熱)",
-    "wins": 2,
-    "losses": 1,
-    "recent_accuracy": "2/3",
-    "updated_at": "4/8 12:10"
-  },
-  "last_update": "2026-04-08T04:10:00+08:00"
-});
-  }
-});
-</script>
-
-
-<script>
 document.addEventListener('DOMContentLoaded', function() {
   if (window.updateFromAnalysis) {
     window.updateFromAnalysis({"signal":{"direction":"條件多 LONG","condition":"等回調 $2220-2240 進場（4H RSI 73.6 超買）","rationale":"BULLISH 6:1 等權投票。美伊停火14天+關稅90天暫停，鏈上5底部信號仍有效。CPI 4/10 二元風險。","eth_signal":59.2,"entry":2235,"sl":2173,"tp1":2310,"position":"2%·2x","tech":78,"onchain":85,"derivatives":55,"orderflow":58,"fundflow":62,"macro":52,"sentiment":60,"news":70,"kol":38,"composite":62,"regime":"趨勢+中波動","wins":2,"losses":1,"recent_accuracy":"2/3","updated_at":"4/8 20:10"},"last_update":"2026-04-08T12:10:00+08:00"});
   }
 });
+</script>
+
+<script>
+// Auto-updated by crypto-analysis 2026-04-08T14:15Z
+(function() {
+  var p = {
+  "signal": {
+    "direction": "條件多 LONG",
+    "condition": "等回踩 $2,175-$2,195 掛限價",
+    "rationale": "伊朗停火+SEC友善引爆空頭大清算（$276M，73%空倉）。F&G=17極度恐懼反指+BlackRock機構買入。6:2 BULLISH投票。8hr時間止損，TP1積極兌現。",
+    "eth_signal": 55.8,
+    "entry": 2185,
+    "sl": 2143,
+    "tp1": 2285,
+    "position": "3.5%·2x",
+    "tech": 58,
+    "onchain": 80,
+    "derivatives": 45,
+    "orderflow": 70,
+    "fundflow": 58,
+    "macro": 43,
+    "sentiment": 65,
+    "news": 72,
+    "kol": 42,
+    "composite": 63,
+    "regime": "趨勢+低波動 ×1.2",
+    "wins": 2,
+    "losses": 1,
+    "recent_accuracy": "2/3",
+    "updated_at": "4/8 22:15"
+  },
+  "long_term": {
+    "status": {
+      "score": 42,
+      "label": "短暫反彈，熊市未解",
+      "badge_text": "伊朗停火催化",
+      "headline": "伊朗停火+SEC轉向引爆空頭，BTC仍低於$83K熊市線",
+      "bullets": [
+        "📈 BTC +5.3% ETH +7.9% 24h — Trump宣布2週停火協議引爆$276M空頭清算",
+        "⚠️ Cowen窗口期未變：4月上半 = Window of Weakness，中期目標BTC $40-50K",
+        "📊 F&G=17極度恐懼（50日持續）+ 交易所儲備7年低位 = 抄底信號但需等時機"
+      ],
+      "bottom_score": 42,
+      "sell_score": 0
+    },
+    "daily_log": [
+      {
+        "date": "04/08",
+        "btc": "71.4K",
+        "eth": "2,225",
+        "fg": 17,
+        "note": "伊朗停火+SEC友善 引爆$276M空清算，ETH +7.9%，RSI 66.5"
+      }
+    ]
+  },
+  "last_update": "2026-04-08T14:15:00+08:00"
+};
+  window._pendingPatch = p;
+  if (window.updateFromAnalysis) { window.updateFromAnalysis(p); }
+  else { document.addEventListener('DOMContentLoaded', function() { if (window.updateFromAnalysis) window.updateFromAnalysis(p); }); }
+})();
 </script>
 </body>
 </html>
