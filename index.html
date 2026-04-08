@@ -215,19 +215,19 @@
 <!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-07T06:10:00+08:00",
+    last_update: "2026-04-08T09:23:00+08:00",
     analysis_mode: "Standard",
 
     signal: {
-        direction: "條件空 CONDITIONAL SHORT",
-        strength: "弱空（5:2投票）",
-        condition: "等CVD向下確認+反彈至$2,110拒絕",
+        direction: "條件多 CONDITIONAL LONG",
+        strength: "弱多（5:2投票）",
+        condition: "等回調至 $2,090-$2,120 限價進場",
         rationale: "6:2 BEARISH投票。Apr9關稅44h倒計時，post-bounce衰竭，BTC低於$83K熊市線，ETH連續lower high從$2,175回落",
-        eth_signal: 44.4,
-        entry: 2107,
-        sl: 2162,
-        tp1: 2072,
-        tp2: 2015,
+        eth_signal: 53.9,
+        entry: 2105,
+        sl: 2035,
+        tp1: 2160,
+        tp2: 2215,
         position: "2.0%·≤3x",
         tech: 40,
         onchain: 88,
@@ -240,7 +240,7 @@ const DASHBOARD_DATA = {
         kol: 38,
         composite: 38.4,
         regime: "震盪+中波動",
-        updated_at: "4/7 06:10"
+        updated_at: "4/8 09:23"
     },
 
         long_term: {
@@ -959,23 +959,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-
-<script>
-// Auto-updated by crypto-analysis deep task 2026-04-08T09:23
-(function() {
-  var patch = {"signal":{"direction":"條件多 LONG","condition":"等回調至 $2,090-$2,120 限價進場","rationale":"BULLISH 5:2票。關稅暫停+ETF淨流入$471M驅動BTC強彈，但仍在$83K熊市線下方。ETH信號53.9因OI/MCap=11.4%過熱+ETH/BTC持續下滑拉至弱信號區。等回調再進。","eth_signal":53.9,"entry":2105,"sl":2035,"tp1":2160,"tp2":2215,"position":"2.5%·2x","tech":47,"onchain":72,"derivatives":57,"orderflow":47,"fundflow":62,"macro":42,"sentiment":70,"news":70,"kol":40,"composite":57.3,"regime":"震盪+高波動","wins":2,"losses":1,"recent_accuracy":"2/3","updated_at":"4/8 09:23"},"long_term":{"daily_log":[{"date":"04/08","btc":"71.6K","eth":"2238","fg":13,"note":"關稅暫停90天+ETF $471M流入，短線擠空完成。仍在Cowen WoW期，$83K未突破"}]},"last_update":"2026-04-08T09:23:00+08:00"};
-  function tryUpdate() {
-    if (window.updateFromAnalysis) {
-      window.updateFromAnalysis(patch);
-    } else {
-      document.addEventListener('DOMContentLoaded', function() {
-        if (window.updateFromAnalysis) window.updateFromAnalysis(patch);
-      });
-    }
-  }
-  tryUpdate();
-})();
-</script>
 </body>
 </html>
 
