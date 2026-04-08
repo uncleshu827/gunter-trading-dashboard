@@ -322,7 +322,7 @@ const MACRO_DATA = {
         current:{ date:"2026-04", label:"現在",      note:"熊市中段" },
         bottom: { date:"2026-10", label:"預計底部區", note:"AI歷史均值" },
         bull:   { date:"2027-10", label:"牛市啟動",  note:"疊加第5次減半" },
-        halving:{ date:"2028-04", label:"第5次減半",  note:"2028-04" },
+        halving:{ date:"2028-04", label:"第5b��¸����",  note:"2028-04" },
         top:    { date:"2028-Q4", label:"下輪頂部區", note:"保守$150K-$168K" }
     },
     btc_bottom: {
@@ -355,7 +355,7 @@ const MACRO_DATA = {
     sp500: {
         current_cape:37,
         scenarios:[
-            { label:"樂觀", prob:30, drawdown:-13, bottom:6071, recovery_months:6,  color:"#4ade80" },
+            { label:"樂觀", prob:30, drawdown:-13, bottom:6071, recovery_months06,  color:"#4ade80" },
             { label:"基準", prob:45, drawdown:-25, bottom:5225, recovery_months:18, color:"#fbbf24" },
             { label:"悲觀", prob:25, drawdown:-36, bottom:4467, recovery_months:36, color:"#f87171" }
         ]
@@ -447,7 +447,7 @@ const MACRO_DATA = {
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:7px; margin-top:10px;">
             <div style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:9px; padding:10px;">
                 <div style="font-size:11px; color:#fbbf24; font-weight:700; margin-bottom:3px;">🏦 Fed降息重啟</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.55);">Warsh偏鷹，降息預期43%需重新定價</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">Wavsh偏鷹，降息預期43%需重新定價</div>
                 <div class="tag tag-gray" style="margin-top:5px;">待觀察</div>
             </div>
             <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:9px; padding:10px;">
@@ -734,7 +734,7 @@ function renderSignal() {
             </div>
             <div class="metric-box" style="flex:1;min-width:80px;">
                 <div style="font-size:9px;color:rgba(226,232,240,0.5);">近期正確率</div>
-                <div style="font-size:20px;font-weight:900;color:${s.backfill.recent_3_correct.startsWith('0')?'#f87171':'#4ade80'};">${s.backfill.recent_3_correct}</div>
+                <div style="font-size:20px;font-weight:900;color:${s.backfill.recent_3_correct.startsWith('0')?'#f87171':'#4ade80']}">${s.backfill.recent_3_correct}</div>
             </div>
             <div class="metric-box" style="flex:1;min-width:80px;">
                 <div style="font-size:9px;color:rgba(226,232,240,0.5);">連勝/連敗</div>
@@ -957,6 +957,72 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+
+<script>
+// Auto-updated by crypto-analysis btc-eth-analysis task 2026-04-08T00:09 UTC+8
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.updateFromAnalysis) {
+    window.updateFromAnalysis({
+  "signal": {
+    "direction": "條件多 COND LONG",
+    "condition": "等回調至$2,150-2,180 + Funding降至<0.05%",
+    "rationale": "BULLISH 6:3投票。關稅90天暫停觸發+10.4%短暫急漲，但Funding飆至+0.23%（4x過熱），追市風險高，等回調。BTC仍在$83K熊市線下，Cowen WoW核心期。",
+    "eth_signal": 55.2,
+    "entry": 2165,
+    "sl": 2060,
+    "tp1": 2290,
+    "position": "2.5%·2x",
+    "tech": 60,
+    "onchain": 72,
+    "derivatives": 28,
+    "orderflow": 35,
+    "fundflow": 58,
+    "macro": 65,
+    "sentiment": 70,
+    "news": 78,
+    "kol": 30,
+    "composite": 63.1,
+    "regime": "趨勢+高波動",
+    "wins": 2,
+    "losses": 2,
+    "recent_accuracy": "2/3",
+    "updated_at": "4/8 00:09"
+  },
+  "long_term": {
+    "status": {
+      "score": 62,
+      "label": "關稅暫停反彈",
+      "badge_text": "90天緩和期",
+      "badge_style": "active",
+      "indicator_style": "neutral",
+      "indicator_text": "短彈+中性觀察",
+      "headline": "關稅90天暫停觸發急漲，但Funding+0.23%顯示多頭已過熱",
+      "bullets": [
+        "📈 ETH $2,059→$2,273（+10.4%）276M空單清出，短暫急漲",
+        "🚨 ETH Funding飆至+0.23%（4x過熱閾值），追多風險高",
+        "📊 F&G=13極度恐慌（中期底部前兆），BTC仍在$83K以下"
+      ],
+      "summary": "川普宣布90天關稅暫停（中國除外升至125%），觸發市場急漲。ETH從$2,059彈至$2,273，276M空單已清。然而Funding飆至+0.23%顯示多頭現已擁擠。BTC仍在$71.9K，遠低於$83K熊市線，Cowen框架不變。等回調與Funding正常化再進場。",
+      "bottom_score": 62,
+      "sell_score": 0,
+      "sell_triggers": "0/5 觸發"
+    },
+    "daily_log": [
+      {
+        "date": "04/08",
+        "btc": "71.9K",
+        "eth": "2241",
+        "fg": 13,
+        "note": "關稅90天暫停，ETH+10.4%急反彈，Funding+0.23%過熱，條件多等回調"
+      }
+    ]
+  },
+  "last_update": "2026-04-08T00:09:00+08:00"
+});
+  }
+});
+</script>
+
 </body>
 </html>
 
