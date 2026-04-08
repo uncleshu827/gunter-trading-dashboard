@@ -958,71 +958,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-// Auto-updated by crypto-analysis btc-eth-analysis task 2026-04-08T00:09 UTC+8
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({
-  "signal": {
-    "direction": "條件多 COND LONG",
-    "condition": "等回調至$2,150-2,180 + Funding降至<0.05%",
-    "rationale": "BULLISH 6:3投票。關稅90天暫停觸發+10.4%短暫急漲，但Funding飆至+0.23%（4x過熱），追市風險高，等回調。BTC仍在$83K熊市線下，Cowen WoW核心期。",
-    "eth_signal": 55.2,
-    "entry": 2165,
-    "sl": 2060,
-    "tp1": 2290,
-    "position": "2.5%·2x",
-    "tech": 60,
-    "onchain": 72,
-    "derivatives": 28,
-    "orderflow": 35,
-    "fundflow": 58,
-    "macro": 65,
-    "sentiment": 70,
-    "news": 78,
-    "kol": 30,
-    "composite": 63.1,
-    "regime": "趨勢+高波動",
-    "wins": 2,
-    "losses": 2,
-    "recent_accuracy": "2/3",
-    "updated_at": "4/8 00:09"
-  },
-  "long_term": {
-    "status": {
-      "score": 62,
-      "label": "關稅暫停反彈",
-      "badge_text": "90天緩和期",
-      "badge_style": "active",
-      "indicator_style": "neutral",
-      "indicator_text": "短彈+中性觀察",
-      "headline": "關稅90天暫停觸發急漲，但Funding+0.23%顯示多頭已過熱",
-      "bullets": [
-        "📈 ETH $2,059→$2,273（+10.4%）276M空單清出，短暫急漲",
-        "🚨 ETH Funding飆至+0.23%（4x過熱閾值），追多風險高",
-        "📊 F&G=13極度恐慌（中期底部前兆），BTC仍在$83K以下"
-      ],
-      "summary": "川普宣布90天關稅暫停（中國除外升至125%），觸發市場急漲。ETH從$2,059彈至$2,273，276M空單已清。然而Funding飆至+0.23%顯示多頭現已擁擠。BTC仍在$71.9K，遠低於$83K熊市線，Cowen框架不變。等回調與Funding正常化再進場。",
-      "bottom_score": 62,
-      "sell_score": 0,
-      "sell_triggers": "0/5 觸發"
-    },
-    "daily_log": [
-      {
-        "date": "04/08",
-        "btc": "71.9K",
-        "eth": "2241",
-        "fg": 13,
-        "note": "關稅90天暫停，ETH+10.4%急反彈，Funding+0.23%過熱，條件多等回調"
-      }
-    ]
-  },
-  "last_update": "2026-04-08T00:09:00+08:00"
-});
-  }
-});
-</script>
 
+
+<script>
+// Auto-updated by crypto-analysis deep task 2026-04-08T09:23
+(function() {
+  var patch = {"signal":{"direction":"條件多 LONG","condition":"等回調至 $2,090-$2,120 限價進場","rationale":"BULLISH 5:2票。關稅暫停+ETF淨流入$471M驅動BTC強彈，但仍在$83K熊市線下方。ETH信號53.9因OI/MCap=11.4%過熱+ETH/BTC持續下滑拉至弱信號區。等回調再進。","eth_signal":53.9,"entry":2105,"sl":2035,"tp1":2160,"tp2":2215,"position":"2.5%·2x","tech":47,"onchain":72,"derivatives":57,"orderflow":47,"fundflow":62,"macro":42,"sentiment":70,"news":70,"kol":40,"composite":57.3,"regime":"震盪+高波動","wins":2,"losses":1,"recent_accuracy":"2/3","updated_at":"4/8 09:23"},"long_term":{"daily_log":[{"date":"04/08","btc":"71.6K","eth":"2238","fg":13,"note":"關稅暫停90天+ETF $471M流入，短線擠空完成。仍在Cowen WoW期，$83K未突破"}]},"last_update":"2026-04-08T09:23:00+08:00"};
+  function tryUpdate() {
+    if (window.updateFromAnalysis) {
+      window.updateFromAnalysis(patch);
+    } else {
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.updateFromAnalysis) window.updateFromAnalysis(patch);
+      });
+    }
+  }
+  tryUpdate();
+})();
+</script>
 </body>
 </html>
 
