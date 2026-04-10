@@ -220,35 +220,35 @@ const DASHBOARD_DATA = {
 
     signal: {
         direction: "BULLISH",
-        strength: "條件多·弱多（5:2投票）",
-        condition: "等回調至 $2,090-$2,120 限價進場",
-        rationale: "BULLISH 5:2票。關稅暫停90天+ETF $471M流入，BTC反彈至$71.6K。ETH信號53.9因OI/MCap=11.4%過熱+ETH/BTC持續下滑至0.031。等回調至$2,090-2,120再進。",
-        eth_signal: 53.9,
-        entry: 2105,
-        sl: 2035,
-        tp1: 2160,
-        tp2: 2215,
-        position: "2.5%·2x",
-        position_pct: 2.5,
+        strength: "條件多（等CPI落地）",
+        condition: "等CPI公布後回調至 $2,100-$2,150 入場",
+        rationale: "投票3:2 BULLISH。5大鏈上底部信號(交易所儲備9年低+MVRV低位+aSOPR<1回升+ETF $471M流入+F&G=12)。CPI今日公布預期偏熱→等反應後再入。",
+        eth_signal: 55.6,
+        entry: 2125,
+        sl: 2020,
+        tp1: 2280,
+        tp2: 2380,
+        position: "3.7%·2x",
+        position_pct: 3.7,
         leverage: 2,
-        dimensions: {tech:47, onchain:72, derivatives:57, orderflow:47, fundflow:62, macro:42, sentiment:70, news:70, kol:40},
-        composite_score: 57.3,
-        regime: "震盪+高波動",
-        updated_at: "4/8 09:23",
+        dimensions: {tech:55, onchain:82, derivatives:50, orderflow:48, fundflow:62, macro:38, sentiment:70, news:48, kol:34},
+        composite_score: 57.0,
+        regime: "震盪+中波動",
+        updated_at: "4/10 08:15",
         backfill: {
-            recent_3_correct: "2/3",
-            streak: "連2勝"
+            recent_3_correct: "1/3",
+            streak: "觀望為主"
         }
     },
 
         long_term: {
-        last_update: "2026-04-03",
+        last_update: "2026-04-10",
         cycle_phase: "熊市中段 — Window of Weakness",
 
         status: {
             changed: true,
             alert_level: "normal",   // normal | watch | accumulate | sell
-            summary: "\u4f0a\u6717\u505c\u706b\u53cd\u5f48+\u93c8\u4e0a\u5e95\u90e8\u4fe1\u865f\u6975\u5f37\uff0c\u4f46\u5b8f\u89c0risk-off\u672a\u89e3\u9664\uff0cRSI\u8d85\u8cb7\u9700\u56de\u8e29",
+            summary: "CPI今日公布。鏈上底部信號極強(5大確認)，但宏觀risk-off+KOL看空，等CPI落地後再判斷方向",
             key_changes: [
                 "\ud83d\udfe2 F&G\u56de\u5347\u81f328\uff0cETH\u93c8\u4e0a\u5e95\u90e8\u4fe1\u865f\u6975\u5f37\uff0895/100\uff1aMVRV\u8ca0+16yr\u4f4e\u5132\u5099+\u8ca0Funding\uff09",
                 "\ud83d\udcc8 \u4f0a\u6717\u505c\u706b\u63a8\u52d5ETH\u53cd\u5f48\u81f3$2,161\uff0c\u4f46\u91cf\u80fd\u50c578%\u4e14RSI 75.8\u8d85\u8cb7",
@@ -300,6 +300,7 @@ const DASHBOARD_DATA = {
         },
 
         daily_log: [
+            { date: "04/10", btc: "$71.8K", eth: "$2,190", fg: 12, note: "CPI日。投票3:2 BULLISH。鏈上底部5信號極強(儲備9年低+MVRV低+ETF$471M)。CPI預期偏熱3.7%→等落地。條件多$2,100-2,150。" },
             { date: "04/07", btc: "$68.7K", eth: "$2,106", fg: 11, note: "反彈衰竭，Apr9關稅44h，ETH高點$2,175未守，條件空信號" },
             {date:"04/06", btc:67320, eth:2055, fg:12, note:"BEARISH 41/100 條件空。BB Squeeze Day6。4/9升級關稅在即。5空票 vs 2多票(鏈上78+情緒70)。CVD 7連未確認禁空。等$2,025跌破+CVD確認。"},
             {date:"04/05", btc:67302, eth:2064, fg:12, note:"CONFLICT 49.2 觀望。Trump Iran延期10天→Risk-On vs 宏觀熊市。4H空頭軋空x10.4。BB極端壓縮。等CVD確認。"},
