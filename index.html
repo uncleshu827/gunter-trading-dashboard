@@ -215,26 +215,26 @@
 <!-- ══════════════════════════════ DATA ══════════════════════════════ -->
 <script>
 const DASHBOARD_DATA = {
-    last_update: "2026-04-08T09:23:00+08:00",
+    last_update: "2026-04-13T08:15:00+08:00",
     analysis_mode: "Standard",
 
     signal: {
         direction: "BULLISH",
-        strength: "條件多（等CPI落地）",
-        condition: "等CPI公布後回調至 $2,100-$2,150 入場",
-        rationale: "投票3:2 BULLISH。5大鏈上底部信號(交易所儲備9年低+MVRV低位+aSOPR<1回升+ETF $471M流入+F&G=12)。CPI今日公布預期偏熱→等反應後再入。",
-        eth_signal: 55.6,
-        entry: 2125,
-        sl: 2020,
+        strength: "條件多（等回踩確認）",
+        condition: "等回調至 $2,100-$2,175 入場",
+        rationale: "投票4:2 BULLISH。F&G=8-10連續60天極端恐懼(歷史最長,90天中位回報+48%)。鏈上底部全亮:交易所儲備16年低+MVRV 1.2累積區+鯨魚30天吸270K BTC。日線射擊星拒絕$2,329後回調,等0.5 Fib回踩確認。",
+        eth_signal: 53.5,
+        entry: 2138,
+        sl: 2050,
         tp1: 2280,
         tp2: 2380,
         position: "3.7%·2x",
         position_pct: 3.7,
         leverage: 2,
-        dimensions: {tech:55, onchain:82, derivatives:50, orderflow:48, fundflow:62, macro:38, sentiment:70, news:48, kol:34},
-        composite_score: 57.0,
+        dimensions: {tech:42, onchain:75, derivatives:48, orderflow:48, fundflow:58, macro:45, sentiment:70, news:58, kol:42},
+        composite_score: 54.8,
         regime: "震盪+中波動",
-        updated_at: "4/10 08:15",
+        updated_at: "4/13 08:15",
         backfill: {
             recent_3_correct: "1/3",
             streak: "觀望為主"
@@ -242,13 +242,13 @@ const DASHBOARD_DATA = {
     },
 
         long_term: {
-        last_update: "2026-04-10",
+        last_update: "2026-04-13",
         cycle_phase: "熊市中段 — Window of Weakness",
 
         status: {
             changed: true,
             alert_level: "normal",   // normal | watch | accumulate | sell
-            summary: "CPI今日公布。鏈上底部信號極強(5大確認)，但宏觀risk-off+KOL看空，等CPI落地後再判斷方向",
+            summary: "F&G=8-10連續60天歷史最長極端恐懼。鏈上底部信號全亮(交易所儲備16年低+MVRV累積區+鯨魚大量吸籌)，但日線射擊星+短期超買需回踩確認。等$2,100-$2,175回踩做多。",
             key_changes: [
                 "\ud83d\udfe2 F&G\u56de\u5347\u81f328\uff0cETH\u93c8\u4e0a\u5e95\u90e8\u4fe1\u865f\u6975\u5f37\uff0895/100\uff1aMVRV\u8ca0+16yr\u4f4e\u5132\u5099+\u8ca0Funding\uff09",
                 "\ud83d\udcc8 \u4f0a\u6717\u505c\u706b\u63a8\u52d5ETH\u53cd\u5f48\u81f3$2,161\uff0c\u4f46\u91cf\u80fd\u50c578%\u4e14RSI 75.8\u8d85\u8cb7",
