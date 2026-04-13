@@ -77,7 +77,7 @@
         .scenario-base { border-color: rgba(251,191,36,0.3);  background: rgba(40,30,10,0.4); }
         .scenario-bear { border-color: rgba(248,113,113,0.3); background: rgba(40,15,15,0.4); }
 
-        /* ── Long-term module CSS ── */
+        /* ââ Long-term module CSS ââ */
         .lt-status-banner { border-radius: 12px; padding: 14px; margin-bottom: 14px; border: 1px solid; }
         .lt-status-banner.watch     { border-color: rgba(251,191,36,0.4); background: rgba(40,30,10,0.5); }
         .lt-status-banner.accumulate{ border-color: rgba(74,222,128,0.4); background: rgba(10,40,20,0.5); }
@@ -133,19 +133,19 @@
 
         .divider { height: 1px; background: rgba(148,163,184,0.08); margin: 14px 0; }
 
-        /* ── 響應式 grid 輔助 class ── */
+        /* ââ é¿æå¼ grid è¼å© class ââ */
         .grid-two   { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
         .grid-two-lg{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
         .grid-three { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
         .grid-entry { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:10px; }
         .grid-lt    { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
-        /* Timeline 滾動容器（手機自動橫滾） */
+        /* Timeline æ»¾åå®¹å¨ï¼ææ©èªåæ©«æ»¾ï¼ */
         .tl-wrap  { overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin:0 -4px; max-width:100%; }
         .tl-inner { min-width:560px; padding:62px 14px 32px; position:relative; }
 
-        /* ── Responsive ── Mobile Optimized v2.0 ── */
+        /* ââ Responsive ââ Mobile Optimized v2.0 ââ */
 
-        /* Header 不溢出修正 */
+        /* Header ä¸æº¢åºä¿®æ­£ */
         .header-sticky > div { flex-wrap:nowrap; min-width:0; }
         .header-sticky > div > div:first-child { min-width:0; flex-shrink:1; }
 
@@ -212,7 +212,7 @@
 </head>
 <body>
 
-<!-- ══════════════════════════════ DATA ══════════════════════════════ -->
+<!-- ââââââââââââââââââââââââââââââ DATA ââââââââââââââââââââââââââââââ -->
 <script>
 const DASHBOARD_DATA = {
     last_update: "2026-04-13T08:15:00+08:00",
@@ -220,35 +220,35 @@ const DASHBOARD_DATA = {
 
     signal: {
         direction: "BULLISH",
-        strength: "條件多（等回踩確認）",
-        condition: "等回調至 $2,100-$2,175 入場",
-        rationale: "投票4:2 BULLISH。F&G=8-10連續60天極端恐懼(歷史最長,90天中位回報+48%)。鏈上底部全亮:交易所儲備16年低+MVRV 1.2累積區+鯨魚30天吸270K BTC。日線射擊星拒絕$2,329後回調,等0.5 Fib回踩確認。",
+        strength: "æ¢ä»¶å¤ï¼ç­åè¸©ç¢ºèªï¼",
+        condition: "ç­åèª¿è³ $2,100-$2,175 å¥å ´",
+        rationale: "æç¥¨4:2 BULLISHãF&G=8-10é£çº60å¤©æ¥µç«¯ææ¼(æ­·å²æé·,90å¤©ä¸­ä½åå ±+48%)ãéä¸åºé¨å¨äº®:äº¤ææå²å16å¹´ä½+MVRV 1.2ç´¯ç©å+é¯¨é­30å¤©å¸270K BTCãæ¥ç·å°æææçµ$2,329å¾åèª¿,ç­0.5 Fibåè¸©ç¢ºèªã",
         eth_signal: 53.5,
         entry: 2138,
         sl: 2050,
         tp1: 2280,
         tp2: 2380,
-        position: "3.7%·2x",
+        position: "3.7%Â·2x",
         position_pct: 3.7,
         leverage: 2,
         dimensions: {tech:42, onchain:75, derivatives:48, orderflow:48, fundflow:58, macro:45, sentiment:70, news:58, kol:42},
         composite_score: 54.8,
-        regime: "震盪+中波動",
+        regime: "éçª+ä¸­æ³¢å",
         updated_at: "4/13 08:15",
         backfill: {
             recent_3_correct: "1/3",
-            streak: "觀望為主"
+            streak: "è§æçºä¸»"
         }
     },
 
         long_term: {
         last_update: "2026-04-13",
-        cycle_phase: "熊市中段 — Window of Weakness",
+        cycle_phase: "çå¸ä¸­æ®µ â Window of Weakness",
 
         status: {
             changed: true,
             alert_level: "normal",   // normal | watch | accumulate | sell
-            summary: "F&G=8-10連續60天歷史最長極端恐懼。鏈上底部信號全亮(交易所儲備16年低+MVRV累積區+鯨魚大量吸籌)，但日線射擊星+短期超買需回踩確認。等$2,100-$2,175回踩做多。",
+            summary: "F&G=8-10é£çº60å¤©æ­·å²æé·æ¥µç«¯ææ¼ãéä¸åºé¨ä¿¡èå¨äº®(äº¤ææå²å16å¹´ä½+MVRVç´¯ç©å+é¯¨é­å¤§éå¸ç±)ï¼ä½æ¥ç·å°ææ+ç­æè¶è²·éåè¸©ç¢ºèªãç­$2,100-$2,175åè¸©åå¤ã",
             key_changes: [
                 "\ud83d\udfe2 F&G\u56de\u5347\u81f328\uff0cETH\u93c8\u4e0a\u5e95\u90e8\u4fe1\u865f\u6975\u5f37\uff0895/100\uff1aMVRV\u8ca0+16yr\u4f4e\u5132\u5099+\u8ca0Funding\uff09",
                 "\ud83d\udcc8 \u4f0a\u6717\u505c\u706b\u63a8\u52d5ETH\u53cd\u5f48\u81f3$2,161\uff0c\u4f46\u91cf\u80fd\u50c578%\u4e14RSI 75.8\u8d85\u8cb7",
@@ -259,58 +259,58 @@ const DASHBOARD_DATA = {
 
         bottom_signals: {
             overall: 58,
-            status: "接拿丆尚暩到底",
+            status: "æ¥æ¿ä¸å°æ©å°åº",
             alert: null,
             indicators: [
-                {name:"MVRV Z-Score",      value:"-0.42",   detail:"<0為帕部區",   score:80, signal:"green"},
-                {name:"F&G恐貪（持續）",   value:"12 / 50天", detail:"敵端恐�<50天", score:88, signal:"green"},
+                {name:"MVRV Z-Score",      value:"-0.42",   detail:"<0çºå¸é¨å",   score:80, signal:"green"},
+                {name:"F&Gæè²ªï¼æçºï¼",   value:"12 / 50å¤©", detail:"æµç«¯æï¿½<50å¤©", score:88, signal:"green"},
                 {name:"BTC vs Realized Price", value:"+24%", detail:"$67K vs $54K", score:45, signal:"yellow"},
-                {name:"交易所儲備",         value:"14.9M",   detail:"16年涷史低位", score:78, signal:"green"},
+                {name:"äº¤ææå²å",         value:"14.9M",   detail:"16å¹´æ¶·å²ä½ä½", score:78, signal:"green"},
                 {name:"BTC vs 200W MA",    value:"+49%",    detail:"$67K vs $45K", score:30, signal:"red"},
-                {name:"ETH/BTC比值走勢",   value:"0.031",   detail:"持續下���趨勢", score:28, signal:"red"}
+                {name:"ETH/BTCæ¯å¼èµ°å¢",   value:"0.031",   detail:"æçºä¸ï¿½ï¿½ï¿½è¶¨å¢", score:28, signal:"red"}
             ],
-            advice: "揈上情緒指樉（MVRV、F&G）h��耲底部區，但BTC現e��黢Realized Price($54K)仍朙24%下���空間，200W MA($45K)直遠。建��僅在BTC到達$54K���下才啟動竬35d�，現價不追。"
+            advice: "æä¸æç·ææ¨ï¼MVRVãF&Gï¼hï¿½ï¿½è²åºé¨åï¼ä½BTCç¾eï¿½ï¿½é»¢Realized Price($54K)ä»æ24%ä¸ï¿½ï¿½ï¿½ç©ºéï¼200W MA($45K)ç´é ãå»ºï¿½ï¿½åå¨BTCå°é$54Kï¿½ï¿½ï¿½ä¸æååç«¬35dï¿½ï¼ç¾å¹ä¸è¿½ã"
         },
 
         macro: {
             indicators: [
-                {name:"M2增速 (YoY)",      value:"+7.2%",         trend:"up",   note:"持續擴張，中長期利多"},
-                {name:"Fed利率",            value:"4.25-4.50%",    trend:"hold", note:"降息預期43%（5月CME）"},
-                {name:"DXY美元指數",        value:"104.2",         trend:"up",   note:"強美元壓制短線BTC"},
-                {name:"VIX恐慌指數",        value:"24.5",          trend:"down", note:"從30.6回落，緩解中"},
-                {name:"SPX vs 200日MA",     value:"-8.5%",         trend:"down", note:"已跌破200日均線"},
-                {name:"10Y美債殖利率",      value:"4.35%",         trend:"down", note:"降息預期推低"},
-                {name:"殖利率曲線(10Y-2Y)", value:"-0.12%",        trend:"flat", note:"輕微倒掛，衰退訊號"},
-                {name:"BTC ETF 7日淨流",    value:"-$820M",        trend:"down", note:"機構仍在減倉"},
-                {name:"全球流動性",          value:"收縮中",         trend:"down", note:"G4央行同步縮表"},
-                {name:"Liberation Day關稅", value:"全面落地 ⚡",    trend:"down", note:"宏觀風險事件確認"}
+                {name:"M2å¢é (YoY)",      value:"+7.2%",         trend:"up",   note:"æçºæ´å¼µï¼ä¸­é·æå©å¤"},
+                {name:"Fedå©ç",            value:"4.25-4.50%",    trend:"hold", note:"éæ¯é æ43%ï¼5æCMEï¼"},
+                {name:"DXYç¾åææ¸",        value:"104.2",         trend:"up",   note:"å¼·ç¾åå£å¶ç­ç·BTC"},
+                {name:"VIXææææ¸",        value:"24.5",          trend:"down", note:"å¾30.6åè½ï¼ç·©è§£ä¸­"},
+                {name:"SPX vs 200æ¥MA",     value:"-8.5%",         trend:"down", note:"å·²è·ç ´200æ¥åç·"},
+                {name:"10Yç¾åµæ®å©ç",      value:"4.35%",         trend:"down", note:"éæ¯é ææ¨ä½"},
+                {name:"æ®å©çæ²ç·(10Y-2Y)", value:"-0.12%",        trend:"flat", note:"è¼å¾®åæï¼è¡°éè¨è"},
+                {name:"BTC ETF 7æ¥æ·¨æµ",    value:"-$820M",        trend:"down", note:"æ©æ§ä»å¨æ¸å"},
+                {name:"å¨çæµåæ§",          value:"æ¶ç¸®ä¸­",         trend:"down", note:"G4å¤®è¡åæ­¥ç¸®è¡¨"},
+                {name:"Liberation Dayéç¨", value:"å¨é¢è½å° â¡",    trend:"down", note:"å®è§é¢¨éªäºä»¶ç¢ºèª"}
             ]
         },
 
         sell_signals: {
             triggered_count: 0,
-            next_check: "2027 Q3-Q4（預期牛市頂部區前6個月）",
+            next_check: "2027 Q3-Q4ï¼é æçå¸é é¨åå6åæï¼",
             indicators: [
                 {name:"MVRV Z-Score > 3.0",       triggered:false, current:"-0.42",   target:">3.0"},
-                {name:"F&G > 85 持續7天",          triggered:false, current:"12",       target:">85"},
-                {name:"BTC >> 21W EMA +30%",       triggered:false, current:"待牛市",   target:"突破確認"},
-                {name:"Funding > 0.05% 持續",      triggered:false, current:"-0.002%", target:">0.05%"},
-                {name:"交易所流入激增",              triggered:false, current:"正常",     target:">50K BTC/週"}
+                {name:"F&G > 85 æçº7å¤©",          triggered:false, current:"12",       target:">85"},
+                {name:"BTC >> 21W EMA +30%",       triggered:false, current:"å¾çå¸",   target:"çªç ´ç¢ºèª"},
+                {name:"Funding > 0.05% æçº",      triggered:false, current:"-0.002%", target:">0.05%"},
+                {name:"äº¤æææµå¥æ¿å¢",              triggered:false, current:"æ­£å¸¸",     target:">50K BTC/é±"}
             ]
         },
 
         daily_log: [
-            { date: "04/10", btc: "$71.8K", eth: "$2,190", fg: 12, note: "CPI日。投票3:2 BULLISH。鏈上底部5信號極強(儲備9年低+MVRV低+ETF$471M)。CPI預期偏熱3.7%→等落地。條件多$2,100-2,150。" },
-            { date: "04/07", btc: "$68.7K", eth: "$2,106", fg: 11, note: "反彈衰竭，Apr9關稅44h，ETH高點$2,175未守，條件空信號" },
-            {date:"04/06", btc:67320, eth:2055, fg:12, note:"BEARISH 41/100 條件空。BB Squeeze Day6。4/9升級關稅在即。5空票 vs 2多票(鏈上78+情緒70)。CVD 7連未確認禁空。等$2,025跌破+CVD確認。"},
-            {date:"04/05", btc:67302, eth:2064, fg:12, note:"CONFLICT 49.2 觀望。Trump Iran延期10天→Risk-On vs 宏觀熊市。4H空頭軋空x10.4。BB極端壓縮。等CVD確認。"},
-            {date:"04/04", btc:67083, eth:2055, fg:11, note:"BEARISH 42.5 觀望。BB極端Squeeze(BTC 1.93%史低)。伊朗4/6截止36hr。鏈上82/100底部強信號 vs 宏觀15/100矛盾。CVD未確認，等4/6方向。"},
-            {date:"04/03", btc:66752, eth:2053, fg:12, note:"NFP 178K強勁，BTC反彈$67K後震盪。Liberation Day後伊朗4/6前夕"},
-            {date:"04/02", btc:68813, eth:2131, fg:8,  note:"ETH反彈至2165後被壓回，Liberation Day後第一天"},
-            {date:"04/01", btc:68203, eth:2107, fg:8,  note:"Liberation Day前夕，高波動觀望"},
-            {date:"03/31", btc:66706, eth:2048, fg:10, note:"月底拋售壓力，ETH破$2,050支撐"},
-            {date:"03/30", btc:71201, eth:2189, fg:20, note:"反彈被$83K壓力打回，假突破"},
-            {date:"03/28", btc:70231, eth:2098, fg:18, note:"週末低流動性橫盤"}
+            { date: "04/10", btc: "$71.8K", eth: "$2,190", fg: 12, note: "CPIæ¥ãæç¥¨3:2 BULLISHãéä¸åºé¨5ä¿¡èæ¥µå¼·(å²å9å¹´ä½+MVRVä½+ETF$471M)ãCPIé æåç±3.7%âç­è½å°ãæ¢ä»¶å¤$2,100-2,150ã" },
+            { date: "04/07", btc: "$68.7K", eth: "$2,106", fg: 11, note: "åå½è¡°ç«­ï¼Apr9éç¨44hï¼ETHé«é»$2,175æªå®ï¼æ¢ä»¶ç©ºä¿¡è" },
+            {date:"04/06", btc:67320, eth:2055, fg:12, note:"BEARISH 41/100 æ¢ä»¶ç©ºãBB Squeeze Day6ã4/9åç´éç¨å¨å³ã5ç©ºç¥¨ vs 2å¤ç¥¨(éä¸78+æç·70)ãCVD 7é£æªç¢ºèªç¦ç©ºãç­$2,025è·ç ´+CVDç¢ºèªã"},
+            {date:"04/05", btc:67302, eth:2064, fg:12, note:"CONFLICT 49.2 è§æãTrump Iranå»¶æ10å¤©âRisk-On vs å®è§çå¸ã4Hç©ºé ­è»ç©ºx10.4ãBBæ¥µç«¯å£ç¸®ãç­CVDç¢ºèªã"},
+            {date:"04/04", btc:67083, eth:2055, fg:11, note:"BEARISH 42.5 è§æãBBæ¥µç«¯Squeeze(BTC 1.93%å²ä½)ãä¼æ4/6æªæ­¢36hrãéä¸82/100åºé¨å¼·ä¿¡è vs å®è§15/100çç¾ãCVDæªç¢ºèªï¼ç­4/6æ¹åã"},
+            {date:"04/03", btc:66752, eth:2053, fg:12, note:"NFP 178Kå¼·åï¼BTCåå½$67Kå¾éçªãLiberation Dayå¾ä¼æ4/6åå¤"},
+            {date:"04/02", btc:68813, eth:2131, fg:8,  note:"ETHåå½è³2165å¾è¢«å£åï¼Liberation Dayå¾ç¬¬ä¸å¤©"},
+            {date:"04/01", btc:68203, eth:2107, fg:8,  note:"Liberation Dayåå¤ï¼é«æ³¢åè§æ"},
+            {date:"03/31", btc:66706, eth:2048, fg:10, note:"æåºæå®å£åï¼ETHç ´$2,050æ¯æ"},
+            {date:"03/30", btc:71201, eth:2189, fg:20, note:"åå½è¢«$83Kå£åæåï¼åçªç ´"},
+            {date:"03/28", btc:70231, eth:2098, fg:18, note:"é±æ«ä½æµåæ§æ©«ç¤"}
         ]
     }
 };
@@ -318,58 +318,58 @@ const DASHBOARD_DATA = {
 const MACRO_DATA = {
     btc_ath: 128000, btc_current_rank: 10, btc_market_cap_t: 1.32, gold_market_cap_t: 22.0,
     cycle: {
-        current:{ date:"2026-04", label:"現在",      note:"熊市中段" },
-        bottom: { date:"2026-10", label:"預計底部區", note:"AI歷史均值" },
-        bull:   { date:"2027-10", label:"牛市啟動",  note:"疊加第5次減半" },
-        halving:{ date:"2028-04", label:"第5b��¸����",  note:"2028-04" },
-        top:    { date:"2028-Q4", label:"下輪頂部區", note:"保守$150K-$168K" }
+        current:{ date:"2026-04", label:"ç¾å¨",      note:"çå¸ä¸­æ®µ" },
+        bottom: { date:"2026-10", label:"é è¨åºé¨å", note:"AIæ­·å²åå¼" },
+        bull:   { date:"2027-10", label:"çå¸åå",  note:"çå ç¬¬5æ¬¡æ¸å" },
+        halving:{ date:"2028-04", label:"ç¬¬5bï¿½ï¿½Â¸ï¿½ï¿½ï¿½ï¿½",  note:"2028-04" },
+        top:    { date:"2028-Q4", label:"ä¸è¼ªé é¨å", note:"ä¿å®$150K-$168K" }
     },
     btc_bottom: {
         cowen:   { conservative:54000, extreme:39000, note:"Realized Price $54K; Balance Price $39K" },
-        hist:    { conservative:44000, extreme:32000, note:"歷史均值跌幅-74.6%；ETF支撐保守$44K" },
+        hist:    { conservative:44000, extreme:32000, note:"æ­·å²åå¼è·å¹-74.6%ï¼ETFæ¯æä¿å®$44K" },
         consensus:{ low:44000, high:54000, extreme:32000 }
     },
     btc_layers: [
-        { price:69000, label:"強支撐測試 / 21周EMA",          pct:10, color:"#fbbf24", risk:"低" },
-        { price:60000, label:"關鍵結構支撐",                   pct:15, color:"#f97316", risk:"中" },
-        { price:54000, label:"Realized Price（Cowen保守底）",  pct:25, color:"#f87171", risk:"中高" },
-        { price:44000, label:"ETF機構支撐保守底（歷史均值）",      pct:30, color:"#ef4444", risk:"高" },
-        { price:32000, label:"Balance Price 極端底（Cowen）",  pct:20, color:"#991b1b", risk:"極端" }
+        { price:69000, label:"å¼·æ¯ææ¸¬è©¦ / 21å¨EMA",          pct:10, color:"#fbbf24", risk:"ä½" },
+        { price:60000, label:"ééµçµæ§æ¯æ",                   pct:15, color:"#f97316", risk:"ä¸­" },
+        { price:54000, label:"Realized Priceï¼Cowenä¿å®åºï¼",  pct:25, color:"#f87171", risk:"ä¸­é«" },
+        { price:44000, label:"ETFæ©æ§æ¯æä¿å®åºï¼æ­·å²åå¼ï¼",      pct:30, color:"#ef4444", risk:"é«" },
+        { price:32000, label:"Balance Price æ¥µç«¯åºï¼Cowenï¼",  pct:20, color:"#991b1b", risk:"æ¥µç«¯" }
     ],
     btc_milestones: [
-        { price:91000,   label:"追平白銀",              market_cap:"1.8T",  upside:"+36%",   color:"#94a3b8" },
-        { price:112000,  label:"黃金1/10",              market_cap:"2.2T",  upside:"+68%",   color:"#fbbf24" },
-        { price:168000,  label:"追平蘋果（下輪頂部）",  market_cap:"3.3T",  upside:"+151%",  color:"#4ade80" },
-        { price:1120000, label:"追平黃金",              market_cap:"22T",   upside:"+1576%", color:"#a855f7" }
+        { price:91000,   label:"è¿½å¹³ç½é",              market_cap:"1.8T",  upside:"+36%",   color:"#94a3b8" },
+        { price:112000,  label:"é»é1/10",              market_cap:"2.2T",  upside:"+68%",   color:"#fbbf24" },
+        { price:168000,  label:"è¿½å¹³èæï¼ä¸è¼ªé é¨ï¼",  market_cap:"3.3T",  upside:"+151%",  color:"#4ade80" },
+        { price:1120000, label:"è¿½å¹³é»é",              market_cap:"22T",   upside:"+1576%", color:"#a855f7" }
     ],
     eth: {
         log_regression_home:1589, bottom_zone_low:1300, bottom_zone_high:1800,
         next_cycle_low:3500, next_cycle_high:5000, eth_btc_target:0.053,
         layers:[
-            { price:1800, label:"底部區上沿",               pct:20, color:"#fbbf24" },
-            { price:1589, label:"Log回歸 Home（Cowen）",    pct:30, color:"#f87171" },
-            { price:1300, label:"底部區下沿 / 極端底",      pct:35, color:"#ef4444" }
+            { price:1800, label:"åºé¨åä¸æ²¿",               pct:20, color:"#fbbf24" },
+            { price:1589, label:"Logåæ­¸ Homeï¼Cowenï¼",    pct:30, color:"#f87171" },
+            { price:1300, label:"åºé¨åä¸æ²¿ / æ¥µç«¯åº",      pct:35, color:"#ef4444" }
         ]
     },
     sp500: {
         current_cape:37,
         scenarios:[
-            { label:"樂觀", prob:30, drawdown:-13, bottom:6071, recovery_months:6,  color:"#4ade80" },
-            { label:"基準", prob:45, drawdown:-25, bottom:5225, recovery_months:18, color:"#fbbf24" },
-            { label:"悲觀", prob:25, drawdown:-36, bottom:4467, recovery_months:36, color:"#f87171" }
+            { label:"æ¨è§", prob:30, drawdown:-13, bottom:6071, recovery_months:6,  color:"#4ade80" },
+            { label:"åºæº", prob:45, drawdown:-25, bottom:5225, recovery_months:18, color:"#fbbf24" },
+            { label:"æ²è§", prob:25, drawdown:-36, bottom:4467, recovery_months:36, color:"#f87171" }
         ]
     }
 };
 </script>
 
-<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<!-- ââââââââââââââââââââââââââââââ HEADER ââââââââââââââââââââââââââââââ -->
 <div class="header-sticky">
     <div style="max-width:900px; margin:0 auto; padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
         <div>
             <div style="font-size:15px; font-weight:800; color:#fff; letter-spacing:-0.3px;">
                 <span class="live-dot"></span>Gunter Macro
             </div>
-            <div style="font-size:9px; color:rgba(226,232,240,0.35);">BTC/ETH 週期 · 抄底賣出導航</div>
+            <div style="font-size:9px; color:rgba(226,232,240,0.35);">BTC/ETH é±æ Â· æåºè³£åºå°èª</div>
         </div>
         <div class="header-prices" style="display:flex; gap:14px; align-items:center;">
             <div class="header-price-item" style="text-align:center;">
@@ -384,60 +384,60 @@ const MACRO_DATA = {
             </div>
             <div style="text-align:right;">
                 <div id="clock" style="font-size:10px; color:rgba(226,232,240,0.5);">--:--</div>
-                <div id="fng-display" style="font-size:9px; color:rgba(226,232,240,0.4);">恐貪--</div>
+                <div id="fng-display" style="font-size:9px; color:rgba(226,232,240,0.4);">æè²ª--</div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ══════════════════════════════ MAIN ══════════════════════════════ -->
+<!-- ââââââââââââââââââââââââââââââ MAIN ââââââââââââââââââââââââââââââ -->
 <div style="max-width:900px; margin:0 auto; padding:10px 12px 32px;">
 
-    <!-- ① 短期交易信號（最重要：即時操作） -->
+    <!-- â  ç­æäº¤æä¿¡èï¼æéè¦ï¼å³ææä½ï¼ -->
     <div id="signal-section"></div>
 
-    <!-- ② 長線宏觀監控（策略：什麼時候抄底賣出） -->
+    <!-- â¡ é·ç·å®è§ç£æ§ï¼ç­ç¥ï¼ä»éº¼æåæåºè³£åºï¼ -->
     <div class="card card-lt" id="lt-section">
-        <!-- 由 JS 渲染 -->
+        <!-- ç± JS æ¸²æ -->
     </div>
 
-    <!-- ③ BTC 宏觀週期導航 -->
+    <!-- â¢ BTC å®è§é±æå°èª -->
     <div class="card" style="margin-bottom:12px;">
-        <div class="section-label">③ 宏觀週期導航</div>
+        <div class="section-label">â¢ å®è§é±æå°èª</div>
         <div class="section-title">
-            <span>📡</span>BTC 四年週期定位
-            <span class="tag tag-red" style="margin-left:auto;">2026 熊市中段</span>
+            <span>ð¡</span>BTC åå¹´é±æå®ä½
+            <span class="tag tag-red" style="margin-left:auto;">2026 çå¸ä¸­æ®µ</span>
         </div>
         <div class="tl-wrap"><div class="tl-inner">
             <div class="timeline-track">
                 <div class="timeline-fill" style="width:15%;"></div>
                 <div class="timeline-node" style="left:0%;">
-                    <div class="node-label-above" style="color:#f7931a; font-size:11px;">▲ ATH<br/>$128K</div>
+                    <div class="node-label-above" style="color:#f7931a; font-size:11px;">â² ATH<br/>$128K</div>
                     <div class="node-dot current"></div>
                     <div class="node-label-below">2025 Q4</div>
                 </div>
                 <div class="timeline-node" style="left:15%;">
-                    <div class="node-label-above" style="color:#fbbf24; font-size:12px; font-weight:800;">● 現在</div>
+                    <div class="node-label-above" style="color:#fbbf24; font-size:12px; font-weight:800;">â ç¾å¨</div>
                     <div class="node-dot current"></div>
                     <div class="node-label-below">2026-04</div>
                 </div>
                 <div class="timeline-node" style="left:38%;">
-                    <div class="node-label-above" style="color:#f87171;">底部區<br/>$32-54K</div>
+                    <div class="node-label-above" style="color:#f87171;">åºé¨å<br/>$32-54K</div>
                     <div class="node-dot future-near"></div>
                     <div class="node-label-below">2026-10</div>
                 </div>
                 <div class="timeline-node" style="left:65%;">
-                    <div class="node-label-above" style="color:#4ade80;">牛市啟動</div>
+                    <div class="node-label-above" style="color:#4ade80;">çå¸åå</div>
                     <div class="node-dot future-bull"></div>
                     <div class="node-label-below">2027-10</div>
                 </div>
                 <div class="timeline-node" style="left:83%;">
-                    <div class="node-label-above" style="color:#a855f7;">第5次減半</div>
+                    <div class="node-label-above" style="color:#a855f7;">ç¬¬5æ¬¡æ¸å</div>
                     <div class="node-dot future-top"></div>
                     <div class="node-label-below">2028-04</div>
                 </div>
                 <div class="timeline-node" style="left:100%;">
-                    <div class="node-label-above" style="color:#a855f7;">頂部<br/>~$168K</div>
+                    <div class="node-label-above" style="color:#a855f7;">é é¨<br/>~$168K</div>
                     <div class="node-dot future-top"></div>
                     <div class="node-label-below">2028 Q4</div>
                 </div>
@@ -445,80 +445,80 @@ const MACRO_DATA = {
         </div></div><!-- /tl-wrap -->
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:7px; margin-top:10px;">
             <div style="background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2); border-radius:9px; padding:10px;">
-                <div style="font-size:11px; color:#fbbf24; font-weight:700; margin-bottom:3px;">🏦 Fed降息重啟</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.55);">Wavsh偏鷹，降息預期43%需重新定價</div>
-                <div class="tag tag-gray" style="margin-top:5px;">待觀察</div>
+                <div style="font-size:11px; color:#fbbf24; font-weight:700; margin-bottom:3px;">ð¦ Fedéæ¯éå</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">Wavshåé·¹ï¼éæ¯é æ43%ééæ°å®å¹</div>
+                <div class="tag tag-gray" style="margin-top:5px;">å¾è§å¯</div>
             </div>
             <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:9px; padding:10px;">
-                <div style="font-size:11px; color:#4ade80; font-weight:700; margin-bottom:3px;">📈 BTC ETF淨流入</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.55);">機構淨流入轉正為底部確認信號</div>
+                <div style="font-size:11px; color:#4ade80; font-weight:700; margin-bottom:3px;">ð BTC ETFæ·¨æµå¥</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">æ©æ§æ·¨æµå¥è½æ­£çºåºé¨ç¢ºèªä¿¡è</div>
                 <div class="tag tag-red" style="margin-top:5px;">7D -$820M</div>
             </div>
             <div style="background:rgba(247,147,26,0.08); border:1px solid rgba(247,147,26,0.2); border-radius:9px; padding:10px;">
-                <div style="font-size:11px; color:#f7931a; font-weight:700; margin-bottom:3px;">₿ 第5次減半</div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.55);">2028-04 觸發，形成中期牛市催化</div>
+                <div style="font-size:11px; color:#f7931a; font-weight:700; margin-bottom:3px;">â¿ ç¬¬5æ¬¡æ¸å</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.55);">2028-04 è§¸ç¼ï¼å½¢æä¸­æçå¸å¬å</div>
                 <div class="tag tag-orange" style="margin-top:5px;">2028-04</div>
             </div>
         </div>
     </div>
 
-    <!-- ④ BTC 分層抄底 + 里程碑（並排，手機改為單欄） -->
+    <!-- â£ BTC åå±¤æåº + éç¨ç¢ï¼ä¸¦æï¼ææ©æ¹çºå®æ¬ï¼ -->
     <div class="grid-two">
         <div class="card card-btc" style="margin-bottom:0;">
-            <div class="section-label">④ BTC 抄底計劃</div>
-            <div class="section-title" style="font-size:14px;"><span>🍊</span>分層建倉策略</div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">ATH $128K → 各層位建議倉位</div>
+            <div class="section-label">â£ BTC æåºè¨å</div>
+            <div class="section-title" style="font-size:14px;"><span>ð</span>åå±¤å»ºåç­ç¥</div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">ATH $128K â åå±¤ä½å»ºè­°åä½</div>
             <div id="btc-layers-container"></div>
             <div class="divider"></div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4);">⚠️ 每層確認收盤後再加。極端底（$32-39K）需雙確認：Realized Price 觸及 + F&G &lt; 15。</div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4);">â ï¸ æ¯å±¤ç¢ºèªæ¶ç¤å¾åå ãæ¥µç«¯åºï¼$32-39Kï¼ééç¢ºèªï¼Realized Price è§¸å + F&G &lt; 15ã</div>
         </div>
         <div class="card card-btc" style="margin-bottom:0;">
-            <div class="section-label">④ BTC 上升路徑</div>
-            <div class="section-title" style="font-size:14px;"><span>🏆</span>里程碑市值對比</div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">現在 $1.32T（全球#10）</div>
+            <div class="section-label">â£ BTC ä¸åè·¯å¾</div>
+            <div class="section-title" style="font-size:14px;"><span>ð</span>éç¨ç¢å¸å¼å°æ¯</div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4); margin-bottom:10px;">ç¾å¨ $1.32Tï¼å¨ç#10ï¼</div>
             <div id="btc-milestones-container"></div>
             <div class="divider"></div>
-            <div style="font-size:10px; color:rgba(226,232,240,0.4);">下輪目標：追平蘋果（$168K），ETH/BTC 目標 0.053</div>
+            <div style="font-size:10px; color:rgba(226,232,240,0.4);">ä¸è¼ªç®æ¨ï¼è¿½å¹³èæï¼$168Kï¼ï¼ETH/BTC ç®æ¨ 0.053</div>
         </div>
     </div>
 
-    <!-- ⑤ ETH 框架 -->
+    <!-- â¤ ETH æ¡æ¶ -->
     <div class="card card-eth">
-        <div class="section-label">⑤ ETH 宏觀框架</div>
-        <div class="section-title"><span>Ξ</span>ETH 對數回歸分析</div>
+        <div class="section-label">â¤ ETH å®è§æ¡æ¶</div>
+        <div class="section-title"><span>Î</span>ETH å°æ¸åæ­¸åæ</div>
         <div class="grid-three">
             <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:10px; padding:12px;">
-                <div style="font-size:10px; color:#627eea; font-weight:700; margin-bottom:3px;">🎯 抄底目標區</div>
+                <div style="font-size:10px; color:#627eea; font-weight:700; margin-bottom:3px;">ð¯ æåºç®æ¨å</div>
                 <div style="font-size:20px; font-weight:900; color:#627eea;">$1,300</div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.5);">─ $1,800</div>
-                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">Log Regression 底部帶</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">â $1,800</div>
+                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">Log Regression åºé¨å¸¶</div>
             </div>
             <div style="background:rgba(98,126,234,0.08); border:1px solid rgba(98,126,234,0.2); border-radius:10px; padding:12px;">
-                <div style="font-size:10px; color:#60a5fa; font-weight:700; margin-bottom:3px;">🏠 Log回歸 Home</div>
+                <div style="font-size:10px; color:#60a5fa; font-weight:700; margin-bottom:3px;">ð  Logåæ­¸ Home</div>
                 <div style="font-size:20px; font-weight:900; color:#60a5fa;">$1,589</div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.5);">Cowen 中位數</div>
-                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">對數回歸帶中線</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">Cowen ä¸­ä½æ¸</div>
+                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">å°æ¸åæ­¸å¸¶ä¸­ç·</div>
             </div>
             <div style="background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); border-radius:10px; padding:12px;">
-                <div style="font-size:10px; color:#4ade80; font-weight:700; margin-bottom:3px;">🚀 下輪牛市目標</div>
+                <div style="font-size:10px; color:#4ade80; font-weight:700; margin-bottom:3px;">ð ä¸è¼ªçå¸ç®æ¨</div>
                 <div style="font-size:20px; font-weight:900; color:#4ade80;">$3,500</div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.5);">─ $5,000</div>
-                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">ETH/BTC 目標 0.053</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5);">â $5,000</div>
+                <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:3px;">ETH/BTC ç®æ¨ 0.053</div>
             </div>
         </div>
-        <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:8px;">ETH 分層抄底</div>
+        <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:8px;">ETH åå±¤æåº</div>
         <div id="eth-layers-container"></div>
         <div class="divider" style="margin:10px 0;"></div>
-        <div style="font-size:10px; color:rgba(226,232,240,0.5);">⚠️ ETH Bull Trap 風險：BTC底部未確認前，ETH假突破風險高。建議 ETH 滯後 BTC 底部確認 1-2 週後再建倉。</div>
+        <div style="font-size:10px; color:rgba(226,232,240,0.5);">â ï¸ ETH Bull Trap é¢¨éªï¼BTCåºé¨æªç¢ºèªåï¼ETHåçªç ´é¢¨éªé«ãå»ºè­° ETH æ»¯å¾ BTC åºé¨ç¢ºèª 1-2 é±å¾åå»ºåã</div>
     </div>
 
-    <!-- ⑥ BTC 底部分析（分析師共識 + 美股情景） -->
+    <!-- â¥ BTC åºé¨åæï¼åæå¸«å±è­ + ç¾è¡ææ¯ï¼ -->
     <div class="card card-btc">
-        <div class="section-label">⑥ BTC 底部分析</div>
-        <div class="section-title"><span>₿</span>多分析師底部共識</div>
+        <div class="section-label">â¥ BTC åºé¨åæ</div>
+        <div class="section-title"><span>â¿</span>å¤åæå¸«åºé¨å±è­</div>
         <div class="grid-two-lg">
             <div>
-                <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:10px;">保守底 vs 極端底</div>
+                <div style="font-size:11px; color:rgba(226,232,240,0.5); margin-bottom:10px;">ä¿å®åº vs æ¥µç«¯åº</div>
                 <div style="margin-bottom:12px;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                         <span style="font-size:11px; color:#60a5fa; font-weight:700;">Benjamin Cowen</span>
@@ -537,16 +537,16 @@ const MACRO_DATA = {
                 </div>
                 <div>
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span style="font-size:11px; color:#a855f7; font-weight:700;">歷史均值回撤</span>
+                        <span style="font-size:11px; color:#a855f7; font-weight:700;">æ­·å²åå¼åæ¤</span>
                         <span style="font-size:10px; color:rgba(226,232,240,0.4);">-74.6% avg</span>
                     </div>
                     <div class="analyst-bar">
-                        <div class="analyst-name">ETF支撐估</div>
+                        <div class="analyst-name">ETFæ¯æä¼°</div>
                         <div class="bar-track"><div class="bar-fill" style="width:34%; background:linear-gradient(90deg,#a855f7,#9333ea);"></div></div>
                         <div class="bar-label-right" style="color:#a855f7;">$44K</div>
                     </div>
                     <div class="analyst-bar">
-                        <div class="analyst-name">純均值</div>
+                        <div class="analyst-name">ç´åå¼</div>
                         <div class="bar-track"><div class="bar-fill" style="width:25%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div>
                         <div class="bar-label-right" style="color:#ef4444;">$32K</div>
                     </div>
@@ -554,41 +554,41 @@ const MACRO_DATA = {
             </div>
             <div>
                 <div style="background:rgba(247,147,26,0.1); border:1px solid rgba(247,147,26,0.3); border-radius:10px; padding:12px; margin-bottom:8px;">
-                    <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:5px;">多分析師共識$��位</div>
+                    <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:5px;">å¤åæå¸«å±è­$ï¿½ï¿½ä½</div>
                     <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                         <div>
-                            <div style="font-size:11px; color:rgba(226,232,240,0.5);">保守底</div>
-                            <div style="font-size:21px; font-weight:900; color:#f7931a;">$44–54K</div>
+                            <div style="font-size:11px; color:rgba(226,232,240,0.5);">ä¿å®åº</div>
+                            <div style="font-size:21px; font-weight:900; color:#f7931a;">$44â54K</div>
                         </div>
                         <div style="text-align:right;">
-                            <div style="font-size:11px; color:rgba(226,232,240,0.5);">極端底</div>
-                            <div style="font-size:21px; font-weight:900; color:#ef4444;">$32–39K</div>
+                            <div style="font-size:11px; color:rgba(226,232,240,0.5);">æ¥µç«¯åº</div>
+                            <div style="font-size:21px; font-weight:900; color:#ef4444;">$32â39K</div>
                         </div>
                     </div>
-                    <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:4px; text-align:center;">預期底部時間：2026 Q3–Q4</div>
+                    <div style="font-size:9px; color:rgba(226,232,240,0.4); margin-top:4px; text-align:center;">é æåºé¨æéï¼2026 Q3âQ4</div>
                 </div>
-                <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:6px;">美股 S&P500 三情景（CAPE 37x）</div>
+                <div style="font-size:10px; color:rgba(226,232,240,0.5); margin-bottom:6px;">ç¾è¡ S&P500 ä¸ææ¯ï¼CAPE 37xï¼</div>
                 <div style="display:flex; flex-direction:column; gap:5px;">
                     <div class="scenario-card scenario-opt">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:11px; font-weight:700; color:#4ade80;">樂觀 30%</span>
+                            <span style="font-size:11px; font-weight:700; color:#4ade80;">æ¨è§ 30%</span>
                             <span style="font-size:16px; font-weight:900; color:#4ade80;">-13%</span>
                         </div>
-                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">底部~6,071 · 恢復6個月</div>
+                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">åºé¨~6,071 Â· æ¢å¾©6åæ</div>
                     </div>
                     <div class="scenario-card scenario-base">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:11px; font-weight:700; color:#fbbf24;">基準 45%</span>
+                            <span style="font-size:11px; font-weight:700; color:#fbbf24;">åºæº 45%</span>
                             <span style="font-size:16px; font-weight:900; color:#fbbf24;">-25%</span>
                         </div>
-                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">底部~5,225 · 恢復18個月</div>
+                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">åºé¨~5,225 Â· æ¢å¾©18åæ</div>
                     </div>
                     <div class="scenario-card scenario-bear">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:11px; font-weight:700; color:#f87171;">悲觀 25%</span>
+                            <span style="font-size:11px; font-weight:700; color:#f87171;">æ²è§ 25%</span>
                             <span style="font-size:16px; font-weight:900; color:#f87171;">-36%</span>
                         </div>
-                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">底部~4,467 · 恢復36個月</div>
+                        <div style="font-size:10px; color:rgba(226,232,240,0.5);">åºé¨~4,467 Â· æ¢å¾©36åæ</div>
                     </div>
                 </div>
             </div>
@@ -597,9 +597,9 @@ const MACRO_DATA = {
 
 </div><!-- /main -->
 
-<!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
+<!-- ââââââââââââââââââââââââââââââ SCRIPTS ââââââââââââââââââââââââââââââ -->
 <script>
-/* ── Clock ── */
+/* ââ Clock ââ */
 function updateClock() {
     const n = new Date();
     document.getElementById('clock').textContent =
@@ -607,7 +607,7 @@ function updateClock() {
 }
 setInterval(updateClock, 1000); updateClock();
 
-/* ── Live prices ── */
+/* ââ Live prices ââ */
 async function fetchPrices() {
     try {
         const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
@@ -623,20 +623,20 @@ async function fetchPrices() {
 }
 fetchPrices(); setInterval(fetchPrices, 30000);
 
-/* ── F&G ── */
+/* ââ F&G ââ */
 async function fetchFNG() {
     try {
         const r = await fetch('https://api.alternative.me/fng/');
         const d = await r.json();
         const val = +d.data[0].value;
         const el = document.getElementById('fng-display');
-        el.textContent = `恐貪 ${val}`;
+        el.textContent = `æè²ª ${val}`;
         el.style.color = val<25?'#f87171':val<45?'#fb923c':val<55?'#fbbf24':'#4ade80';
     } catch(e){}
 }
 fetchFNG();
 
-/* ── Render BTC layers ── */
+/* ââ Render BTC layers ââ */
 function renderBtcLayers() {
     document.getElementById('btc-layers-container').innerHTML =
         MACRO_DATA.btc_layers.map(l=>`
@@ -648,7 +648,7 @@ function renderBtcLayers() {
         </div>`).join('');
 }
 
-/* ── Render BTC milestones ── */
+/* ââ Render BTC milestones ââ */
 function renderBtcMilestones() {
     document.getElementById('btc-milestones-container').innerHTML =
         MACRO_DATA.btc_milestones.map(m=>`
@@ -657,14 +657,14 @@ function renderBtcMilestones() {
                 <div style="font-size:14px; font-weight:900; color:${m.color};">$${(m.price/1000).toFixed(0)}K</div>
                 <div>
                     <div style="font-size:11px; color:rgba(226,232,240,0.8);">${m.label}</div>
-                    <div style="font-size:9px; color:rgba(226,232,240,0.4);">市值 $${m.market_cap}</div>
+                    <div style="font-size:9px; color:rgba(226,232,240,0.4);">å¸å¼ $${m.market_cap}</div>
                 </div>
             </div>
             <div style="font-size:13px; font-weight:800; color:${m.color};">${m.upside}</div>
         </div>`).join('');
 }
 
-/* ── Render ETH layers ── */
+/* ââ Render ETH layers ââ */
 function renderEthLayers() {
     document.getElementById('eth-layers-container').innerHTML =
         MACRO_DATA.eth.layers.map(l=>`
@@ -676,28 +676,28 @@ function renderEthLayers() {
         </div>`).join('');
 }
 
-/* ── Render Signal ── */
+/* ââ Render Signal ââ */
 function renderSignal() {
     const s = DASHBOARD_DATA.signal;
     const cls = s.direction==='BULLISH'?'bullish':s.direction==='BEARISH'?'bearish':s.direction==='CONFLICT'?'conflict':'neutral';
     const badge = s.direction==='BULLISH'?'badge-long':s.direction==='BEARISH'?'badge-short':s.direction==='CONFLICT'?'badge-conflict':'badge-neutral';
-    const dirText = s.direction==='BULLISH'?'做多 LONG':s.direction==='BEARISH'?'做空 SHORT':s.direction==='CONFLICT'?'訊號衝突':'觀望';
+    const dirText = s.direction==='BULLISH'?'åå¤ LONG':s.direction==='BEARISH'?'åç©º SHORT':s.direction==='CONFLICT'?'è¨èè¡çª':'è§æ';
     const dimColor = v => v>=65?'#4ade80':v>=40?'#fbbf24':'#f87171';
-    const dimNames = {tech:'技術面',onchain:'鏈上',derivatives:'衍生品',orderflow:'訂單流',fundflow:'資金流',macro:'宏觀',sentiment:'情緒',news:'新聞',kol:'KOL'};
+    const dimNames = {tech:'æè¡é¢',onchain:'éä¸',derivatives:'è¡çå',orderflow:'è¨å®æµ',fundflow:'è³éæµ',macro:'å®è§',sentiment:'æç·',news:'æ°è',kol:'KOL'};
     const upd = new Date(DASHBOARD_DATA.last_update);
     const updStr = `${upd.getMonth()+1}/${upd.getDate()} ${String(upd.getHours()).padStart(2,'0')}:${String(upd.getMinutes()).padStart(2,'0')}`;
 
     const entryBlock = s.entry ? `
     <div class="grid-entry">
-        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">入場</div><div style="font-weight:800;color:#fbbf24;font-size:13px;">$${s.entry}</div></div>
-        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">止損</div><div style="font-weight:800;color:#f87171;font-size:13px;">$${s.sl}</div></div>
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">å¥å ´</div><div style="font-weight:800;color:#fbbf24;font-size:13px;">$${s.entry}</div></div>
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">æ­¢æ</div><div style="font-weight:800;color:#f87171;font-size:13px;">$${s.sl}</div></div>
         <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">TP1</div><div style="font-weight:800;color:#4ade80;font-size:13px;">$${s.tp1}</div></div>
-        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">倉位/槓桿</div><div style="font-weight:800;color:#fbbf24;font-size:12px;">${s.position_pct}%·${s.leverage}x</div></div>
-    </div>` : `<div style="margin-top:8px;padding:9px;background:rgba(148,163,184,0.06);border-radius:8px;font-size:11px;color:rgba(226,232,240,0.5);">⏳ ${s.timeframe_note}</div>`;
+        <div class="metric-box"><div style="font-size:9px;color:rgba(226,232,240,0.5);">åä½/æ§æ¡¿</div><div style="font-weight:800;color:#fbbf24;font-size:12px;">${s.position_pct}%Â·${s.leverage}x</div></div>
+    </div>` : `<div style="margin-top:8px;padding:9px;background:rgba(148,163,184,0.06);border-radius:8px;font-size:11px;color:rgba(226,232,240,0.5);">â³ ${s.timeframe_note}</div>`;
 
     document.getElementById('signal-section').innerHTML = `
     <div class="card card-signal" style="margin-bottom:12px;">
-        <div class="section-label">① 短期交易信號（最新）</div>
+        <div class="section-label">â  ç­æäº¤æä¿¡èï¼ææ°ï¼</div>
         <div class="signal-banner ${cls}">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
                 <div style="flex:1;min-width:0;">
@@ -708,7 +708,7 @@ function renderSignal() {
                     <div style="font-size:11px;color:rgba(226,232,240,0.6);line-height:1.55;">${s.reason}</div>
                 </div>
                 <div style="text-align:center;flex-shrink:0;">
-                    <div style="font-size:9px;color:rgba(226,232,240,0.4);">ETH信號</div>
+                    <div style="font-size:9px;color:rgba(226,232,240,0.4);">ETHä¿¡è</div>
                     <div style="font-size:26px;font-weight:900;color:#627eea;">${s.eth_signal}</div>
                     <div style="font-size:9px;color:rgba(226,232,240,0.4);">/100</div>
                 </div>
@@ -724,30 +724,30 @@ function renderSignal() {
         </div>
         <div style="display:flex;gap:7px;flex-wrap:wrap;">
             <div class="metric-box" style="flex:1;min-width:80px;">
-                <div style="font-size:9px;color:rgba(226,232,240,0.5);">綜合分</div>
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">ç¶åå</div>
                 <div style="font-size:20px;font-weight:900;color:#fbbf24;">${s.composite_score}</div>
             </div>
             <div class="metric-box" style="flex:2;min-width:100px;">
-                <div style="font-size:9px;color:rgba(226,232,240,0.5);">體制</div>
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">é«å¶</div>
                 <div style="font-size:12px;font-weight:700;color:#94a3b8;margin-top:2px;">${s.regime}</div>
             </div>
             <div class="metric-box" style="flex:1;min-width:80px;">
-                <div style="font-size:9px;color:rgba(226,232,240,0.5);">近期正確率</div>
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">è¿ææ­£ç¢ºç</div>
                 <div style="font-size:20px;font-weight:900;color:${s.backfill.recent_3_correct.startsWith('0')?'#f87171':'#4ade80'}">${s.backfill.recent_3_correct}</div>
             </div>
             <div class="metric-box" style="flex:1;min-width:80px;">
-                <div style="font-size:9px;color:rgba(226,232,240,0.5);">連勝/連敗</div>
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">é£å/é£æ</div>
                 <div style="font-size:12px;font-weight:700;color:#f87171;margin-top:2px;">${s.backfill.streak}</div>
             </div>
             <div class="metric-box" style="flex:1;min-width:90px;">
-                <div style="font-size:9px;color:rgba(226,232,240,0.5);">更新</div>
+                <div style="font-size:9px;color:rgba(226,232,240,0.5);">æ´æ°</div>
                 <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-top:2px;">${updStr}</div>
             </div>
         </div>
     </div>`;
 }
 
-/* ── Render Long-Term Monitor ── */
+/* ââ Render Long-Term Monitor ââ */
 function renderLongTerm() {
     const lt = DASHBOARD_DATA.long_term;
     const st = lt.status;
@@ -760,20 +760,20 @@ function renderLongTerm() {
     const scoreBorder = s => s>=80?'rgba(74,222,128,0.5)':s>=60?'rgba(251,191,36,0.5)':s>=40?'rgba(249,115,22,0.5)':'rgba(248,113,113,0.5)';
     const signalColor = s => s==='green'?'#4ade80':s==='yellow'?'#fbbf24':'#f87171';
     const barBg = s => s==='green'?'linear-gradient(90deg,#4ade80,#22c55e)':s==='yellow'?'linear-gradient(90deg,#fbbf24,#f59e0b)':'linear-gradient(90deg,#f87171,#ef4444)';
-    const trendIcon = t => t==='up'?'<span class="trend-up">↑</span>':t==='down'?'<span class="trend-down">↓</span>':'<span class="trend-hold">→</span>';
+    const trendIcon = t => t==='up'?'<span class="trend-up">â</span>':t==='down'?'<span class="trend-down">â</span>':'<span class="trend-hold">â</span>';
     const alertCls = st.alert_level==='accumulate'?'accumulate':st.alert_level==='sell'?'sell':st.alert_level==='watch'?'watch':'normal';
 
     // Status banner
     const changedBadge = st.changed
-        ? `<span class="tag tag-red" style="font-size:9px;">今日有變化</span>`
-        : `<span class="tag tag-green" style="font-size:9px;">與昨日相同</span>`;
+        ? `<span class="tag tag-red" style="font-size:9px;">ä»æ¥æè®å</span>`
+        : `<span class="tag tag-green" style="font-size:9px;">èæ¨æ¥ç¸å</span>`;
     const alertLabel = st.alert_level==='accumulate'
-        ? `<span class="tag tag-green">🟢 可開始抄底</span>`
+        ? `<span class="tag tag-green">ð¢ å¯éå§æåº</span>`
         : st.alert_level==='sell'
-        ? `<span class="tag tag-red">🔴 考慮減倉</span>`
+        ? `<span class="tag tag-red">ð´ èæ®æ¸å</span>`
         : st.alert_level==='watch'
-        ? `<span class="tag tag-orange">🟡 密切觀察</span>`
-        : `<span class="tag tag-gray">⚪ 觀望等待</span>`;
+        ? `<span class="tag tag-orange">ð¡ å¯åè§å¯</span>`
+        : `<span class="tag tag-gray">âª è§æç­å¾</span>`;
 
     const keyChangesHTML = st.key_changes.map(c=>`
         <div style="font-size:11px;color:rgba(226,232,240,0.65);margin-bottom:5px;padding-left:2px;">${c}</div>`).join('');
@@ -816,18 +816,18 @@ function renderLongTerm() {
         </div>`).join('');
 
     document.getElementById('lt-section').innerHTML = `
-    <div class="section-label">② 長線宏觀監控（每日更新）</div>
+    <div class="section-label">â¡ é·ç·å®è§ç£æ§ï¼æ¯æ¥æ´æ°ï¼</div>
     <div class="section-title">
-        <span>🔭</span>長線抄底賣出雷達
+        <span>ð­</span>é·ç·æåºè³£åºé·é
         <span style="margin-left:auto;display:flex;gap:6px;align-items:center;">${changedBadge}${alertLabel}</span>
     </div>
 
-    <!-- 今日狀態橫幅 -->
+    <!-- ä»æ¥çææ©«å¹ -->
     <div class="lt-status-banner ${alertCls}" style="margin-bottom:14px;">
         <div style="display:flex;align-items:flex-start;gap:14px;">
             <div class="score-circle" style="border-color:${scoreBorder(bs.overall)};">
                 <div class="score-num" style="color:${scoreColor(bs.overall)};">${bs.overall}</div>
-                <div class="score-label">底部分</div>
+                <div class="score-label">åºé¨å</div>
             </div>
             <div style="flex:1;min-width:0;">
                 <div style="font-size:13px;font-weight:800;color:#e8ecf1;margin-bottom:6px;">${st.summary}</div>
@@ -839,46 +839,46 @@ function renderLongTerm() {
     </div>
 
     <div class="grid-lt">
-        <!-- 底部信號 -->
+        <!-- åºé¨ä¿¡è -->
         <div>
-            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">📊 底部信號評分（${bs.overall}/100）</div>
+            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">ð åºé¨ä¿¡èè©åï¼${bs.overall}/100ï¼</div>
             ${bottomHTML}
             <div class="divider" style="margin:10px 0;"></div>
             <div style="font-size:10px;color:rgba(226,232,240,0.5);line-height:1.5;">${bs.advice}</div>
         </div>
-        <!-- 長線賣出信號 + 日誌 -->
+        <!-- é·ç·è³£åºä¿¡è + æ¥èª -->
         <div>
-            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">🚨 長線賣出信號（${sel.triggered_count}/5 觸發）</div>
+            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">ð¨ é·ç·è³£åºä¿¡èï¼${sel.triggered_count}/5 è§¸ç¼ï¼</div>
             ${sellHTML}
-            <div style="font-size:10px;color:rgba(226,232,240,0.4);margin-top:6px;">下次檢查：${sel.next_check}</div>
+            <div style="font-size:10px;color:rgba(226,232,240,0.4);margin-top:6px;">ä¸æ¬¡æª¢æ¥ï¼${sel.next_check}</div>
             <div class="divider" style="margin:10px 0;"></div>
-            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">📅 每日觀測日誌</div>
+            <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">ð æ¯æ¥è§æ¸¬æ¥èª</div>
             <div style="display:flex;gap:8px;margin-bottom:6px;">
-                <div style="width:38px;font-size:9px;color:rgba(226,232,240,0.3);">日期</div>
+                <div style="width:38px;font-size:9px;color:rgba(226,232,240,0.3);">æ¥æ</div>
                 <div style="width:55px;font-size:9px;color:rgba(226,232,240,0.3);">BTC</div>
                 <div style="width:50px;font-size:9px;color:rgba(226,232,240,0.3);">ETH</div>
                 <div style="width:26px;font-size:9px;color:rgba(226,232,240,0.3);">FG</div>
-                <div style="flex:1;font-size:9px;color:rgba(226,232,240,0.3);">今日變化</div>
+                <div style="flex:1;font-size:9px;color:rgba(226,232,240,0.3);">ä»æ¥è®å</div>
             </div>
             ${logHTML}
         </div>
     </div>
 
-    <!-- 宏觀數據 -->
+    <!-- å®è§æ¸æ -->
     <div>
-        <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">🌍 宏觀數據面板</div>
+        <div style="font-size:11px;font-weight:700;color:rgba(226,232,240,0.5);margin-bottom:8px;">ð å®è§æ¸æé¢æ¿</div>
         <div class="macro-grid">${macroHTML}</div>
     </div>`;
 }
 
-/* ── Init ── */
+/* ââ Init ââ */
 renderSignal();
 renderLongTerm();
 renderBtcLayers();
 renderBtcMilestones();
 renderEthLayers();
 
-    // ─── Dashboard Update API (called by crypto-analysis scheduled task) ───
+    // âââ Dashboard Update API (called by crypto-analysis scheduled task) âââ
     window.updateFromAnalysis = function(patch) {
         if (patch.signal) Object.assign(DASHBOARD_DATA.signal, patch.signal);
         if (patch.long_term) {
@@ -897,8 +897,8 @@ renderEthLayers();
 
 <!-- Footer -->
 <div style="max-width:900px;margin:0 auto;padding:8px 14px 28px;font-size:9px;color:rgba(226,232,240,0.22);text-align:center;">
-    宏觀預測僅供參考，不構成投資建議。分析來源：Benjamin Cowen、Cowen週期框架、子時AI分析、量化宏觀模型。<br/>
-    里程碑觸發時更新：BTC跌破 $83K / $60K / $54K / $45K / $39K
+    å®è§é æ¸¬åä¾åèï¼ä¸æ§ææè³å»ºè­°ãåæä¾æºï¼Benjamin CowenãCowené±ææ¡æ¶ãå­æAIåæãéåå®è§æ¨¡åã<br/>
+    éç¨ç¢è§¸ç¼ææ´æ°ï¼BTCè·ç ´ $83K / $60K / $54K / $45K / $39K
 </div>
 
 <!-- AUTO-UPDATE-INJECT -->
@@ -913,19 +913,7 @@ renderEthLayers();
 
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) { window.updateFromAnalysis({"signal":{"direction":"條件多 BULLISH","condition":"等回調$2,220-$2,240進場（ADX=52趨勢延續）","rationale":"5:1 BULLISH投票。關稅90天暫停觸發軋空，ADX=52/DI+主導確認上行趨勢，ETH突破BB上軌。BTC仍低於$83K熊市線，Cowen WoW核心期反彈非新牛市。CPI明日(4/10)最大事件風險。","eth_signal":58.3,"entry":2230,"sl":2100,"tp1":2310,"position":"3.0%·2x","tech":58,"onchain":82,"derivatives":55,"orderflow":52,"fundflow":62,"macro":48,"sentiment":60,"news":65,"kol":35,"composite":60.6,"regime":"趨勢+低波動 (Post-squeeze ADX=52)","wins":2,"losses":1,"recent_accuracy":"2/2 ✅ (連敗恢復)","updated_at":"4/8 10:10"},"long_term":{"daily_log":[{"date":"04/08","btc":"71.7K","eth":"2,244","fg":17,"note":"關稅90天暫停觸發+10%軋空，ADX=52趨勢延續，CPI明日風險"}]},"last_update":"2026-04-08T02:10:00+08:00"}); }
-});
-</script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({"signal":{"direction":"條件多 LONG","condition":"等回調 $2220-2240 進場（4H RSI 73.6 超買）","rationale":"BULLISH 6:1 等權投票。美伊停火14天+關稅90天暫停，鏈上5底部信號仍有效。CPI 4/10 二元風險。","eth_signal":59.2,"entry":2235,"sl":2173,"tp1":2310,"position":"2%·2x","tech":78,"onchain":85,"derivatives":55,"orderflow":58,"fundflow":62,"macro":52,"sentiment":60,"news":70,"kol":38,"composite":62,"regime":"趨勢+中波動","wins":2,"losses":1,"recent_accuracy":"2/3","updated_at":"4/8 20:10"},"last_update":"2026-04-08T12:10:00+08:00"});
-  }
-});
-</script>
 
 
 
@@ -933,7 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Auto-updated by crypto-deep scheduled task 2026-04-08
 document.addEventListener('DOMContentLoaded', function() {
   if (window.updateFromAnalysis) {
-    window.updateFromAnalysis({"signal":{"direction":"條件多 LONG","condition":"等回踩$2,150-$2,190入場","rationale":"5:2 BULLISH投票。鏈上5大底部信號同時觸發(歷史僅3次→300%+)。美伊停火+關稅暫停催化。CPI 4/10為最大風險。","eth_signal":56.6,"entry":2170,"sl":2080,"tp1":2310,"position":"4.5%·2x","tech":55,"onchain":78,"derivatives":55,"orderflow":58,"fundflow":62,"macro":42,"sentiment":70,"news":65,"kol":40,"composite":60.7,"regime":"震盪+中波動→趨勢轉換","wins":3,"losses":2,"recent_accuracy":"3/5","updated_at":"4/8 22:45"},"long_term":{"status":{"score":62,"label":"觀望偏多","badge_text":"催化劑出現","badge_style":"active","indicator_style":"neutral","indicator_text":"觀望偏多","headline":"美伊停火+關稅暫停雙催化，但BTC仍<$83K熊市結構","bullets":["📈 ETH反彈+10%至$2,274後回落$2,208，短線超買需回踩","🔗 鏈上5大底部信號同時觸發（2015/2018/2022後漲300%+）","⚠️ CPI 4/10 headline預期3.1%偏高，超預期=快速回調","📊 F&G=13連續47天極端恐懼（歷史最長之一）"],"summary":"BTC $71.1K仍低於$83K熊市線，Cowen 4月WoW。鏈上底部信號史上最密集，催化劑觸發短線反彈。","bottom_score":62,"sell_score":0,"sell_triggers":"0/5 觸發"},"daily_log":[{"date":"04/08","btc":"71.1K","eth":"2209","fg":13,"note":"美伊停火+關稅暫停，ETH+6.6%，5大底部信號同觸"}]},"last_update":"2026-04-08T22:45:00+08:00"});
+    window.updateFromAnalysis({"signal":{"direction":"æ¢ä»¶å¤ LONG","condition":"ç­åè¸©$2,150-$2,190å¥å ´","rationale":"5:2 BULLISHæç¥¨ãéä¸5å¤§åºé¨ä¿¡èåæè§¸ç¼(æ­·å²å3æ¬¡â300%+)ãç¾ä¼åç«+éç¨æ«åå¬åãCPI 4/10çºæå¤§é¢¨éªã","eth_signal":56.6,"entry":2170,"sl":2080,"tp1":2310,"position":"4.5%Â·2x","tech":55,"onchain":78,"derivatives":55,"orderflow":58,"fundflow":62,"macro":42,"sentiment":70,"news":65,"kol":40,"composite":60.7,"regime":"éçª+ä¸­æ³¢åâè¶¨å¢è½æ","wins":3,"losses":2,"recent_accuracy":"3/5","updated_at":"4/8 22:45"},"long_term":{"status":{"score":62,"label":"è§æåå¤","badge_text":"å¬åååºç¾","badge_style":"active","indicator_style":"neutral","indicator_text":"è§æåå¤","headline":"ç¾ä¼åç«+éç¨æ«åéå¬åï¼ä½BTCä»<$83Kçå¸çµæ§","bullets":["ð ETHåå½+10%è³$2,274å¾åè½$2,208ï¼ç­ç·è¶è²·éåè¸©","ð éä¸5å¤§åºé¨ä¿¡èåæè§¸ç¼ï¼2015/2018/2022å¾æ¼²300%+ï¼","â ï¸ CPI 4/10 headlineé æ3.1%åé«ï¼è¶é æ=å¿«éåèª¿","ð F&G=13é£çº47å¤©æ¥µç«¯ææ¼ï¼æ­·å²æé·ä¹ä¸ï¼"],"summary":"BTC $71.1Kä»ä½æ¼$83Kçå¸ç·ï¼Cowen 4æWoWãéä¸åºé¨ä¿¡èå²ä¸æå¯éï¼å¬ååè§¸ç¼ç­ç·åå½ã","bottom_score":62,"sell_score":0,"sell_triggers":"0/5 è§¸ç¼"},"daily_log":[{"date":"04/08","btc":"71.1K","eth":"2209","fg":13,"note":"ç¾ä¼åç«+éç¨æ«åï¼ETH+6.6%ï¼5å¤§åºé¨ä¿¡èåè§¸"}]},"last_update":"2026-04-08T22:45:00+08:00"});
   }
 });
 </script>
